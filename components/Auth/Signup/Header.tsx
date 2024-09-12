@@ -4,11 +4,12 @@ import { Feather } from "@expo/vector-icons";
 import Back from "@/components/Core/Back";
 import { useSignUp } from "@/context/Signup";
 import clsx from "clsx";
+import Message from "@/components/Core/Message";
 
 const Header = () => {
-  const { step, back } = useSignUp();
+  const { step, back, error, message } = useSignUp();
   return (
-    <View className="pt-3 w-full">
+    <View className=" w-full">
       <View className="flex-row items-center">
         <Back action={step > 1 ? back : undefined} />
 
@@ -16,7 +17,16 @@ const Header = () => {
           Step {step} of 8
         </Text>
       </View>
-      <View className="w-screen -left-4 px-4 mt-5 flex-row  justify-between">
+      {(error || message) && (
+        <Message message={error ?? message} isError={!!error} />
+      )}
+
+      <View
+        className={clsx([
+          "w-screen -left-4 px-4 mt-5 flex-row  justify-between",
+          error.length && "mt-0",
+        ])}
+      >
         {new Array(8).fill(0).map((_, index) => (
           <View
             key={index}

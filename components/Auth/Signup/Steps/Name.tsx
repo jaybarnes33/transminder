@@ -3,18 +3,11 @@ import React from "react";
 import clsx from "clsx";
 
 import { useSignUp } from "@/context/Signup";
+import Input from "@/components/Core/Input";
 
 const Name = () => {
-  const [focus, setFocus] = React.useState(false);
   const { details, handleChange } = useSignUp();
 
-  const containsSymbol = (password: string) => {
-    return /[^a-zA-Z0-9]/.test(password);
-  };
-
-  const containsNumber = (password: string) => {
-    return /[0-9]/.test(password);
-  };
   return (
     <View className="py-5 space-y-5">
       <View className="">
@@ -29,17 +22,12 @@ const Name = () => {
         </Text>
       </View>
 
-      <TextInput
-        className={clsx([
-          "h-12 bg-gray-200 font-main text-base items-center font-bold px-3 justify-cener pb-2  rounded-xl lowercase",
-          focus && " border-2 border-ring",
-        ])}
+      <Input
         value={details?.name}
         placeholder="Name"
         autoCapitalize="none"
         textContentType="name"
         onChangeText={(text) => handleChange("name", text)}
-        onFocus={() => setFocus(true)}
       />
     </View>
   );

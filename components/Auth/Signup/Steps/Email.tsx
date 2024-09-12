@@ -1,10 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import clsx from "clsx";
+
 import { useSignUp } from "@/context/Signup";
+import Input from "@/components/Core/Input";
 
 const One = () => {
-  const [focus, setFocus] = React.useState(false);
   const { details, handleChange } = useSignUp();
   return (
     <View className="py-5 space-y-5">
@@ -16,19 +16,13 @@ const One = () => {
           Sign up with your email address
         </Text>
       </View>
-
-      <TextInput
+      <Input
         value={details?.email}
-        className={clsx([
-          "h-12 bg-gray-200 font-main font-semibold px-3 py-1 rounded-xl lowercase",
-          focus && " border-2 border-ring ",
-        ])}
         placeholder="Email Address"
         textContentType="emailAddress"
         keyboardType="email-address"
         autoCapitalize="none"
         onChangeText={(text) => handleChange("email", text)}
-        onFocus={() => setFocus(true)}
       />
     </View>
   );

@@ -1,10 +1,14 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React, { ReactNode } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from "react-native";
+import React, { ReactNode, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "./Header";
 import { useSignUp } from "@/context/Signup";
 import Email from "./Steps/Email";
-import { useRouter } from "expo-router";
 import clsx from "clsx";
 import Otp from "./Steps/Otp";
 import Password from "./Steps/Password";
@@ -14,20 +18,28 @@ import Gender from "./Steps/Gender";
 import Notifications from "./Steps/Notifications";
 import Privacy from "./Steps/Privacy";
 
-const components: Record<number, ReactNode> = {
-  1: <Email />,
-  2: <Otp />,
-  3: <Password />,
-  4: <Name />,
-  5: <Avatar />,
-  6: <Gender />,
-  7: <Notifications />,
-  8: <Privacy />,
-};
-const Form = () => {
-  const { step, isValid, next } = useSignUp();
+const Form = ({ email }: { email?: string }) => {
+  const { step, isValid, next, error, handleChange, continueFromOTP } =
+    useSignUp();
 
-  const disabled = !isValid(step);
+  const components: Record<number, ReactNode> = {
+    1: <Email />,
+    2: <Otp isResend={!!email} />,
+    3: <Password />,
+    4: <Name />,
+    5: <Avatar />,
+    6: <Gender />,
+    7: <Notifications />,
+    8: <Privacy />,
+  };
+  useEffect(() => {
+    if (email) {
+      handleChange("email", email);
+      continueFromOTP();
+    }
+  }, [email]);
+
+  const disabled = !isValid(step) || !!error;
 
   return (
     <SafeAreaView className="bg-purple-50 flex-1 px-4">

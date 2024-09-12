@@ -3,6 +3,7 @@ import React from "react";
 import clsx from "clsx";
 
 import { useSignUp } from "@/context/Signup";
+import { genders } from "@/constants";
 
 const Item = ({
   gender,
@@ -39,16 +40,6 @@ const Gender = () => {
     details: { genderIdentity: gender },
     handleChange,
   } = useSignUp();
-
-  const genders = [
-    "Transgender",
-    "Non-binary",
-    "Intersex",
-    "Genderfluid",
-    "Cisgender",
-    "Other (specify)",
-    "Prefer not to answer",
-  ];
 
   React.useEffect(() => {
     if (!gender) {

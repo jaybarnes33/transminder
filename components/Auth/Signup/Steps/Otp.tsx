@@ -1,12 +1,50 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 
 import { useSignUp } from "@/context/Signup";
+import axiosInstance from "@/lib/axios";
+import { ErrorObj } from "@/types/global";
+import Input from "@/components/Core/Input";
 
-const Two = () => {
+const Two = ({ isResend }: { isResend: boolean }) => {
   const [focus, setFocus] = React.useState(false);
-  const { details, handleChange } = useSignUp();
+  const { details, handleChange, setMessage, setError } = useSignUp();
+
+  const [resend, setResend] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+
+  useEffect(() => {
+    setResend(isResend);
+  }, [isResend]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setResend(true);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [resend]);
+
+  const resendOTP = async () => {
+    try {
+      setSending(true);
+      await axiosInstance.post("/auth/otp/resend", { email: details.email });
+      setMessage("Code resent successfully");
+    } catch (error) {
+      console.log(error);
+      setError(
+        (error as ErrorObj).response.data.error ?? "Failed to resend code"
+      );
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <View className="py-5 space-y-5">
       <View className="">
@@ -21,19 +59,25 @@ const Two = () => {
         </Text>
       </View>
 
-      <TextInput
+      <Input
         value={details?.otp}
         className={clsx([
           "h-12 bg-gray-200 font-main text-2xl font-bold px-3 text-center py-1 rounded-xl lowercase",
-          focus && " border-2 border-ring",
         ])}
         placeholder="- - - - - -"
         keyboardType="numeric"
         autoCapitalize="none"
         onChangeText={(text) => handleChange("otp", text)}
-        onFocus={() => setFocus(true)}
         maxLength={6}
       />
+      {resend && (
+        <TouchableOpacity onPress={resendOTP}>
+          <Text className="font-main text-sm font-bold text-dark text-center">
+            Resend code
+          </Text>
+          {sending && <ActivityIndicator size="small" color={"#bb5adf"} />}
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

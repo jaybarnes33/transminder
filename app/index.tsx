@@ -5,6 +5,7 @@ import { Onboarding } from "@/types/global";
 import clsx from "clsx";
 import { colors } from "@/constants/onboarding";
 import { useRouter } from "expo-router";
+import UnAuthContent from "@/components/Auth/UnAuthContent";
 
 const components: Record<number, Onboarding> = {
   0: {
@@ -65,7 +66,6 @@ const OnboardingItem = ({
 }: Onboarding & {
   title: string;
 }) => {
-  console.log(title);
   return (
     <View className=" items-center my-8">
       <View className="my-2">
@@ -109,42 +109,43 @@ const index = () => {
     setColor(colors[components[step].color]);
   }, [step]);
 
-  useEffect(() => {
-    console.log(color);
-  }, []);
   return (
-    <SafeAreaView className={clsx(["h-screen  px-4", "bg-rose-50", color.bg])}>
-      <View className="flex-1 items-center ">
-        <View className="flex-row mt-5">
-          {Object.keys(components).map((key) => {
-            return (
-              <TouchableOpacity
-                onPress={() => setStep(parseInt(key))}
-                key={key}
-                className={`h-2 w-2 rounded-full ${
-                  step === parseInt(key)
-                    ? `${color.active} w-4 h`
-                    : `${color.inactive}`
-                } mx-1`}
-              />
-            );
-          })}
-        </View>
+    <UnAuthContent>
+      <SafeAreaView
+        className={clsx(["h-screen  px-4", "bg-rose-50", color.bg])}
+      >
+        <View className="flex-1 items-center ">
+          <View className="flex-row mt-5">
+            {Object.keys(components).map((key) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => setStep(parseInt(key))}
+                  key={key}
+                  className={`h-2 w-2 rounded-full ${
+                    step === parseInt(key)
+                      ? `${color.active} w-4 h`
+                      : `${color.inactive}`
+                  } mx-1`}
+                />
+              );
+            })}
+          </View>
 
-        <OnboardingItem {...components[step]} title={color.text} />
-      </View>
-      <View className="absolute bottom-10 w-screen px-4">
-        <TouchableOpacity
-          className="bg-dark py-4 items-center rounded-3xl"
-          onPress={handleStep}
-        >
-          <Text className="text-white font-main font-semibold">
-            {" "}
-            {step === 4 ? "Get Started" : "Continue"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <OnboardingItem {...components[step]} title={color.text} />
+        </View>
+        <View className="absolute bottom-10 w-screen px-4">
+          <TouchableOpacity
+            className="bg-dark py-4 items-center rounded-3xl"
+            onPress={handleStep}
+          >
+            <Text className="text-white font-main font-semibold">
+              {" "}
+              {step === 4 ? "Get Started" : "Continue"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </UnAuthContent>
   );
 };
 

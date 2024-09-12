@@ -28,7 +28,7 @@ const Avatar = ({
           size === "xl" ? "text-[74pt]" : "text-3xl",
         ])}
       >
-        {name.charAt(0)}
+        {name?.charAt(0)}
       </Text>
     </View>
   );

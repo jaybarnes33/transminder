@@ -14,7 +14,7 @@ const Back = ({ action }: { action?: () => void }) => {
     }
   };
   return (
-    <TouchableOpacity onPress={handleAction}>
+    <TouchableOpacity className="relative z-[99]" onPress={handleAction}>
       <Feather name="chevron-left" size={30} color={"gray"} />
     </TouchableOpacity>
   );

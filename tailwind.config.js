@@ -1,12 +1,47 @@
+const tailwindColors = require("./node_modules/tailwindcss/colors");
+const colorSafeList = [];
+
+// Skip these to avoid a load of deprecated warnings when tailwind starts up
+const deprecated = [
+  "lightBlue",
+  "warmGray",
+  "trueGray",
+  "coolGray",
+  "blueGray",
+];
+
+for (const colorName in tailwindColors) {
+  if (deprecated.includes(colorName)) {
+    continue;
+  }
+
+  const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+
+  const pallette = tailwindColors[colorName];
+
+  if (typeof pallette === "object") {
+    shades.forEach((shade) => {
+      if (shade in pallette) {
+        colorSafeList.push(`text-${colorName}-${shade}`);
+        colorSafeList.push(`bg-${colorName}-${shade}`);
+      }
+    });
+  }
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
+  safelist: colorSafeList,
   theme: {
     extend: {
       fontFamily: {
         main: "Quicksand",
       },
       colors: {
+        purple: {
+          500: "#b85adf",
+        },
         rose: {
           50: "#FEF1FB",
           100: "#FEE5F9",
