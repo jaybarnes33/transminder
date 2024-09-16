@@ -6,18 +6,17 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import clsx from "clsx";
 import { useNavigation, useRouter } from "expo-router";
 import Back from "@/components/Core/Back";
 import axiosInstance from "@/lib/axios";
 
-import { setTokens, setUser } from "@/utils/auth";
+import { setTokens } from "@/utils/auth";
 import Message from "@/components/Core/Message";
-import { useUser } from "@/context/Auth";
 import Input from "@/components/Core/Input";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
+import { mutate } from "swr";
 
 const Login = () => {
   const [form, setForm] = React.useState({
@@ -28,7 +27,6 @@ const Login = () => {
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const { setUser } = useUser();
   const { navigate } = useRouter();
   const navigation = useNavigation();
   const handleChange = (key: string, value: string) => {
@@ -44,9 +42,10 @@ const Login = () => {
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
         }),
-
-        setUser(data.user),
       ]);
+
+      mutate("/auth", data);
+
       navigate("/(app)/(tabs)");
     } catch (error) {
       //@ts-ignore

@@ -61,12 +61,12 @@ const EditGender = ({
   currentGender,
 }: {
   action: (gender: string) => void;
-  currentGender?: string;
+  currentGender: string;
 }) => {
   return (
     <View>
       <View className="flex space-y-3 h-[50vh]">
-        {genders.map((item) => (
+        {Array.from(new Set([currentGender, ...genders])).map((item) => (
           <Item
             key={item}
             gender={item}

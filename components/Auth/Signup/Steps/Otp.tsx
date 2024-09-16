@@ -36,7 +36,6 @@ const Two = ({ isResend }: { isResend: boolean }) => {
       await axiosInstance.post("/auth/otp/resend", { email: details.email });
       setMessage("Code resent successfully");
     } catch (error) {
-      console.log(error);
       setError(
         (error as ErrorObj).response.data.error ?? "Failed to resend code"
       );

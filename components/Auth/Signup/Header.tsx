@@ -8,6 +8,8 @@ import Message from "@/components/Core/Message";
 
 const Header = () => {
   const { step, back, error, message } = useSignUp();
+
+  const isError = !!error;
   return (
     <View className=" w-full">
       <View className="flex-row items-center">
@@ -18,7 +20,7 @@ const Header = () => {
         </Text>
       </View>
       {(error || message) && (
-        <Message message={error ?? message} isError={!!error} />
+        <Message message={isError ? error : message} isError={isError} />
       )}
 
       <View

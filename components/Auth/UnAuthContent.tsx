@@ -4,13 +4,18 @@ import { useUser } from "@/context/Auth";
 import { useRouter } from "expo-router";
 
 const UnAuthContent = ({ children }: { children: ReactNode }) => {
-  const { user } = useUser();
+  const { user, loading } = useUser();
   const { navigate } = useRouter();
   useEffect(() => {
-    if (user) {
+    if (!loading && user) {
       navigate("/(app)/(tabs)");
     }
   }, [user]);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
   return <>{children}</>;
 };
 

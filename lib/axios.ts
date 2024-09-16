@@ -1,4 +1,5 @@
 import { checkTokenExpiration, getTokens, setTokens } from "@/utils/auth";
+import { Platform } from "react-native";
 import axios, {
   AxiosInstance,
   AxiosError,
@@ -6,7 +7,14 @@ import axios, {
 } from "axios";
 
 // Create an Axios instance with default configurations
-const baseURL = process.env.EXPO_PUBLIC_API!;
+const baseURL =
+  process.env.EXPO_PUBLIC_ENV !== "production"
+    ? `${
+        Platform.OS !== "android"
+          ? process.env.EXPO_PUBLIC_BASE
+          : process.env.EXPO_PUBLIC_ANDROID_BASE
+      }/api`
+    : `${process.env.EXPO_PUBLIC_URL}/api`;
 const axiosInstance: AxiosInstance = axios.create({
   baseURL, // Replace with your API base URL
   timeout: 10000, // Request timeout in milliseconds

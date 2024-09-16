@@ -21,4 +21,6 @@ export interface User {
   genderIdentity: string;
   allowNotifications: boolean;
   avatar: string;
+  age: string;
+  country: string;
 }

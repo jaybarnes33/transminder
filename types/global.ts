@@ -1,3 +1,4 @@
+import { icons } from "@/constants/icons";
 import { colors } from "@/constants/onboarding";
 import { ImageSourcePropType } from "react-native";
 
@@ -31,3 +32,12 @@ export interface ErrorObj {
     };
   };
 }
+
+export type Drug = {
+  name: string;
+  type: "pill" | "patch" | "injection" | "syrup";
+  times: { taken: boolean; time: string }[];
+  notes: string[];
+};
+
+export type IconName = keyof typeof icons;

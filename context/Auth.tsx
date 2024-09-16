@@ -1,52 +1,45 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { getTokens, getUser } from "@/utils/auth"; // Import your getTokens function
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import axiosInstance from "@/lib/axios";
 import { User } from "@/types/auth";
+import { getTokens, logout } from "@/utils/auth";
+import useSWR from "swr";
 import { useRouter } from "expo-router";
-import { setUser as saveUser } from "@/utils/auth";
+import { Text } from "react-native";
+
 type AuthContextType = {
   user: User | undefined;
+  logOut: () => void;
   loading: boolean;
   error: any;
-  setUser: (user: User | undefined) => void;
+  mutate: any;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [user, setUser] = useState<User | undefined>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<any>(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const fetchUser = async () => {
+    const { data } = await axiosInstance.get("/auth");
+    return data;
+  };
+
   const { navigate } = useRouter();
-
-  useEffect(() => {
-    const fetchTokens = async () => {
-      try {
-        const tokens = await getTokens();
-        const activeUser = await getUser();
-        console.log({ activeUser });
-        if (tokens.accessToken) {
-          setUser(activeUser);
-        }
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTokens();
-  }, []);
-
-  useEffect(() => {
-    if (user?._id) {
-      saveUser(user);
-    }
-  }, [user]);
+  const { data, error, isLoading, mutate } = useSWR("/auth", fetchUser);
+  const logOut = async () => {
+    await logout();
+    mutate(undefined, false);
+    navigate("/Auth");
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, setUser }}>
+    <AuthContext.Provider
+      value={{ user: data, loading: isLoading, error, logOut, mutate }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -54,10 +47,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useUser = (): AuthContextType => {
   const context = useContext(AuthContext);
-
-  console.log({ context });
-  if (context === undefined) {
-    throw new Error("useUser must be used within an AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

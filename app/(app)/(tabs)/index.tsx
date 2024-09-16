@@ -1,33 +1,43 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Touchable,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { StyleSheet, VirtualizedList } from "react-native";
 import React from "react";
 import Calendar from "@/components/Health/Calendar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useUser } from "@/context/Auth";
 import { LinearGradient } from "expo-linear-gradient";
 import { Dimensions } from "react-native";
 import Tracker from "@/components/Health/Tracker";
-import { Feather } from "@expo/vector-icons";
-import Icon from "@/components/Core/Icon";
 import Header from "@/components/Core/Header";
-const index = () => {
-  const { user } = useUser();
+import Plan from "@/components/Health/Plan";
+import Appointments from "@/components/Health/Appointments";
+import Track from "@/components/Health/Track";
+import Premium from "@/components/Health/Premium";
+const Index = () => {
+  const sections = [
+    { key: "Calendar", component: <Calendar /> },
+    { key: "Tracker", component: <Tracker /> },
+    { key: "Plan", component: <Plan /> },
+    { key: "Appointments", component: <Appointments /> },
+    { key: "Track", component: <Track /> },
+    { key: "Premium", component: <Premium /> },
+  ];
+  const getItem = (data: typeof sections, index: number) => data[index];
+
+  const getItemCount = (data: typeof sections) => data.length;
   return (
     <SafeAreaView className="px-4">
       <LinearGradient
         colors={["#e4d6f3", "#f3f4f6"]}
         style={styles.background}
       />
-
       <Header />
-      <Calendar />
-      <Tracker />
+      <VirtualizedList
+        data={sections}
+        initialNumToRender={4}
+        renderItem={({ item }) => item.component}
+        keyExtractor={(item) => item.key}
+        getItem={getItem}
+        getItemCount={getItemCount}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 };
@@ -58,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default index;
+export default Index;

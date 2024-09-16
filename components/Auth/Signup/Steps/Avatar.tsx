@@ -24,15 +24,6 @@ const Screen = () => {
       <View className="items-center">
         <Avatar name={details?.name!} size="xl" />
       </View>
-
-      <TouchableOpacity className="items-center">
-        <View className="items-center flex-row space-x-2">
-          <FontAwesome6 name="camera" size={16} color="#a855f7" />
-          <Text className="font-main text-base font-semibold text-purple-500">
-            Add photo
-          </Text>
-        </View>
-      </TouchableOpacity>
     </View>
   );
 };

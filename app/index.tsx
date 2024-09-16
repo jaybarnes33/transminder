@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { colors } from "@/constants/onboarding";
 import { useRouter } from "expo-router";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
+import { onboardingCompleted } from "@/utils/auth";
 
 const components: Record<number, Onboarding> = {
   0: {
@@ -92,6 +93,7 @@ const OnboardingItem = ({
 };
 const index = () => {
   const [step, setStep] = React.useState(0);
+  const [onboarded, setOnboarded] = React.useState(false);
   const { navigate } = useRouter();
   const handleStep = () => {
     if (step === 4) {
@@ -109,11 +111,21 @@ const index = () => {
     setColor(colors[components[step].color]);
   }, [step]);
 
+  useEffect(() => {
+    async () => {
+      const boarded = await onboardingCompleted();
+      setOnboarded(boarded);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (onboarded) {
+      navigate("/Auth");
+    }
+  }, [onboarded]);
   return (
     <UnAuthContent>
-      <SafeAreaView
-        className={clsx(["h-screen  px-4", "bg-rose-50", color.bg])}
-      >
+      <SafeAreaView className={clsx(["flex-1  px-4", "bg-rose-50", color.bg])}>
         <View className="flex-1 items-center ">
           <View className="flex-row mt-5">
             {Object.keys(components).map((key) => {

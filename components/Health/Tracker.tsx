@@ -3,7 +3,7 @@ import React from "react";
 
 const Tracker = () => {
   return (
-    <View className="bg-purple-500 relative rounded-[20pt] h-[126] items-center space-y-3 pt-4 mt-4">
+    <View className="bg-purple-500 relative rounded-[20px] h-[126] items-center space-y-3 pt-4 my-4">
       <View>
         <Text className="font-main text-white">Daily Tracker</Text>
       </View>
@@ -11,7 +11,7 @@ const Tracker = () => {
         How are you feeling today?
       </Text>
 
-      <TouchableOpacity className="bg-white p-2 w-[144] items-center rounded-[70pt] relative z-[99]">
+      <TouchableOpacity className="bg-white p-2 w-[144] items-center rounded-[70px] relative z-[99]">
         <Text className="font-main font-bold text-purple-500">
           Log your mood
         </Text>

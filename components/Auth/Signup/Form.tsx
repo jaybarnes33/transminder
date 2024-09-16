@@ -3,6 +3,7 @@ import {
   Text,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import React, { ReactNode, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,8 +20,15 @@ import Notifications from "./Steps/Notifications";
 import Privacy from "./Steps/Privacy";
 
 const Form = ({ email }: { email?: string }) => {
-  const { step, isValid, next, error, handleChange, continueFromOTP } =
-    useSignUp();
+  const {
+    step,
+    isValid,
+    next,
+    error,
+    handleChange,
+    continueFromOTP,
+    submitting,
+  } = useSignUp();
 
   const components: Record<number, ReactNode> = {
     1: <Email />,
@@ -49,21 +57,23 @@ const Form = ({ email }: { email?: string }) => {
         disabled={disabled}
         onPress={next}
         className={clsx([
-          "bg-dark flex-row space-x-2 w-full absolute  bottom-14 ml-4 items-center h-12 justify-center rounded-full",
+          "bg-dark flex-row  w-full absolute  bottom-14 ml-4 items-center h-12 justify-center rounded-full space-x-2",
           disabled && "bg-gray-500",
           step == 8 && "bg-ring",
         ])}
       >
         {step < 8 && (
-          <Text className="font-main text-base text-white font-semibold">
+          <Text className="font-main text-base text-white font-semibold text-center">
             {step !== 7 ? "Next" : "Turn on notifications"}
           </Text>
         )}
         {step === 8 && (
-          <Text className="font-main text-base text-white font-semibold">
+          <Text className="font-main text-base text-white font-semibold text-center">
             Let's Go!
           </Text>
         )}
+
+        {submitting && <ActivityIndicator color="white" size="small" />}
       </TouchableOpacity>
     </SafeAreaView>
   );

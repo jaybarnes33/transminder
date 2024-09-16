@@ -13,7 +13,7 @@ const Item = ({
   return (
     <View
       className={clsx([
-        "items-center justify-center  w-[51] h-[76] rounded-3xl space-y-1",
+        "items-center justify-center  w-[45px] h-[76px] rounded-3xl space-y-1",
         active && "bg-white",
       ])}
     >
@@ -27,7 +27,7 @@ const Item = ({
       </Text>
       <Text
         className={clsx([
-          "font-main font-bold text-[20pt]",
+          "font-main font-bold text-[20]",
           active ? "text-dark" : "text-gray-600",
         ])}
       >

@@ -47,6 +47,7 @@ const Gender = () => {
     }
   }, []);
 
+  const list = Array.from(new Set([gender, ...genders]));
   return (
     <View className="py-5 space-y-5">
       <View className="space-y-1">
@@ -58,7 +59,7 @@ const Gender = () => {
         </Text>
       </View>
       <View className="flex space-y-3 h-[50vh]">
-        {genders.map((item) => (
+        {list.map((item) => (
           <Item
             key={item}
             gender={item}

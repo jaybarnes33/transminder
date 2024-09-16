@@ -9,7 +9,7 @@ const Header = () => {
 
   const { navigate } = useRouter();
   return (
-    <View className="flex-row justify-between items-center">
+    <View className="flex-row justify-between items-center mb-4">
       <Text className="font-main text-base font-semibold">
         Hello {user?.name}!
       </Text>

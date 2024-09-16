@@ -1,3 +1,5 @@
+import { logout } from "@/utils/auth";
+
 export const icons = {
   health: require("@/assets/icons/health.png"),
   "health-active": require("@/assets/icons/health-active.png"),
@@ -17,4 +19,11 @@ export const icons = {
   report: require("@/assets/icons/report.png"),
   contact: require("@/assets/icons/contact.png"),
   info: require("@/assets/icons/info.png"),
+  logout: require("@/assets/icons/logout.png"),
+  pill: require("@/assets/icons/pill.png"),
+  "pill-grey": require("@/assets/icons/pill-grey.png"),
+  patch: require("@/assets/icons/patch.png"),
+  "patch-grey": require("@/assets/icons/patch-grey.png"),
+  "push-pin": require("@/assets/icons/push-pin.png"),
+  "stars-fill": require("@/assets/icons/stars-fill.png"),
 };

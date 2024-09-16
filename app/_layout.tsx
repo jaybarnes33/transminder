@@ -11,7 +11,7 @@ import {
 } from "@expo-google-fonts/quicksand";
 
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 import { AuthProvider } from "@/context/Auth";
@@ -32,9 +32,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Light: Quicksand_300Light,
-    Regular: Quicksand_400Regular,
+    Quicksand: Quicksand_400Regular,
     Medium: Quicksand_500Medium,
     SemiBold: Quicksand_600SemiBold,
     Bold: Quicksand_700Bold,
@@ -56,10 +55,6 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
   return (
     <AuthProvider>
       <BottomSheetModalProvider>

@@ -1,18 +1,18 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import React from "react";
 
 import Back from "@/components/Core/Back";
-import { useUser } from "@/context/Auth";
+import { useUser as useCachedUser, useUser } from "@/context/Auth";
 import Icon from "@/components/Core/Icon";
 import Avatar from "@/components/Core/Avatar";
 import { Feather } from "@expo/vector-icons";
 import { icons } from "@/constants/icons";
 import { useRouter } from "expo-router";
-import { logout } from "@/utils/auth";
+
+import Wrapper from "@/components/Settings/Wrapper";
+import { getAvatar } from "@/utils/auth";
 
 const Profile = () => {
-  const { user, setUser } = useUser();
-
+  const { user, loading, logOut } = useUser();
   const sections = {
     personalize: [
       {
@@ -31,54 +31,60 @@ const Profile = () => {
       {
         name: "manage subscription",
         icon: "card",
-        path: "subscription",
+        path: "(subscription)",
       },
       {
         name: "notifications",
         icon: "bell",
-        path: "/",
+        path: "notifications",
       },
       {
         name: "language",
         icon: "language",
+        path: "language",
       },
     ],
     support: [
       {
         name: "report a place, content or bug",
         icon: "report",
+        path: "report",
       },
       {
         name: "contact us",
         icon: "contact",
+        path: "contact",
       },
       {
         name: "about transminder",
         icon: "info",
+        path: "about",
       },
     ],
   };
 
   const { navigate } = useRouter();
 
-  const handleLogout = async () => {
-    await logout();
-    setUser(undefined);
-    navigate("/Auth");
-  };
   return (
-    <>
-      <View className="items-center space-y-1">
-        <Avatar size="xl" name={user?.name as string} />
-        <Text className="font-bold text-[30pt] font-main">
-          {user?.name.split(" ")[0]}
-        </Text>
-        <TouchableOpacity onPress={handleLogout}>
-          <Text className="font-main font-base font-bold text-red-500">
-            Logout
+    <Wrapper>
+      {user && (
+        <View className="items-center space-y-1">
+          <Avatar
+            size="xl"
+            name={user?.name as string}
+            image={getAvatar(user.avatar, user._id)}
+            isEdit={false}
+          />
+          <Text className="font-bold text-[30] font-main">
+            {user?.name.split(" ")[0]}
           </Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={logOut}>
+            <Text className="font-main font-base font-bold text-red-500">
+              Logout
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <FlatList
         data={Object.keys(sections)}
@@ -90,8 +96,13 @@ const Profile = () => {
             </Text>
             {sections[item as keyof typeof sections].map((section) => (
               <TouchableOpacity
-                //@ts-ignore
-                onPress={() => navigate(section.path)}
+                onPress={() =>
+                  navigate({
+                    //@ts-ignore
+                    pathname: section.path,
+                    params: { title: section.name },
+                  })
+                }
                 className="flex-row items-center space-x-3 bg-neutral-200 h-[50] px-4 rounded-xl "
                 key={section.name}
               >
@@ -106,7 +117,7 @@ const Profile = () => {
           </View>
         )}
       />
-    </>
+    </Wrapper>
   );
 };
 

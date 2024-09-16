@@ -27,7 +27,7 @@ const Privacy = () => {
 
       <Image source={require("@/assets/images/data.png")} />
 
-      <View className="top-28 pt-10 flex-row space-x-3 ">
+      <View className="top-28 py-2 flex-row space-x-3 ">
         <View className="mt-2">
           <AntDesign name="checkcircle" size={15} color="#b85adf" />
         </View>

@@ -29,7 +29,7 @@ export const BottomSheetModalProvider: React.FC<{
   const [content, setContent] = useState<React.ReactNode>(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = useMemo(() => ["70%", "63%"], []);
+  const snapPoints = useMemo(() => ["70%", "85%"], []);
 
   const showModal = useCallback((content: React.ReactNode) => {
     setContent(content);
@@ -46,10 +46,6 @@ export const BottomSheetModalProvider: React.FC<{
     bottomSheetModalRef.current?.close();
   }, []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
   return (
     <GestureHandlerRootView>
       <BottomSheetModalContext.Provider
@@ -61,8 +57,8 @@ export const BottomSheetModalProvider: React.FC<{
             ref={bottomSheetModalRef}
             index={1}
             snapPoints={snapPoints}
-            onChange={handleSheetChanges}
             enableDismissOnClose
+            enableDynamicSizing
           >
             <BottomSheetView>{content}</BottomSheetView>
           </BottomSheetModal>

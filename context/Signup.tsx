@@ -5,6 +5,9 @@ import { setTokens } from "@/utils/auth";
 import { useRouter } from "expo-router";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { useUser } from "./Auth";
+import { useBottomSheetModal } from "./BottomSheet";
+import EditItem from "@/components/Settings/EditItem";
+import { mutate } from "swr";
 
 interface SignupPayload {
   email: string;
@@ -44,8 +47,8 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState("");
   const [id, setId] = useState("");
   const [message, setMessage] = useState("");
+  const { showModal } = useBottomSheetModal();
 
-  const { setUser } = useUser();
   const { navigate } = useRouter();
   const checkEmail = async () => {
     const { data } = await axiosInstance.post("/auth/check-email", {
@@ -60,8 +63,8 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
       }),
-      setUser(data.user),
     ]);
+    mutate("/auth", data.user);
     navigate("/(tabs)");
   };
 
@@ -107,6 +110,16 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
   const handleChange = (key: string, value: string | boolean) => {
     setMessage("");
     setError("");
+    if (key === "genderIdentity" && value.toString().startsWith("Other")) {
+      showModal(
+        <EditItem
+          name="gender"
+          val=""
+          title="How do you identify?"
+          onChange={handleChange}
+        />
+      );
+    }
     setDetails((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -114,7 +127,7 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
     1: isValidEmail(details?.email),
     2: details?.otp?.length === 6,
     3:
-      details?.password?.length > 8 &&
+      details?.password?.length >= 8 &&
       containsNumber(details?.password) &&
       containsSymbol(details?.password),
     4: !!details?.name,
