@@ -12,13 +12,22 @@
       "resizeMode": "cover"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.higotechs.transminder",
+      "appleId": "ohenesetwumasi@gmail.com",
+      "appleTeamId": "BL24Y8CQ2Z"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.higotechs.transminder"
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +52,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "869ee212-11ba-4485-9a9b-76ebdfe7cdfe"
+      }
     }
   }
 }
