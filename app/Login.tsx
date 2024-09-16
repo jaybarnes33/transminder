@@ -6,7 +6,7 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRouter } from "expo-router";
 import Back from "@/components/Core/Back";
@@ -49,11 +49,16 @@ const Login = () => {
       navigate("/(app)/(tabs)");
     } catch (error) {
       //@ts-ignore
-      setError(error.response.data.error ?? "An error occurred");
+
+      setError(error?.response?.data?.error ?? error.message);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    alert(JSON.stringify(process.env.EXPO_PUBLIC_BASE));
+  }, []);
   return (
     <UnAuthContent>
       <SafeAreaView className="bg-purple-50 flex-1 px-4">

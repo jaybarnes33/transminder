@@ -31,6 +31,7 @@ export interface ErrorObj {
       message: string;
     };
   };
+  message: string;
 }
 
 export type Drug = {
