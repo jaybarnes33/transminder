@@ -11,7 +11,7 @@
         "EXPO_PUBLIC_BASE": "http://localhost:8080",
         "EXPO_PUBLIC_ANDROID_BASE": "http://10.0.2.2:8080",
         "EXPO_PUBLIC_ENV": "development",
-        "EXPO_PUBLIC_URL": "http://172.201.224.249"
+        "EXPO_PUBLIC_URL": "https://minder.otwumasi.tech"
       }
     },
     "preview": {
@@ -21,7 +21,7 @@
           "EXPO_PUBLIC_BASE": "http://localhost:8080",
           "EXPO_PUBLIC_ANDROID_BASE": "http://10.0.2.2:8080",
           "EXPO_PUBLIC_ENV": "production",
-          "EXPO_PUBLIC_URL": "http://172.201.224.249"
+          "EXPO_PUBLIC_URL": "https://minder.otwumasi.tech"
         }
       }
     },
@@ -31,7 +31,7 @@
         "EXPO_PUBLIC_BASE": "http://localhost:8080",
         "EXPO_PUBLIC_ANDROID_BASE": "http://10.0.2.2:8080",
         "EXPO_PUBLIC_ENV": "production",
-        "EXPO_PUBLIC_URL": "http://172.201.224.249"
+        "EXPO_PUBLIC_URL": "https://minder.otwumasi.tech"
       }
     }
   },
