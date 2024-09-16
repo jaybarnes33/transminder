@@ -56,9 +56,6 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    alert(JSON.stringify(process.env.EXPO_PUBLIC_BASE));
-  }, []);
   return (
     <UnAuthContent>
       <SafeAreaView className="bg-purple-50 flex-1 px-4">
