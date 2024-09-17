@@ -41,6 +41,7 @@ const SignUpContext = createContext<SignUpContextValue>(
 
 export const SignUpProvider = ({ children }: { children: ReactNode }) => {
   const [details, setDetails] = useState<SignupPayload>({} as SignupPayload);
+  const [otp, setOtp] = useState("");
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [resend, setResend] = useState(false);
@@ -57,7 +58,10 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
     setId(data.id);
   };
   const handleSignup = async () => {
-    const { data } = await axiosInstance.post(`/users/`, { data: details, id });
+    const { data } = await axiosInstance.post(`/users/`, {
+      data: { ...details, otp: undefined },
+      id,
+    });
     await Promise.all([
       setTokens({
         accessToken: data.accessToken,

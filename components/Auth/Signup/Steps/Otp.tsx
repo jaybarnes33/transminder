@@ -37,7 +37,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
       setMessage("Code resent successfully");
     } catch (error) {
       setError(
-        (error as ErrorObj).response.data.error ?? "Failed to resend code"
+        (error as ErrorObj)?.response?.data.error ?? "Failed to resend code"
       );
     } finally {
       setSending(false);
