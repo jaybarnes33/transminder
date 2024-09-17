@@ -4,6 +4,9 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ActivityIndicator,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { ReactNode, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -51,30 +54,39 @@ const Form = ({ email }: { email?: string }) => {
 
   return (
     <SafeAreaView className="bg-purple-50 flex-1 px-4">
-      <Header />
-      {components[step]}
-      <TouchableOpacity
-        disabled={disabled}
-        onPress={next}
-        className={clsx([
-          "bg-dark flex-row  w-full absolute  bottom-14 ml-4 items-center h-12 justify-center rounded-full space-x-2",
-          disabled && "bg-gray-500",
-          step == 8 && "bg-ring",
-        ])}
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        {step < 8 && (
-          <Text className="font-main text-base text-white font-semibold text-center">
-            {step !== 7 ? "Next" : "Turn on notifications"}
-          </Text>
-        )}
-        {step === 8 && (
-          <Text className="font-main text-base text-white font-semibold text-center">
-            Let's Go!
-          </Text>
-        )}
+        <TouchableWithoutFeedback className="flex-1" onPress={Keyboard.dismiss}>
+          <View className="flex-1 ">
+            <Header />
+            {components[step]}
+            <TouchableOpacity
+              disabled={disabled}
+              onPress={next}
+              className={clsx([
+                "bg-dark flex-row  w-full  mt-auto mb-4    items-center h-12 justify-center rounded-full space-x-2",
+                disabled && "bg-gray-500",
+                step == 8 && "bg-ring",
+              ])}
+            >
+              {step < 8 && (
+                <Text className="font-main text-base text-white font-semibold text-center">
+                  {step !== 7 ? "Next" : "Turn on notifications"}
+                </Text>
+              )}
+              {step === 8 && (
+                <Text className="font-main text-base text-white font-semibold text-center">
+                  Let's Go!
+                </Text>
+              )}
 
-        {submitting && <ActivityIndicator color="white" size="small" />}
-      </TouchableOpacity>
+              {submitting && <ActivityIndicator color="white" size="small" />}
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

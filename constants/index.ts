@@ -1,3 +1,5 @@
+import { Drug } from "@/types/global";
+
 export const genders = [
   "Transgender",
   "Non-binary",
@@ -8,7 +10,7 @@ export const genders = [
   "Prefer not to answer",
 ];
 
-export const drugs = [
+export const drugs: Drug[] = [
   {
     name: "Estradiol",
     type: "pill",

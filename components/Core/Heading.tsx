@@ -16,10 +16,10 @@ const Heading = ({
   return (
     <View>
       <View className="flex-row items-center justify-between w-full space-x-2">
-        <Text className="font-fwbold text-lg font-main">{text}</Text>
+        <Text className="font-fwbold text-lg">{text}</Text>
         {more && (
           <TouchableOpacity onPress={moreAction}>
-            <Text className="text-sm text-neutral-500 font-fwbold font-main">
+            <Text className="text-sm text-neutral-500 font-semibold">
               {more}
             </Text>
           </TouchableOpacity>
