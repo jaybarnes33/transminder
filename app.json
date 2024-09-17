@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.higotechs.transminderapp",
+      "bundleIdentifier": "com.higotechs.transminder",
       "appleId": "ohenesetwumasi@gmail.com",
       "appleTeamId": "BL24Y8CQ2Z"
     },
