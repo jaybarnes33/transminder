@@ -28,7 +28,9 @@ const ProfileItem = ({
         {splitCamelCase(name)}
       </Text>
       <View className="flex-row items-center space-x-2">
-        <Text className="text-base text-dark font-main font-bold">{value}</Text>
+        <Text className="text-base text-dark font-main font-fwbold">
+          {value}
+        </Text>
         <TouchableOpacity onPress={action}>
           <Feather name="chevron-right" size={20} color="gray" />
         </TouchableOpacity>
@@ -63,7 +65,7 @@ const Profile = () => {
             <Avatar
               size="xl"
               name={user?.name as string}
-              image={getAvatar(user.avatar, user._id)}
+              image={user?.avatar && getAvatar(user.avatar, user._id)}
             />
           )}
         </View>
