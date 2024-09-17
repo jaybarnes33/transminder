@@ -53,7 +53,7 @@ const Item = ({ drug }: { drug: Drug }) => {
           <Text className="font-main text-base font-semibold">{drug.name}</Text>
         </View>
         <View>
-          <Text className="font-main font-bold text-blue-500 text-capitalize   text-sm capitalize">
+          <Text className="font-main font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
             Today, <Text className="uppercase">{drug.times[0].time}</Text>
           </Text>
           <View className="flex-row justify-between items-center">
@@ -67,12 +67,12 @@ const Item = ({ drug }: { drug: Drug }) => {
       {showButtons && (
         <View className="flex-row space-x-3 py-3 border-t border-neutral-400 w-full mt-3 flex-1">
           <TouchableOpacity className="flex-1 h-[40] bg-neutral-200 rounded-full justify-center">
-            <Text className="text-dark text-center font-bold font-main text-sm">
+            <Text className="text-dark text-center font-fwbold font-main text-sm">
               Skipped
             </Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 h-[40] justify-center rounded-full bg-blue-500">
-            <Text className="text-white text-center font-bold font-main text-sm">
+            <Text className="text-white text-center font-fwbold font-main text-sm">
               Taken
             </Text>
           </TouchableOpacity>

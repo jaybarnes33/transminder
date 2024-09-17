@@ -25,7 +25,9 @@ const ProfileItem = ({
         {splitCamelCase(name)}
       </Text>
       <View className="flex-row items-center space-x-2">
-        <Text className="text-base text-dark font-main font-bold">{value}</Text>
+        <Text className="text-base text-dark font-main font-fwbold">
+          {value}
+        </Text>
         <TouchableOpacity onPress={action}>
           <Feather name="chevron-right" size={20} color="gray" />
         </TouchableOpacity>
@@ -48,7 +50,7 @@ const Profile = () => {
   return (
     <Wrapper>
       <View className="space-y-1 mt-4 flex-1 ">
-        <Text className="font-main text-base font-bold text-neutral-500">
+        <Text className="font-main text-base font-fwbold text-neutral-500">
           Login and security
         </Text>
         <View>
@@ -96,7 +98,7 @@ const Profile = () => {
               onPress={() => "Delete account"}
               className="flex-row items-center justify-center space-x-3 bg-[#f871712d]  h-[50] px-4 rounded-full  "
             >
-              <Text className="font-main text-sm text-center flex-1 font-bold text-[#f87171] ">
+              <Text className="font-main text-sm text-center flex-1 font-fwbold text-[#f87171] ">
                 Delete my account
               </Text>
             </TouchableOpacity>

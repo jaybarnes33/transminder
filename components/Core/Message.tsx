@@ -24,7 +24,7 @@ const Message = ({
       )}
       <Text
         className={clsx([
-          "font-main font-bold text-xs",
+          "font-main font-fwbold text-xs",
           isError ? "text-red-500" : "text-green-500",
         ])}
       >

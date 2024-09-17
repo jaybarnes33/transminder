@@ -11,7 +11,7 @@ const Privacy = () => {
   return (
     <View className="py-5 space-y-14 items-center">
       <View>
-        <Text className="font-main font-bold text-center text-2xl">
+        <Text className="font-main font-fwbold text-center text-2xl">
           Your data, Your rules!
         </Text>
         <Text className="font-main font-semibold text-base text-center text-gray-600">

@@ -10,7 +10,7 @@ const Coupon = () => {
       </View>
 
       <View className="mt-5 space-y-2 ">
-        <Text className="font-main font-bold text-center text-base text-neutral-500">
+        <Text className="font-main font-fwbold text-center text-base text-neutral-500">
           Have a coupon code?
         </Text>
         <Text className="font-main font-semibold text-center text-sm text-dark">
@@ -19,7 +19,9 @@ const Coupon = () => {
         </Text>
         <Text className="font-main font-semibold text-center text-sm text-dark">
           Simply go to{" "}
-          <Text className="text-purple-500 font-bold">www.transminder.app</Text>
+          <Text className="text-purple-500 font-fwbold">
+            www.transminder.app
+          </Text>
           , enter your code, and log in. Your access will be updated shortly
           after!
         </Text>

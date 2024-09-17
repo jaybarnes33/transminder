@@ -12,7 +12,7 @@ const Track = () => {
           <Text className="font-main text-base">Medication plan</Text>
           <Text className="font-main font-semibold text-base">Last 7 days</Text>
         </View>
-        <Text className="font-main text-xl font-bold">7/7 intake</Text>
+        <Text className="font-main text-xl font-fwbold">7/7 intake</Text>
         <View className="flex-row  space-x-2 items-center">
           <Octicons name="check-circle-fill" size={12} color="green" />
           <Text>Complete intake</Text>
@@ -21,12 +21,12 @@ const Track = () => {
       <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm space-y-1">
         <View className="flex-row  justify-between items-center">
           <Text className="font-main text-base">Well-being</Text>
-          <Text className="font-main font-semibold text-base">Last 7 days</Text>
+          <Text className="font-semibold text-base">Last 7 days</Text>
         </View>
-        <Text className="font-main text-xl font-bold">Mostly anxious</Text>
+        <Text className="text-xl font-fwbold">Mostly anxious</Text>
         <View className="flex-row  space-x-2 items-center">
           <Octicons name="check-circle-fill" size={12} color="green" />
-          <Text>Complete intake</Text>
+          <Text className="font-main">Complete intake</Text>
         </View>
       </View>
     </View>

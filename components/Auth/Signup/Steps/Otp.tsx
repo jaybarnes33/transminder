@@ -47,7 +47,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
   return (
     <View className="py-5 space-y-5">
       <View className="">
-        <Text className="font-main font-bold text-center text-2xl mb-1">
+        <Text className="font-main font-fwbold text-center text-2xl mb-1">
           Enter code
         </Text>
         <Text className="font-main font-semibold text-base text-center text-gray-600">
@@ -61,7 +61,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
       <Input
         value={details?.otp}
         className={clsx([
-          "h-12 bg-gray-200 font-main text-2xl font-bold px-3 text-center py-1 rounded-xl lowercase",
+          "h-12 bg-gray-200 font-main text-2xl font-fwbold px-3 text-center py-1 rounded-xl lowercase",
         ])}
         placeholder="- - - - - -"
         keyboardType="numeric"
@@ -71,7 +71,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
       />
       {resend && (
         <TouchableOpacity onPress={resendOTP}>
-          <Text className="font-main text-sm font-bold text-dark text-center">
+          <Text className="font-main text-sm font-fwbold text-dark text-center">
             Resend code
           </Text>
           {sending && <ActivityIndicator size="small" color={"#bb5adf"} />}

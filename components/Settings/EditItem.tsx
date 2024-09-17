@@ -68,7 +68,7 @@ const EditItem = ({
   const isGender = name === "genderIdentity";
   return (
     <View className={clsx(["   mt-2  px-4", isGender && "h-[80vh]"])}>
-      <Text className="font-main text-xl font-bold text-center capitalize ">
+      <Text className="font-main text-xl font-fwbold text-center capitalize ">
         {title}
       </Text>
       <View className={clsx([isGender && "flex-1"])}>

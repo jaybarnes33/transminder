@@ -7,12 +7,12 @@ const Tracker = () => {
       <View>
         <Text className="font-main text-white">Daily Tracker</Text>
       </View>
-      <Text className="font-main font-base font-bold text-white">
+      <Text className="font-main font-base font-fwbold text-white">
         How are you feeling today?
       </Text>
 
       <TouchableOpacity className="bg-white p-2 w-[144] items-center rounded-[70px] relative z-[99]">
-        <Text className="font-main font-bold text-purple-500">
+        <Text className="font-main font-fwbold text-purple-500">
           Log your mood
         </Text>
       </TouchableOpacity>

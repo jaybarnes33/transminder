@@ -75,11 +75,11 @@ const Profile = () => {
             image={getAvatar(user.avatar, user._id)}
             isEdit={false}
           />
-          <Text className="font-bold text-[30] font-main">
+          <Text className="font-fwbold text-[30] font-main">
             {user?.name.split(" ")[0]}
           </Text>
           <TouchableOpacity onPress={logOut}>
-            <Text className="font-main font-base font-bold text-red-500">
+            <Text className="font-main font-base font-fwbold text-red-500">
               Logout
             </Text>
           </TouchableOpacity>

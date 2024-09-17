@@ -47,7 +47,7 @@ const Change = () => {
             ])}
           >
             <View>
-              <Text className="text-base capitalize text-neutral-700 font-bold font-main">
+              <Text className="text-base capitalize text-neutral-700 font-fwbold font-main">
                 {plan.name}
               </Text>
               <Text className="text-base text-neutral-500 font-main">
@@ -55,7 +55,7 @@ const Change = () => {
               </Text>
             </View>
             <View className="flex-row items-center space-x-2">
-              <Text className="text-base text-dark font-main font-bold">
+              <Text className="text-base text-dark font-main font-fwbold">
                 {plan.price}
               </Text>
             </View>

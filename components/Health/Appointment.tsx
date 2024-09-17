@@ -17,10 +17,10 @@ const Appointment = ({
   return (
     <View className="h-[96] bg-white flex-row space-x-4 p-4 rounded-3xl">
       <View className="flex-1 border-l-4 px-2 border-ring">
-        <Text className="font-main text-sm text-ring font-bold capitalize">
+        <Text className="font-main text-sm text-ring font-fwbold capitalize">
           {appointment.date}
         </Text>
-        <Text className="font-main font-bold text-lg capitalize">
+        <Text className="font-main font-fwbold text-lg capitalize">
           {appointment.name}
         </Text>
         <View className="flex-row space-x-2 items-center">

@@ -79,10 +79,10 @@ const OnboardingItem = ({
           {subtitle}
         </Text>
         <View className="mt-2 mb-3">
-          <Text className="text-2xl font-main font-bold text-center">
+          <Text className="text-2xl font-main font-fwbold text-center">
             {line1}
           </Text>
-          <Text className="text-2xl font-main font-bold text-center">
+          <Text className="text-2xl font-main font-fwbold text-center">
             {line2}
           </Text>
         </View>

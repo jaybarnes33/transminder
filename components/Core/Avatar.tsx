@@ -95,7 +95,7 @@ const Avatar = ({
 
             <Text
               className={clsx([
-                "font-main text-white font-bold ",
+                "font-main text-white font-fwbold ",
                 size === "xl" ? "text-[74px]" : "text-3xl",
               ])}
             >
@@ -112,7 +112,7 @@ const Avatar = ({
               className="items-center justify-center flex-row space-x-2"
               onPress={() => setSelected(undefined)}
             >
-              <Text className="font-main text-base font-bold text-red-500">
+              <Text className="font-main text-base font-fwbold text-red-500">
                 Cancel
               </Text>
             </TouchableOpacity>
@@ -125,7 +125,7 @@ const Avatar = ({
             {!selected && (
               <FontAwesome6 name="camera" size={16} color="#a855f7" />
             )}
-            <Text className="font-main text-base font-bold text-[#a855f7]">
+            <Text className="font-main text-base font-fwbold text-[#a855f7]">
               {selected ? "Upload" : image ? "Edit Avatar" : "Add photo"}
             </Text>
           </TouchableOpacity>

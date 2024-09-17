@@ -34,7 +34,7 @@ const Subscription = () => {
               Free Plan
             </Text>
             <TouchableOpacity onPress={() => navigate("/change")}>
-              <Text className="text-xs text-purple-500 font-bold font-main">
+              <Text className="text-xs text-purple-500 font-fwbold font-main">
                 Change Plan
               </Text>
             </TouchableOpacity>
@@ -52,7 +52,7 @@ const Subscription = () => {
             ])}
           >
             <Feather name={item.icon as "gift" | "refresh-ccw"} size={30} />
-            <Text className="text-base capitalize flex-1 text-neutral-700 font-bold font-main">
+            <Text className="text-base capitalize flex-1 text-neutral-700 font-fwbold font-main">
               {item.text}
             </Text>
             <Feather name="chevron-right" size={20} color="gray" />

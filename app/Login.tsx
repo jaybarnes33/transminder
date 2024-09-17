@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   ActivityIndicator,
@@ -62,7 +61,7 @@ const Login = () => {
         <Back />
 
         <View className="items-center space-y-1">
-          <Text className="font-main font-bold text-2xl text-center text-dark">
+          <Text className="font-main font-fwbold text-2xl text-center text-dark">
             Login to your account
           </Text>
           <Text className="font-main font-semibold text-gray-600 text-center">
@@ -76,7 +75,7 @@ const Login = () => {
             //@ts-ignore
             onPress={() => navigation.navigate("Signup", { email: form.email })}
           >
-            <Text className="font-main font-bold  font-base text-white">
+            <Text className="font-main font-fwbold  font-base text-white">
               Complete sign up
             </Text>
           </TouchableOpacity>
@@ -101,7 +100,7 @@ const Login = () => {
           />
 
           <TouchableOpacity>
-            <Text className="font-main text-sm font-bold text-dark ">
+            <Text className="font-main text-sm font-fwbold text-dark ">
               Forgot Password?
             </Text>
           </TouchableOpacity>

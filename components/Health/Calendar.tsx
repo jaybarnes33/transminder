@@ -20,14 +20,14 @@ const Item = ({
       <Text
         className={clsx(
           "font-main text-xs font-semibold text-gray-500 uppercase",
-          active && "text-dark font-bold"
+          active && "text-dark font-fwbold"
         )}
       >
         {day.dayOfWeek}
       </Text>
       <Text
         className={clsx([
-          "font-main font-bold text-[20]",
+          "font-main font-fwbold text-[20]",
           active ? "text-dark" : "text-gray-600",
         ])}
       >

@@ -24,7 +24,7 @@ const AddAvatar = () => {
     <TouchableOpacity className="items-center" onPress={pickImage}>
       <View className="items-center flex-row space-x-2">
         <FontAwesome6 name="camera" size={16} color="#a855f7" />
-        <Text className="font-main text-base font-bold text-[#a855f7]">
+        <Text className="font-main text-base font-fwbold text-[#a855f7]">
           Add photo
         </Text>
       </View>

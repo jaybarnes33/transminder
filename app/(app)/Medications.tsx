@@ -6,7 +6,7 @@ import { drugs } from "@/constants";
 const Medications = () => {
   return (
     <SafeAreaView className="px-4 bg-gray-100 flex-1">
-      <Text className=" text-3xl font-Bold font-bold">
+      <Text className=" text-3xl font-fwbold font-fwbold">
         All Medications <Text className="text-neutral-400">{drugs.length}</Text>
       </Text>
 
