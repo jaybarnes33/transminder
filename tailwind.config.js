@@ -37,10 +37,6 @@ module.exports = {
     extend: {
       fontFamily: {
         main: "Quicksand",
-        Light: "Light",
-        Medium: "Medium",
-        SemiBold: "Quicksand_600SemiBold",
-        Bold: "Quicksand_700Bold",
       },
       colors: {
         purple: {

@@ -7,6 +7,7 @@ import { drugs } from "@/constants";
 import { sortTimes } from "@/utils";
 import clsx from "clsx";
 import Heading from "../Core/Heading";
+import { useRouter } from "expo-router";
 
 const Item = ({ drug }: { drug: Drug }) => {
   const [showButtons, setShowButtons] = useState(false);
@@ -81,10 +82,15 @@ const Item = ({ drug }: { drug: Drug }) => {
   );
 };
 const Plan = () => {
+  const { navigate } = useRouter();
   return (
     <View className="space-y-2">
       <View className="flex-row items-center justify-between space-x-2">
-        <Heading text="Your plan" more="View plan" />
+        <Heading
+          text="Your plan"
+          more="View plan"
+          moreAction={() => navigate("/(app)/Medications")}
+        />
       </View>
       <View>
         <FlatList

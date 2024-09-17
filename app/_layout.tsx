@@ -32,11 +32,11 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    Light: Quicksand_300Light,
-    Quicksand: Quicksand_400Regular,
-    Medium: Quicksand_500Medium,
-    SemiBold: Quicksand_600SemiBold,
-    Bold: Quicksand_700Bold,
+    Quicksand_300Light,
+    Quicksand_400Regular,
+    Quicksand_500Medium,
+    Quicksand_600SemiBold,
+    Quicksand_700Bold,
     ...FontAwesome.font,
   });
 
