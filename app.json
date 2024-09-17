@@ -13,11 +13,9 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.higotechs.transminder",
-
-      "infoPlist": {
-        "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true }
-      }
+      "bundleIdentifier": "com.higotechs.transminderapp",
+      "appleId": "ohenesetwumasi@gmail.com",
+      "appleTeamId": "BL24Y8CQ2Z"
     },
     "android": {
       "adaptiveIcon": {
@@ -39,17 +37,7 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "usesCleartextTraffic": true
-          },
-          "ios": {
-            "flipper": true
-          }
-        }
-      ],
+
       [
         "expo-local-authentication",
         {

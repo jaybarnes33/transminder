@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import clsx from "clsx";
 import * as ImagePicker from "expo-image-picker";
@@ -13,6 +7,7 @@ import { useUser } from "@/hooks/useUser";
 import axiosInstance from "@/lib/axios";
 import { mutate } from "swr";
 import { decode } from "base64-arraybuffer";
+import { Image } from "expo-image";
 
 const Avatar = ({
   size,
