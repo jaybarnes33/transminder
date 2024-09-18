@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -8,35 +8,45 @@ import axiosInstance from "@/lib/axios";
 import { mutate } from "swr";
 import { decode } from "base64-arraybuffer";
 import { Image } from "expo-image";
+import { useSignUp } from "@/context/Signup";
 
 const Avatar = ({
   size,
   name,
   image,
   isEdit = true,
+  uploads = true,
+  selectAction,
 }: {
   size: string;
   name: string;
   image?: string;
   isEdit?: boolean;
+  uploads?: boolean;
+  selectAction?: (name: string, file: ImagePicker.ImagePickerAsset) => void;
 }) => {
   const { user } = useUser();
   const [selected, setSelected] = useState<ImagePicker.ImagePickerAsset>();
   const [loading, setLoading] = useState(false);
+  const { details } = useSignUp();
   const pickImage = async () => {
     if (selected) {
-      await updateImage();
+      if (uploads) {
+        await updateImage();
+      }
+
       return;
     } else {
       // No permissions request is necessary for launching the image library
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         aspect: [4, 3],
         quality: 1,
       });
 
       if (!result.canceled) {
         setSelected(result.assets[0]);
+        selectAction && selectAction("avatar", result.assets[0]);
       }
     }
   };
@@ -53,7 +63,7 @@ const Avatar = ({
         name: selected?.fileName,
       });
 
-      const { data } = await axiosInstance.put(
+      await axiosInstance.put(
         `/users/${user?._id}?user=${user?._id}`,
         formData,
         {
@@ -70,12 +80,20 @@ const Avatar = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!uploads && details?.avatar) {
+      setSelected(details.avatar);
+    }
+  }, []);
   return (
     <View className="space-y-4">
       <View
         className={clsx([
           "h-14 w-14 rounded-full items-center justify-center",
           size === "xl" && "h-44 w-44",
+          size === "lg" && "h-24 w-24",
+          size === "md" && "h-20 w-20",
         ])}
       >
         {image || selected ? (
@@ -95,7 +113,7 @@ const Avatar = ({
 
             <Text
               className={clsx([
-                "font-main text-white font-fwbold ",
+                "text-white font-fwbold ",
                 size === "xl" ? "text-[74px]" : "text-3xl",
               ])}
             >
@@ -112,23 +130,23 @@ const Avatar = ({
               className="items-center justify-center flex-row space-x-2"
               onPress={() => setSelected(undefined)}
             >
-              <Text className="font-main text-base font-fwbold text-red-500">
-                Cancel
+              <Text className="text-base font-fwbold text-red-500">Cancel</Text>
+            </TouchableOpacity>
+          )}
+          {(!selected || (selected && uploads)) && (
+            <TouchableOpacity
+              className="items-center justify-center flex-row space-x-2"
+              onPress={pickImage}
+            >
+              {loading && <ActivityIndicator size="small" color="#a855f7" />}
+              {!selected && (
+                <FontAwesome6 name="camera" size={16} color="#a855f7" />
+              )}
+              <Text className="text-base font-fwbold text-[#a855f7]">
+                {selected ? "Upload" : image ? "Edit Avatar" : "Add photo"}
               </Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            className="items-center justify-center flex-row space-x-2"
-            onPress={pickImage}
-          >
-            {loading && <ActivityIndicator size="small" color="#a855f7" />}
-            {!selected && (
-              <FontAwesome6 name="camera" size={16} color="#a855f7" />
-            )}
-            <Text className="font-main text-base font-fwbold text-[#a855f7]">
-              {selected ? "Upload" : image ? "Edit Avatar" : "Add photo"}
-            </Text>
-          </TouchableOpacity>
         </View>
       )}
     </View>

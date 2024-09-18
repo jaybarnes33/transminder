@@ -13,6 +13,8 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import { Keyboard } from "react-native";
+
 type BottomSheetModalContextType = {
   showModal: (content: React.ReactNode) => void;
   dismissModal: () => void;
@@ -29,7 +31,7 @@ export const BottomSheetModalProvider: React.FC<{
   const [content, setContent] = useState<React.ReactNode>(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = useMemo(() => ["70%", "85%"], []);
+  const snapPoints = useMemo(() => ["70%", "75%"], []);
 
   const showModal = useCallback((content: React.ReactNode) => {
     setContent(content);
@@ -42,6 +44,7 @@ export const BottomSheetModalProvider: React.FC<{
 
   const dismissModal = useCallback(() => {
     setContent(null);
+    Keyboard.dismiss();
     bottomSheetModalRef.current?.dismiss();
     bottomSheetModalRef.current?.close();
   }, []);
@@ -58,7 +61,8 @@ export const BottomSheetModalProvider: React.FC<{
             index={1}
             snapPoints={snapPoints}
             enableDismissOnClose
-            enableDynamicSizing
+            enablePanDownToClose
+            onDismiss={dismissModal}
           >
             <BottomSheetView>{content}</BottomSheetView>
           </BottomSheetModal>

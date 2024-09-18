@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   TextInputProps,
+  Keyboard,
 } from "react-native";
 import React, { useState } from "react";
 import clsx from "clsx";
@@ -15,6 +16,7 @@ import Input from "../Core/Input";
 import axiosInstance from "@/lib/axios";
 import { useUser } from "@/context/Auth";
 import { capitalize } from "@/utils";
+import Countries from "../Core/Countries";
 
 const EditItem = ({
   name,
@@ -66,36 +68,48 @@ const EditItem = ({
   };
 
   const isGender = name === "genderIdentity";
+  const isAgeEror =
+    name === "age" && (parseInt(value) < 18 || parseInt(value) > 100);
   return (
-    <View className={clsx(["   mt-2  px-4", isGender && "h-[80vh]"])}>
-      <Text className="font-main text-xl font-fwbold text-center capitalize ">
+    <View className={clsx(["   mt-2  px-4"])}>
+      <Text className=" text-xl font-fwbold text-center capitalize ">
         {title}
       </Text>
-      <View className={clsx([isGender && "flex-1"])}>
+      <View>
         {error && <Message message={error} isError />}
         {name !== "genderIdentity" ? (
-          <View
-            className={clsx([
-              "space-y-1 mt-0",
-              error.length > 0 ? "mb-3" : "my-3",
-            ])}
-          >
-            <Text className="capitalize font-main text-base font-semibold">
-              {name}
-            </Text>
+          name !== "country" ? (
+            <View
+              className={clsx([
+                "space-y-1 mt-0",
+                error.length > 0 ? "mb-3" : "my-3",
+              ])}
+            >
+              <Text className="capitalize font-main text-base font-semibold">
+                {name}
+              </Text>
 
-            <Input
-              defaultValue={val}
-              placeholder={capitalize(name)}
-              textContentType={name as TextInputProps["textContentType"]}
-              secureTextEntry={name === "password"}
-              autoFocus
-              onChangeText={(text) => {
-                error.length && setError("");
-                setValue(text);
-              }}
-            />
-          </View>
+              <Input
+                defaultValue={val}
+                placeholder={capitalize(name)}
+                textContentType={name as TextInputProps["textContentType"]}
+                secureTextEntry={name === "password"}
+                autoFocus
+                onChangeText={(text) => {
+                  error.length && setError("");
+                  setValue(text);
+                }}
+                keyboardType={name === "age" ? "numeric" : "default"}
+              />
+              {isAgeEror && (
+                <Text className="text-red-500 text-sm font-main">
+                  Age must be between 18 and 100
+                </Text>
+              )}
+            </View>
+          ) : (
+            <Countries current={val} onSelect={setValue} />
+          )
         ) : (
           <EditGender
             currentGender={value.length > 0 ? value : val}
@@ -109,8 +123,10 @@ const EditItem = ({
         className={clsx([
           "flex-row space-x-2  w-full items-center h-12 justify-center rounded-full bg-purple-300",
           active && "bg-purple-500",
+          isAgeEror && "bg-purple-300",
           isGender && "mb-14",
         ])}
+        disabled={!active || isAgeEror}
       >
         <Text className="font-main text-base text-white font-semibold">
           Confirm

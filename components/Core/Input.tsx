@@ -1,9 +1,18 @@
-import { View, Text, TextInput, TextInputProps } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { clsx } from "clsx";
+import { Feather, FontAwesome6 } from "@expo/vector-icons";
 
 const Input = (props: TextInputProps & { name?: string }) => {
   const [focus, setFocus] = React.useState(false);
+  const [secure, setSecure] = React.useState(props.secureTextEntry || false);
+  const inputRef = React.useRef<TextInput>(null);
   return (
     <View className="space-y-1">
       {props.name && (
@@ -11,16 +20,34 @@ const Input = (props: TextInputProps & { name?: string }) => {
           {props.name}
         </Text>
       )}
-      <TextInput
-        {...props}
+      <View
         className={clsx([
-          "h-12 bg-neutral-200 px-3  rounded-xl font-main font-semibold",
+          "h-12 justify-center bg-neutral-200   rounded-xl font-main font-semibold w-full",
           focus && " border-2 border-ring ",
         ])}
-        placeholderTextColor={"gray"}
-        onFocus={() => setFocus(true)}
-        onBlur={() => setFocus(false)}
-      />
+      >
+        <TextInput
+          {...props}
+          ref={inputRef}
+          className="flex-1  h-full w-full absolute px-3 font-main font-semibold"
+          placeholderTextColor={"gray"}
+          secureTextEntry={secure}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+        />
+        {props.secureTextEntry && props.value?.length! > 0 && (
+          <TouchableOpacity
+            onPress={() => setSecure(!secure)}
+            className="absolute right-0 h-full items-center justify-center w-12"
+          >
+            <Feather
+              name={secure ? "eye" : "eye-off"}
+              size={20}
+              color={"gray"}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };

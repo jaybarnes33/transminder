@@ -22,7 +22,12 @@ const Screen = () => {
       </View>
 
       <View className="items-center">
-        <Avatar name={details?.name!} size="xl" />
+        <Avatar
+          name={details?.name!}
+          size="xl"
+          selectAction={handleChange}
+          uploads={false}
+        />
       </View>
     </View>
   );

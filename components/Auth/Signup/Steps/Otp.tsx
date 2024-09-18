@@ -26,7 +26,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setResend(true);
-    }, 30000);
+    }, 15000);
     return () => clearInterval(interval);
   }, [resend]);
 
@@ -61,7 +61,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
       <Input
         value={details?.otp}
         className={clsx([
-          "h-12 bg-gray-200 font-main text-2xl font-fwbold px-3 text-center py-1 rounded-xl lowercase",
+          " text-2xl font-fwbold px-3 text-center py-1 rounded-xl lowercase",
         ])}
         placeholder="- - - - - -"
         keyboardType="numeric"

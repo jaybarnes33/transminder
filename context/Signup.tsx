@@ -8,6 +8,7 @@ import { useUser } from "./Auth";
 import { useBottomSheetModal } from "./BottomSheet";
 import EditItem from "@/components/Settings/EditItem";
 import { mutate } from "swr";
+import { ImagePickerAsset } from "expo-image-picker";
 
 interface SignupPayload {
   email: string;
@@ -16,12 +17,15 @@ interface SignupPayload {
   password: string;
   genderIdentity: string;
   allowNotifications: boolean;
-  avatar: string;
+  avatar: ImagePickerAsset;
 }
 
 interface SignUpContextValue {
   details: SignupPayload;
-  handleChange: (key: string, value: string | boolean) => void;
+  handleChange: (
+    key: string,
+    value: string | boolean | ImagePickerAsset
+  ) => void;
   step: number;
   next: () => void;
   isValid: (step: number) => boolean;
@@ -58,10 +62,33 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
     setId(data.id);
   };
   const handleSignup = async () => {
-    const { data } = await axiosInstance.post(`/users/`, {
-      data: { ...details, otp: undefined },
-      id,
+    const formData = new FormData();
+    //@ts-ignore
+    formData.append("avatar", {
+      uri: details.avatar.uri,
+      type: details.avatar.type,
+      name: details.avatar.fileName,
     });
+    formData.append("email", details.email);
+    formData.append("name", details.name);
+    formData.append("password", details.password);
+    formData.append("genderIdentity", details.genderIdentity);
+    formData.append(
+      "allowNotifications",
+      details.allowNotifications.toString()
+    );
+
+    const { data } = await axiosInstance.post(
+      `/users?user=${id}`,
+
+      formData,
+
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     await Promise.all([
       setTokens({
         accessToken: data.accessToken,
@@ -113,7 +140,10 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
     setResend(true);
   };
 
-  const handleChange = (key: string, value: string | boolean) => {
+  const handleChange = (
+    key: string,
+    value: string | boolean | ImagePickerAsset
+  ) => {
     setMessage("");
     setError("");
     if (key === "genderIdentity" && value.toString().startsWith("Other")) {

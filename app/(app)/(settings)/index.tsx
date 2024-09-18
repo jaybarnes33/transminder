@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Linking } from "react-native";
 
 import Back from "@/components/Core/Back";
 import { useUser as useCachedUser, useUser } from "@/context/Auth";
@@ -13,7 +13,15 @@ import { getAvatar } from "@/utils/auth";
 
 const Profile = () => {
   const { user, loading, logOut } = useUser();
-  const sections = {
+  const sections: Record<
+    "personalize" | "preferences" | "support",
+    {
+      name: string;
+      icon: string;
+      path?: string;
+      url?: string;
+    }[]
+  > = {
     personalize: [
       {
         name: "profile",
@@ -48,12 +56,12 @@ const Profile = () => {
       {
         name: "report a place, content or bug",
         icon: "report",
-        path: "report",
+        url: "mailto:report@transminder.app",
       },
       {
         name: "contact us",
         icon: "contact",
-        path: "contact",
+        url: "mailto:hello@transminder.app",
       },
       {
         name: "about transminder",
@@ -70,7 +78,7 @@ const Profile = () => {
       {user && (
         <View className="items-center space-y-1">
           <Avatar
-            size="xl"
+            size="lg"
             name={user?.name as string}
             image={user.avatar && getAvatar(user.avatar, user._id)}
             isEdit={false}
@@ -86,20 +94,24 @@ const Profile = () => {
 
       <FlatList
         data={Object.keys(sections)}
+        scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View className="space-y-1 my-3" key={item}>
-            <Text className="font-main text-base text-neutral-500 font-semibold capitalize">
+          <View className="space-y-1 my-1" key={item}>
+            <Text className="font-main text-base mt-2 text-neutral-500 font-semibold capitalize">
               {item}
             </Text>
             {sections[item as keyof typeof sections].map((section) => (
               <TouchableOpacity
-                onPress={() =>
-                  navigate({
-                    //@ts-ignore
-                    pathname: section.path,
-                    params: { title: section.name },
-                  })
+                onPress={async () =>
+                  !section.url
+                    ? navigate({
+                        //@ts-ignore
+                        pathname: section.path,
+                        params: { title: section.name },
+                      })
+                    : (await Linking.canOpenURL(section.url)) &&
+                      Linking.openURL(section.url)
                 }
                 className="flex-row items-center space-x-3 bg-neutral-200 h-[50] px-4 rounded-xl "
                 key={section.name}

@@ -11,7 +11,6 @@ import { splitCamelCase } from "@/utils";
 
 import Wrapper from "@/components/Settings/Wrapper";
 import { getAvatar } from "@/utils/auth";
-import AddAvatar from "@/components/Core/AddAvatar";
 
 const ProfileItem = ({
   name,
@@ -23,19 +22,19 @@ const ProfileItem = ({
   action?: () => void;
 }) => {
   return (
-    <View className="flex-row items-center justify-between  bg-neutral-200 h-[50] px-4 rounded-xl mb-1">
+    <TouchableOpacity
+      onPress={action}
+      className="flex-row items-center justify-between  bg-neutral-200 h-[50] px-4 rounded-xl mb-1"
+    >
       <Text className="text-base capitalize text-neutral-700 font-semibold font-main">
         {splitCamelCase(name)}
       </Text>
       <View className="flex-row items-center space-x-2">
-        <Text className="text-base text-dark font-main font-fwbold">
-          {value}
-        </Text>
-        <TouchableOpacity onPress={action}>
-          <Feather name="chevron-right" size={20} color="gray" />
-        </TouchableOpacity>
+        <Text className="text-base text-dark  font-fwbold">{value}</Text>
+
+        <Feather name="chevron-right" size={20} color="gray" />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 const Profile = () => {

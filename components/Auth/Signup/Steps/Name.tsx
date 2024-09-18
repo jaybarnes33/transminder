@@ -25,7 +25,6 @@ const Name = () => {
       <Input
         value={details?.name}
         placeholder="Name"
-        autoCapitalize="none"
         textContentType="name"
         onChangeText={(text) => handleChange("name", text)}
       />
