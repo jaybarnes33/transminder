@@ -55,7 +55,7 @@ const Change = () => {
               </Text>
             </View>
             <View className="flex-row items-center space-x-2">
-              <Text className="text-base text-dark font-main font-fwbold">
+              <Text className="text-base text-dark font-fwbold">
                 {plan.price}
               </Text>
             </View>

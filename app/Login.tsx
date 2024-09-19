@@ -16,6 +16,7 @@ import Message from "@/components/Core/Message";
 import Input from "@/components/Core/Input";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import { mutate } from "swr";
+import Google from "@/components/Auth/Google";
 
 const Login = () => {
   const [form, setForm] = React.useState({
@@ -36,12 +37,10 @@ const Login = () => {
     try {
       setLoading(true);
       const { data } = await axiosInstance.post("/auth/", form);
-      await Promise.all([
-        setTokens({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        }),
-      ]);
+      await setTokens({
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      });
 
       mutate("/auth", data);
 
@@ -58,10 +57,10 @@ const Login = () => {
   return (
     <UnAuthContent>
       <SafeAreaView className="bg-purple-50 flex-1 px-4">
-        <Back />
+        <Back action={() => navigate("/Auth")} />
 
         <View className="items-center space-y-1">
-          <Text className="font-main font-fwbold text-2xl text-center text-dark">
+          <Text className="font-fwbold text-2xl text-center text-dark">
             Login to your account
           </Text>
           <Text className="font-main font-semibold text-gray-600 text-center">
@@ -75,12 +74,12 @@ const Login = () => {
             //@ts-ignore
             onPress={() => navigation.navigate("Signup", { email: form.email })}
           >
-            <Text className="font-main font-fwbold  font-base text-white">
+            <Text className="font-fwbold  font-base text-white">
               Complete sign up
             </Text>
           </TouchableOpacity>
         )}
-        <View className="mt-6 space-y-4">
+        <View className="mt-6 space-y-1">
           <View className="space-y-1">
             <Input
               placeholder="Email Address"
@@ -90,22 +89,24 @@ const Login = () => {
               onChangeText={(text) => handleChange("email", text)}
             />
           </View>
-          <Input
-            placeholder="**********"
-            textContentType="password"
-            autoCapitalize="none"
-            secureTextEntry
-            placeholderTextColor={"gray"}
-            onChangeText={(text) => handleChange("password", text)}
-          />
-
-          <TouchableOpacity>
-            <Text className="font-main text-sm font-fwbold text-dark ">
+          <View className="space-y-1">
+            <Input
+              placeholder="••••••••"
+              textContentType="password"
+              value={form.password}
+              autoCapitalize="none"
+              secureTextEntry
+              placeholderTextColor={"gray"}
+              onChangeText={(text) => handleChange("password", text)}
+            />
+          </View>
+          <TouchableOpacity onPress={() => navigate("/(forgot-password)")}>
+            <Text className="text-sm font-fwbold text-dark ">
               Forgot Password?
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="items-center w-full space-y-2 mt-3 ">
+        <View className="items-center w-full space-y-2 mt-6 ">
           <TouchableOpacity
             disabled={loading || !form.email || !form.password}
             onPress={handleLogin}
@@ -124,20 +125,12 @@ const Login = () => {
             )}
           </TouchableOpacity>
 
-          <View className="w-full px-6 flex-row justify-center space-x-2 items-center">
+          <View className="w-full px-6 flex-row justify-center space-x-2 items-center mb-2">
             <View className="h-px bg-gray-300  w-1/2  " />
             <Text className="font-main font-semibold text-gray-500">OR</Text>
             <View className="h-px bg-gray-300  w-1/2   " />
           </View>
-          <TouchableOpacity className="bg-purple-100 w-full space-x-2 flex-row items-center h-12 justify-center rounded-full">
-            <Image
-              className="w-6 h-6"
-              source={require("@/assets/images/google.png")}
-            />
-            <Text className="font-main font-semibold text-base">
-              Continue with Google
-            </Text>
-          </TouchableOpacity>
+          <Google />
         </View>
       </SafeAreaView>
     </UnAuthContent>

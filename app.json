@@ -44,6 +44,13 @@
         }
       ],
       [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.234390212423-p4hcnt6j4rr4s2jio6i81rcspshvs2nj",
+          "iosClientId": "234390212423-p4hcnt6j4rr4s2jio6i81rcspshvs2nj.apps.googleusercontent.com"
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."

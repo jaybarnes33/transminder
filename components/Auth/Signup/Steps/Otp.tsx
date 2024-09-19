@@ -47,7 +47,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
   return (
     <View className="py-5 space-y-5">
       <View className="">
-        <Text className="font-main font-fwbold text-center text-2xl mb-1">
+        <Text className=" font-fwbold text-center text-2xl mb-1">
           Enter code
         </Text>
         <Text className="font-main font-semibold text-base text-center text-gray-600">
@@ -70,8 +70,11 @@ const Two = ({ isResend }: { isResend: boolean }) => {
         maxLength={6}
       />
       {resend && (
-        <TouchableOpacity onPress={resendOTP}>
-          <Text className="font-main text-sm font-fwbold text-dark text-center">
+        <TouchableOpacity
+          className="flex-row items-center justify-center"
+          onPress={resendOTP}
+        >
+          <Text className=" space-x-2 text-sm font-fwbold text-dark text-center">
             Resend code
           </Text>
           {sending && <ActivityIndicator size="small" color={"#bb5adf"} />}

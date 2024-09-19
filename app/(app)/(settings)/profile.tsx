@@ -12,18 +12,21 @@ import { splitCamelCase } from "@/utils";
 import Wrapper from "@/components/Settings/Wrapper";
 import { getAvatar } from "@/utils/auth";
 
-const ProfileItem = ({
+export const ProfileItem = ({
   name,
   value,
   action,
+  disabled,
 }: {
   name: string;
   value: string;
   action?: () => void;
+  disabled?: boolean;
 }) => {
   return (
     <TouchableOpacity
       onPress={action}
+      disabled={disabled}
       className="flex-row items-center justify-between  bg-neutral-200 h-[50] px-4 rounded-xl mb-1"
     >
       <Text className="text-base capitalize text-neutral-700 font-semibold font-main">

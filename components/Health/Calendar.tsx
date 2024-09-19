@@ -27,7 +27,7 @@ const Item = ({
       </Text>
       <Text
         className={clsx([
-          "font-main font-fwbold text-[20]",
+          "font-fwbold text-[20]",
           active ? "text-dark" : "text-gray-600",
         ])}
       >

@@ -12,9 +12,7 @@ const Tracker = () => {
       </Text>
 
       <TouchableOpacity className="bg-white p-2 w-[144] items-center rounded-[70px] relative z-[99]">
-        <Text className="font-main font-fwbold text-purple-500">
-          Log your mood
-        </Text>
+        <Text className="font-fwbold text-purple-500">Log your mood</Text>
       </TouchableOpacity>
       <Image
         className="absolute w-full bottom-0"

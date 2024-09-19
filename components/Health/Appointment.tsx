@@ -20,7 +20,7 @@ const Appointment = ({
         <Text className="font-main text-sm text-ring font-fwbold capitalize">
           {appointment.date}
         </Text>
-        <Text className="font-main font-fwbold text-lg capitalize">
+        <Text className="font-fwbold text-lg capitalize">
           {appointment.name}
         </Text>
         <View className="flex-row space-x-2 items-center">

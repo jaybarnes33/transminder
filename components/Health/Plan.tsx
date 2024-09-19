@@ -53,7 +53,7 @@ const Item = ({ drug }: { drug: Drug }) => {
           <Text className="font-main text-base font-semibold">{drug.name}</Text>
         </View>
         <View>
-          <Text className="font-main font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
+          <Text className="font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
             Today, <Text className="uppercase">{drug.times[0].time}</Text>
           </Text>
           <View className="flex-row justify-between items-center">

@@ -10,8 +10,8 @@ const Name = () => {
 
   return (
     <View className="py-5 space-y-5">
-      <View className="">
-        <Text className="font-main font-fwbold text-center text-2xl mb-1">
+      <View>
+        <Text className="font-fwbold text-center text-2xl mb-1">
           Enter your name
         </Text>
         <Text className="font-main font-semibold text-base text-center text-gray-600">

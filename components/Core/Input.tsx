@@ -14,7 +14,7 @@ const Input = (props: TextInputProps & { name?: string }) => {
   const [secure, setSecure] = React.useState(props.secureTextEntry || false);
   const inputRef = React.useRef<TextInput>(null);
   return (
-    <View className="space-y-1">
+    <View className="space-y-1 my-2">
       {props.name && (
         <Text className="font-main font-semibold text-neutral-600 text-center text-sm">
           {props.name}
@@ -35,7 +35,7 @@ const Input = (props: TextInputProps & { name?: string }) => {
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
         />
-        {props.secureTextEntry && props.value?.length! > 0 && (
+        {props.secureTextEntry && (
           <TouchableOpacity
             onPress={() => setSecure(!secure)}
             className="absolute right-0 h-full items-center justify-center w-12"
@@ -43,7 +43,7 @@ const Input = (props: TextInputProps & { name?: string }) => {
             <Feather
               name={secure ? "eye" : "eye-off"}
               size={20}
-              color={"gray"}
+              color={"black"}
             />
           </TouchableOpacity>
         )}

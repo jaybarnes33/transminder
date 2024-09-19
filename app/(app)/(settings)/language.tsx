@@ -35,7 +35,7 @@ const Language = () => {
               <Text className="text-base capitalize text-neutral-700 font-semibold font-main">
                 {lang.flag}
               </Text>
-              <Text className="text-base text-dark font-main font-fwbold">
+              <Text className="text-base text-dark font-fwbold">
                 {lang.name}
               </Text>
             </TouchableOpacity>

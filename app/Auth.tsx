@@ -3,6 +3,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
+import Google from "@/components/Auth/Google";
 
 const Auth = () => {
   const { navigate } = useRouter();
@@ -22,15 +23,7 @@ const Auth = () => {
           </View>
         </View>
         <View className="items-center w-full space-y-2 ">
-          <TouchableOpacity className="bg-purple-100 w-full space-x-2 flex-row items-center h-12 justify-center rounded-full">
-            <Image
-              className="w-6 h-6"
-              source={require("@/assets/images/google.png")}
-            />
-            <Text className="font-main font-semibold text-base">
-              Continue with Google
-            </Text>
-          </TouchableOpacity>
+          <Google />
           <View className="w-full px-6 flex-row justify-center space-x-2 items-center">
             <View className="h-px bg-gray-300  w-1/2  " />
             <Text className="font-main font-semibold text-gray-500">OR</Text>

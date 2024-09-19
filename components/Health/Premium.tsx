@@ -6,7 +6,7 @@ const Premium = () => {
   return (
     <View className="mt-4 mb-14 p-4 bg-white rounded-[20px]">
       <View className="flex-row items-center space-x-2">
-        <Text className="text-lg font-main font-fwbold">Transminder</Text>
+        <Text className="text-lg font-fwbold">Transminder</Text>
         <Image source={require("@/assets/images/premium.png")} />
       </View>
       <View className="mt-4 flex-row items-center flex-1 space-x-3 ">

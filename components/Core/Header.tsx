@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <View className="flex-row justify-between items-center mb-4">
       <Text className="font-main text-base font-semibold">
-        Hello {user?.name}!
+        Hello, {user?.name?.split(" ")[0] ?? user?.name}!
       </Text>
       <View className="flex-row items-center space-x-2">
         <TouchableOpacity className="h-8 w-8 bg-white rounded-full items-center justify-center">

@@ -51,7 +51,7 @@ const Gender = () => {
   return (
     <View className="py-5 space-y-5">
       <View className="space-y-1">
-        <Text className="font-main font-fwbold text-center text-2xl">
+        <Text className="font-fwbold text-center text-2xl">
           How do you identify?
         </Text>
         <Text className="font-main font-semibold text-center text-gray-600">

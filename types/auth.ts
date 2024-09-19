@@ -22,5 +22,6 @@ export interface User {
   allowNotifications: boolean;
   avatar: string;
   age: string;
+  googleId?: string;
   country: string;
 }

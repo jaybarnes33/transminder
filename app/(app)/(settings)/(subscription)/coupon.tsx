@@ -10,7 +10,7 @@ const Coupon = () => {
       </View>
 
       <View className="mt-5 space-y-2 ">
-        <Text className="font-main font-fwbold text-center text-base text-neutral-500">
+        <Text className="font-fwbold text-center text-base text-neutral-500">
           Have a coupon code?
         </Text>
         <Text className="font-main font-semibold text-center text-sm text-dark">

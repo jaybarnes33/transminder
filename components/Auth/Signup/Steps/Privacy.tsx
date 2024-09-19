@@ -1,17 +1,13 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import clsx from "clsx";
-import { useRouter } from "expo-router";
-import { useSignUp } from "@/context/Signup";
+
 import { AntDesign } from "@expo/vector-icons";
 
 const Privacy = () => {
-  const [focus, setFocus] = React.useState(false);
-  const { details, handleChange } = useSignUp();
   return (
     <View className="py-5 space-y-14 items-center">
       <View>
-        <Text className="font-main font-fwbold text-center text-2xl">
+        <Text className="font-fwbold text-center text-2xl">
           Your data, Your rules!
         </Text>
         <Text className="font-main font-semibold text-base text-center text-gray-600">

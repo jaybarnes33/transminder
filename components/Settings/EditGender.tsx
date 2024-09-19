@@ -65,9 +65,11 @@ const EditGender = ({
 }) => {
   return (
     <View className="flex space-y-3 h-[60vh] ">
-      {Array.from(new Set([currentGender, ...genders])).map((item) => (
+      {Array.from(
+        new Set(currentGender ? [currentGender, ...genders] : [...genders])
+      ).map((item, index) => (
         <Item
-          key={item}
+          key={index}
           gender={item}
           active={currentGender === item}
           onChange={() => action(item)}
