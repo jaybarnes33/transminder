@@ -36,9 +36,11 @@ export interface ErrorObj {
 
 export type Drug = {
   name: string;
+  dosage: string;
   type: "pill" | "patch" | "injection" | "syrup";
   times: { taken: boolean; time: string }[];
   notes: string[];
+  unit: string;
 };
 
 export type IconName = keyof typeof icons;

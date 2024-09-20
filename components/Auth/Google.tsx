@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { Text, TouchableOpacity, Image } from "react-native";
 import React, { useEffect } from "react";
 
 import {
@@ -13,14 +13,20 @@ const Google = () => {
   useEffect(() => {
     GoogleSignin.configure({
       iosClientId: process.env.EXPO_PUBLIC_GOOGLE_ID, // From Google Console
+      webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_ID, // From Google Console
     });
   }, []);
 
   const { navigate } = useRouter();
   const signInWithGoogle = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+
       const userInfo = await GoogleSignin.signIn();
+
+      console.log(userInfo);
 
       const { data } = await axiosInstance.post("/auth/google", {
         token: userInfo.data?.idToken,
@@ -41,7 +47,7 @@ const Google = () => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log("Play services not available or outdated");
       } else {
-        console.log("Some other error happened:", error);
+        console.error(error);
       }
     }
   };

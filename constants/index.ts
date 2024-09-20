@@ -14,6 +14,7 @@ export const drugs: Drug[] = [
   {
     name: "Estradiol",
     type: "pill",
+    dosage: "2 mg",
     times: [
       { taken: false, time: "08:00 AM" },
       { taken: false, time: "08:00 PM" },
@@ -23,6 +24,7 @@ export const drugs: Drug[] = [
   {
     name: "Spironolactone",
     type: "pill",
+    dosage: "100 mg",
     times: [
       { taken: false, time: "09:00 AM" },
       { taken: false, time: "09:00 PM" },
@@ -32,23 +34,19 @@ export const drugs: Drug[] = [
   {
     name: "Testosterone",
     type: "injection",
+    dosage: "50 mg",
     times: [{ taken: false, time: "10:00 AM" }],
     notes: ["Administer as directed by your healthcare provider."],
   },
   {
     name: "Progesterone",
     type: "pill",
+    dosage: "200 mg",
     times: [
-      { taken: false, time: "07:00 AM" },
-      { taken: false, time: "07:00 PM" },
+      { taken: false, time: "10:00 AM" },
+      { taken: false, time: "10:00 PM" },
     ],
-    notes: ["Take at bedtime to reduce drowsiness."],
-  },
-  {
-    name: "Finasteride",
-    type: "pill",
-    times: [{ taken: false, time: "06:00 AM" }],
-    notes: ["Take at the same time each day."],
+    notes: ["Take at bedtime to avoid dizziness."],
   },
 ];
 
@@ -246,4 +244,14 @@ export const countries = [
   { name: "Yemen", flag: "🇾🇪" },
   { name: "Zambia", flag: "🇿🇲" },
   { name: "Zimbabwe", flag: "🇿🇼" },
+];
+
+export const drugTypes = ["pill", "liquid", "injection", "gel", "patch"];
+
+export const doses = [
+  "Milligrams (mg)",
+  "Micrograms (mcg)",
+  "Grams (g)",
+  "Milliliters (ml)",
+  "Percentage (%)",
 ];

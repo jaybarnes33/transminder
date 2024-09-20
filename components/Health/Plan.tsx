@@ -89,7 +89,7 @@ const Plan = () => {
         <Heading
           text="Your plan"
           more="View plan"
-          moreAction={() => navigate("/(app)/Medications")}
+          moreAction={() => navigate("/(medications)")}
         />
       </View>
       <View>

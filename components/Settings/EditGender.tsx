@@ -41,7 +41,7 @@ const Item = ({
       className={clsx([
         "h-12  font-main font-semibold px-3 py-1 rounded-xl lowercase my-1 justify-center",
         ,
-        active ? "bg-ring text-white" : "bg-gray-200",
+        active ? "bg-ring text-white" : "bg-gray-100",
       ])}
     >
       <Text

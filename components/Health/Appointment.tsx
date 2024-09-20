@@ -17,7 +17,7 @@ const Appointment = ({
   return (
     <View className="h-[96] bg-white flex-row space-x-4 p-4 rounded-3xl">
       <View className="flex-1 border-l-4 px-2 border-ring">
-        <Text className="font-main text-sm text-ring font-fwbold capitalize">
+        <Text className=" text-sm text-ring font-fwbold capitalize">
           {appointment.date}
         </Text>
         <Text className="font-fwbold text-lg capitalize">

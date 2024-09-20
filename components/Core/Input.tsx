@@ -16,13 +16,13 @@ const Input = (props: TextInputProps & { name?: string }) => {
   return (
     <View className="space-y-1 my-2">
       {props.name && (
-        <Text className="font-main font-semibold text-neutral-600 text-center text-sm">
+        <Text className="font-main font-semibold text-neutral-600  text-sm">
           {props.name}
         </Text>
       )}
       <View
         className={clsx([
-          "h-12 justify-center bg-neutral-200   rounded-xl font-main font-semibold w-full",
+          "h-12 justify-center bg-gray-100   rounded-xl font-main font-semibold w-full",
           focus && " border-2 border-ring ",
         ])}
       >

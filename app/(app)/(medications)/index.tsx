@@ -6,6 +6,7 @@ import Icon from "@/components/Core/Icon";
 import { Drug, IconName } from "@/types/global";
 import clsx from "clsx";
 import Back from "@/components/Core/Back";
+import { useRouter } from "expo-router";
 
 const Item = ({ drug }: { drug: Drug }) => {
   const [showButtons, setShowButtons] = useState(false);
@@ -81,12 +82,13 @@ const Item = ({ drug }: { drug: Drug }) => {
 };
 
 const Medications = () => {
+  const { navigate } = useRouter();
   return (
     <SafeAreaView className="px-4 bg-gray-100  flex-1">
       <View className="space-y-4">
         <View className="flex-row items-center justify-between space-x-4">
           <Back />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigate("/add")}>
             <Text className="font-main text-base text-blue-500 font-semibold">
               Add Medication
             </Text>
