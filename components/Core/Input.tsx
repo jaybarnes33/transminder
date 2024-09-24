@@ -22,7 +22,7 @@ const Input = (props: TextInputProps & { name?: string }) => {
       )}
       <View
         className={clsx([
-          "h-12 justify-center bg-gray-100   rounded-xl font-main font-semibold w-full",
+          "h-12 justify-center bg-gray-200   rounded-xl font-main font-semibold w-full",
           focus && " border-2 border-ring ",
         ])}
       >

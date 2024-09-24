@@ -5,7 +5,7 @@ import Header from "./Header";
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
   return (
-    <SafeAreaView className="flex-1 px-4 bg-gray-100">
+    <SafeAreaView className="flex-1 px-4 bg-white">
       <Header />
       {children}
     </SafeAreaView>

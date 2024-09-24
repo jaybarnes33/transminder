@@ -16,7 +16,9 @@ const Item = ({ drug }: { drug: Drug }) => {
       const currentTime = new Date();
       const targetTime = new Date();
 
-      const [hours, minutes] = drug.times[0].time.split(":");
+      const [hours, minutes] = (
+        drug.times[0] as { time: string; taken: boolean }
+      ).time.split(":");
       targetTime.setHours(parseInt(hours), parseInt(minutes), 0);
 
       if (currentTime >= targetTime) {
@@ -53,7 +55,10 @@ const Item = ({ drug }: { drug: Drug }) => {
         </View>
         <View>
           <Text className="font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
-            Today, <Text className="uppercase">{drug.times[0].time}</Text>
+            Today,{" "}
+            <Text className="uppercase">
+              {(drug.times[0] as { taken: boolean; time: string }).time}
+            </Text>
           </Text>
           <View className="flex-row justify-between items-center">
             <Text className="font-main text-neutral-400 font-semibold text-sm">
@@ -65,7 +70,7 @@ const Item = ({ drug }: { drug: Drug }) => {
       </View>
       {showButtons && (
         <View className="flex-row space-x-3 py-3 border-t border-neutral-400 w-full mt-3 flex-1">
-          <TouchableOpacity className="flex-1 h-[40] bg-neutral-200 rounded-full justify-center">
+          <TouchableOpacity className="flex-1 h-[40] bg-gray-200 rounded-full justify-center">
             <Text className="text-dark text-center font-fwbold text-sm">
               Skipped
             </Text>
@@ -84,7 +89,7 @@ const Item = ({ drug }: { drug: Drug }) => {
 const Medications = () => {
   const { navigate } = useRouter();
   return (
-    <SafeAreaView className="px-4 bg-gray-100  flex-1">
+    <SafeAreaView className="px-4 bg-gray-200  flex-1">
       <View className="space-y-4">
         <View className="flex-row items-center justify-between space-x-4">
           <Back />

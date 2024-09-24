@@ -34,7 +34,7 @@ const Header = () => {
             key={index}
             className={clsx([
               "w-[11%] h-1 rounded-full ",
-              index + 1 <= step ? "bg-purple-500" : "bg-gray-100",
+              index + 1 <= step ? "bg-purple-500" : "bg-gray-200",
             ])}
           />
         ))}

@@ -66,7 +66,7 @@ const Item = ({ drug }: { drug: Drug }) => {
       </View>
       {showButtons && (
         <View className="flex-row space-x-3 py-3 border-t border-neutral-400 w-full mt-3 flex-1">
-          <TouchableOpacity className="flex-1 h-[40] bg-neutral-200 rounded-full justify-center">
+          <TouchableOpacity className="flex-1 h-[40] bg-gray-200 rounded-full justify-center">
             <Text className="text-dark text-center font-fwbold font-main text-sm">
               Skipped
             </Text>

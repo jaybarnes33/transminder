@@ -27,7 +27,7 @@ export const ProfileItem = ({
     <TouchableOpacity
       onPress={action}
       disabled={disabled}
-      className="flex-row items-center justify-between  bg-neutral-200 h-[50] px-4 rounded-xl mb-1"
+      className="flex-row items-center justify-between  bg-gray-200 h-[50] px-4 rounded-xl mb-1"
     >
       <Text className="text-base capitalize text-neutral-700 font-semibold font-main">
         {splitCamelCase(name)}

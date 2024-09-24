@@ -38,7 +38,7 @@ export type Drug = {
   name: string;
   dosage: string;
   type: "pill" | "patch" | "injection" | "syrup";
-  times: { taken: boolean; time: string }[];
+  times: { taken: boolean; time: string }[] | string[] | [];
   notes: string[];
   unit: string;
 };

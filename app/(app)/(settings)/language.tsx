@@ -27,9 +27,7 @@ const Language = () => {
               key={i}
               onPress={() => setSelectedLanguage(lang.name)}
               className={`flex-row items-center space-x-3 h-[50] px-4 rounded-xl mb-1 ${
-                selectedLanguage === lang.name
-                  ? "bg-purple-300"
-                  : "bg-neutral-200"
+                selectedLanguage === lang.name ? "bg-purple-300" : "bg-gray-200"
               }`}
             >
               <Text className="text-base capitalize text-neutral-700 font-semibold font-main">

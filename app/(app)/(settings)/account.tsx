@@ -81,7 +81,7 @@ const Profile = () => {
           <TouchableOpacity
             disabled={!!confirmation}
             onPress={() => handleAction("logout")}
-            className="flex-row items-center space-x-3 bg-neutral-200 h-[50] px-4 rounded-xl mt-12 "
+            className="flex-row items-center space-x-3 bg-gray-200 h-[50] px-4 rounded-xl mt-12 "
           >
             <Icon name="logout" />
             <Text className="font-main text-base flex-1 font-semibold text-neutral-700 capitalize">

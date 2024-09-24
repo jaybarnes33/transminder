@@ -113,7 +113,7 @@ const Profile = () => {
                     : (await Linking.canOpenURL(section.url)) &&
                       Linking.openURL(section.url)
                 }
-                className="flex-row items-center space-x-3 bg-neutral-200 h-[50] px-4 rounded-xl "
+                className="flex-row items-center space-x-3 bg-gray-200 h-[50] px-4 rounded-xl "
                 key={section.name}
               >
                 <Icon name={section.icon as keyof typeof icons} />
