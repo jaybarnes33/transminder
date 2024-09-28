@@ -59,9 +59,9 @@ const Gender = () => {
         </Text>
       </View>
       <View className="flex space-y-3 h-[50vh]">
-        {list.map((item) => (
+        {list.map((item, index) => (
           <Item
-            key={item}
+            key={index}
             gender={item}
             active={gender === item}
             onChange={() => handleChange("genderIdentity", item)}

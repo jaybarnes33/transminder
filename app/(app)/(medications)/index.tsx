@@ -1,4 +1,10 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { drugs } from "@/constants";
@@ -7,33 +13,10 @@ import { Drug, IconName } from "@/types/global";
 import clsx from "clsx";
 import Back from "@/components/Core/Back";
 import { useRouter } from "expo-router";
+import axiosInstance from "@/lib/axios";
+import useSWR from "swr";
 
 const Item = ({ drug }: { drug: Drug }) => {
-  const [showButtons, setShowButtons] = useState(false);
-
-  useEffect(() => {
-    const checkTime = () => {
-      const currentTime = new Date();
-      const targetTime = new Date();
-
-      const [hours, minutes] = (
-        drug.times[0] as { time: string; taken: boolean }
-      ).time.split(":");
-      targetTime.setHours(parseInt(hours), parseInt(minutes), 0);
-
-      if (currentTime >= targetTime) {
-        setShowButtons(true);
-      } else {
-        setShowButtons(false);
-      }
-    };
-
-    checkTime();
-    const interval = setInterval(checkTime, 60000); // Check every minute
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
-
   return (
     <View
       className={" bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center  "}
@@ -55,39 +38,31 @@ const Item = ({ drug }: { drug: Drug }) => {
         </View>
         <View>
           <Text className="font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
-            Today,{" "}
-            <Text className="uppercase">
-              {(drug.times[0] as { taken: boolean; time: string }).time}
-            </Text>
+            Today, <Text className="uppercase">{drug.times[0]}</Text>
           </Text>
           <View className="flex-row justify-between items-center">
-            <Text className="font-main text-neutral-400 font-semibold text-sm">
-              {drug.notes.length} note{drug.notes.length > 2 ? "s" : ""}
-            </Text>
+            {!!drug.notes && (
+              <Text className="font-main text-neutral-400 font-semibold text-sm">
+                1 note
+              </Text>
+            )}
             <Icon name="push-pin" />
           </View>
         </View>
       </View>
-      {showButtons && (
-        <View className="flex-row space-x-3 py-3 border-t border-neutral-400 w-full mt-3 flex-1">
-          <TouchableOpacity className="flex-1 h-[40] bg-gray-200 rounded-full justify-center">
-            <Text className="text-dark text-center font-fwbold text-sm">
-              Skipped
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-1 h-[40] justify-center rounded-full bg-blue-500">
-            <Text className="text-white text-center font-fwbold text-sm">
-              Taken
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 };
 
 const Medications = () => {
   const { navigate } = useRouter();
+
+  const fetchDrugs = async () => {
+    const { data } = await axiosInstance.get("/drugs");
+    return data;
+  };
+
+  const { data: drugs, isLoading } = useSWR("/medications", fetchDrugs);
   return (
     <SafeAreaView className="px-4 bg-gray-200  flex-1">
       <View className="space-y-4">
@@ -101,16 +76,22 @@ const Medications = () => {
         </View>
         <Text className=" text-3xl font-fwbold">
           All Medications{" "}
-          <Text className=" text-neutral-400">{drugs.length}</Text>
+          <Text className=" text-neutral-400">{drugs?.length}</Text>
         </Text>
 
-        <FlatList
-          contentContainerStyle={{ paddingBottom: 100 }}
-          data={drugs}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.name}
-          renderItem={({ item }) => <Item drug={item} />}
-        />
+        {isLoading ? (
+          <View className="justify-center items-center">
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <FlatList
+            contentContainerStyle={{ paddingBottom: 100 }}
+            data={drugs}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => <Item drug={item} />}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

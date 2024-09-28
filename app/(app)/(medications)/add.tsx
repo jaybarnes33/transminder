@@ -16,21 +16,90 @@ import Back from "@/components/Core/Back";
 import { useRouter } from "expo-router";
 import { doses, drugTypes } from "@/constants";
 import Icon from "@/components/Core/Icon";
-import { Feather, FontAwesome6 } from "@expo/vector-icons";
+import { Feather, FontAwesome6, Octicons } from "@expo/vector-icons";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import axiosInstance from "@/lib/axios";
+import Message from "@/components/Core/Message";
+import { mutate } from "swr";
 
 const Add = () => {
   const [drug, setDrug] = useState<Drug>({
     name: "",
-    times: [""],
+    times: [new Date().toTimeString().split(" ")[0]],
     dosage: "",
     type: "" as Drug["type"],
-    notes: [""],
+    notes: "",
     unit: "",
   });
+
+  const [error, setError] = useState("");
+  const { navigate } = useRouter();
+  const [step, setStep] = useState(0);
+
+  const [show, setShow] = useState(false);
+  const [activeReminderIndex, setActiveReminderIndex] = useState<number | null>(
+    null
+  );
+
+  const handleDateChange = (
+    event: any,
+    selectedDate: Date | undefined,
+    index: number
+  ) => {
+    if (event.type === "set" && selectedDate) {
+      const currentDate = selectedDate;
+
+      setDrug((prev) => ({
+        ...prev,
+        times: prev.times.map((t, i) =>
+          i === index ? currentDate.toTimeString().split(" ")[0] : t
+        ),
+      }));
+    }
+    setShow(false);
+    setActiveReminderIndex(null);
+  };
+
+  const validations: Record<number, boolean> = {
+    0: !!drug.name,
+    1: !!drug.type,
+    2: !!drug.dosage,
+    3: !!drug.times,
+    4: !!drug.notes,
+  };
+
+  const handleNext = async () => {
+    if (step === 4) {
+      await addDrug();
+      return;
+    }
+    setStep((step: number) => step + 1);
+  };
+
+  const handleBack = () => {
+    if (step === 0) {
+      navigate("/(app)/(medications)");
+    }
+    setStep((step: number) => step - 1);
+  };
 
   const handleChange = (key: string, value: string | {}) => {
     setDrug((prev) => ({ ...prev, [key]: value }));
   };
+
+  const addDrug = async () => {
+    try {
+      console.log({ drug });
+      const { data } = await axiosInstance.post("/drugs", drug);
+      mutate("/medications");
+      navigate("/(medications)");
+    } catch (error) {
+      console.error(error);
+      //@ts-ignore
+      setError(error.response.data.error ?? error.message);
+    }
+  };
+
   const components: Record<number, ReactNode> = {
     0: (
       <View className="space-y-10">
@@ -63,7 +132,11 @@ const Add = () => {
                 drug.type === type && "bg-blue-500",
               ])}
             >
-              <Icon name={type as IconName} />
+              <Icon
+                name={
+                  (drug.type === type ? `${type}-active` : type) as IconName
+                }
+              />
               <Text
                 className={clsx([
                   "capitalize flex-1 font-semibold text-base",
@@ -159,18 +232,47 @@ const Add = () => {
             <Text className="font-main font-semibold">Time</Text>
             <ScrollView className="space-y-2">
               {drug.times.map((time, index) => (
-                <TouchableOpacity
+                <View
+                  className="flex-row h-50 bg-gray-200 py-3 px-3 rounded-xl justify-between my-3 items-center"
                   key={index}
-                  className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-gray-200"
                 >
-                  <Text className="text-[#0d96ff] font-semibold text-base">
-                    {time as string}
-                  </Text>
-                </TouchableOpacity>
+                  {show && activeReminderIndex === index && (
+                    <RNDateTimePicker
+                      value={new Date()}
+                      mode="time"
+                      onChange={(event, selectedDate) =>
+                        handleDateChange(event, selectedDate, index)
+                      }
+                    />
+                  )}
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShow(true);
+                      setActiveReminderIndex(index);
+                    }}
+                  >
+                    <Text className="text-base">{time}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setDrug((prev) => ({
+                        ...prev,
+                        times: prev.times.filter((_, i) => i !== index),
+                      }))
+                    }
+                  >
+                    <Octicons name="trash" size={24} color="red" />
+                  </TouchableOpacity>
+                </View>
               ))}
-              {drug.times.length > 0 && (
+              {drug.times.length > 0 && drug.times.length <= 6 && (
                 <TouchableOpacity
-                  onPress={() => handleChange("times", ["", ...drug.times])}
+                  onPress={() =>
+                    handleChange("times", [
+                      new Date().toTimeString().split(" ")[0],
+                      ...drug.times,
+                    ])
+                  }
                   className="bg-blue-100 my-2 rounded-lg py-3 px-3 flex-row space-x-3 items-center"
                 >
                   <Feather name="plus" color="#0d96ff" size={18} />
@@ -199,7 +301,7 @@ const Add = () => {
           </View>
           <View className="flex-row  justify-between items-center   ">
             <Text className="text-neutral-500 font-semibold text-base">
-              {drug.times.length} time(s) at
+              {drug.times.length} time(s)
             </Text>
             <Text className="text-dark font-semibold text-base">
               {drug.dosage} {drug.unit}
@@ -210,39 +312,14 @@ const Add = () => {
           <Text className="font-main font-semibold">Notes</Text>
           <TextInput
             className="bg-neutral-100 h-[100px] p-3 rounded-lg"
-            value={drug.notes[0]}
-            onChangeText={(text) => handleChange("notes", [text])}
+            value={drug.notes}
+            onChangeText={(text) => handleChange("notes", text)}
             multiline
             numberOfLines={10}
           />
         </View>
       </View>
     ),
-  };
-
-  const { navigate } = useRouter();
-  const [step, setStep] = useState(0);
-
-  const validations: Record<number, boolean> = {
-    0: !!drug.name,
-    1: !!drug.type,
-    2: !!drug.dosage,
-    3: !!drug.times,
-    4: !!drug.notes,
-  };
-
-  const handleNext = () => {
-    if (step === 4) {
-      return;
-    }
-    setStep((step: number) => step + 1);
-  };
-
-  const handleBack = () => {
-    if (step === 0) {
-      navigate("/(app)/(medications)");
-    }
-    setStep((step: number) => step - 1);
   };
 
   return (
@@ -285,6 +362,7 @@ const Add = () => {
             ))}
           </View>
         </View>
+        {error && <Message message={error} isError />}
         <View className="mt-4">{components[step]}</View>
 
         <View className="bg-white mt-auto">

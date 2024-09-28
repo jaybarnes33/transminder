@@ -29,4 +29,9 @@ export const icons = {
   injection: require("@/assets/icons/injection.png"),
   gel: require("@/assets/icons/gel.png"),
   liquid: require("@/assets/icons/liquid.png"),
+  tablet: require("@/assets/icons/tablet.png"),
+  "tablet-active": require("@/assets/icons/tablet-active.png"),
+  capsule: require("@/assets/icons/pill.png"),
+  pencil: require("@/assets/icons/pencil.png"),
+  sun: require("@/assets/icons/day.png"),
 };

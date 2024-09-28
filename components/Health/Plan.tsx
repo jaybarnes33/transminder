@@ -8,6 +8,8 @@ import { sortTimes } from "@/utils";
 import clsx from "clsx";
 import Heading from "../Core/Heading";
 import { useRouter } from "expo-router";
+import axiosInstance from "@/lib/axios";
+import useSWR from "swr";
 
 const Item = ({ drug }: { drug: Drug }) => {
   const [showButtons, setShowButtons] = useState(false);
@@ -17,7 +19,7 @@ const Item = ({ drug }: { drug: Drug }) => {
       const currentTime = new Date();
       const targetTime = new Date();
 
-      const [hours, minutes] = drug.times[0].time.split(":");
+      const [hours, minutes] = drug.times[0].split(":");
       targetTime.setHours(parseInt(hours), parseInt(minutes), 0);
 
       if (currentTime >= targetTime) {
@@ -54,14 +56,16 @@ const Item = ({ drug }: { drug: Drug }) => {
         </View>
         <View>
           <Text className="font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
-            Today, <Text className="uppercase">{drug.times[0].time}</Text>
+            Today, <Text className="uppercase">{drug.times[0]}</Text>
           </Text>
-          <View className="flex-row justify-between items-center">
-            <Text className="font-main text-neutral-400 font-semibold text-sm">
-              {drug.notes.length} note{drug.notes.length > 2 ? "s" : ""}
-            </Text>
-            <Icon name="push-pin" />
-          </View>
+          {!!drug.notes && (
+            <View className="flex-row justify-between items-center">
+              <Text className="font-main text-neutral-400 font-semibold text-sm">
+                1 note
+              </Text>
+              <Icon name="push-pin" />
+            </View>
+          )}
         </View>
       </View>
       {showButtons && (
@@ -83,6 +87,13 @@ const Item = ({ drug }: { drug: Drug }) => {
 };
 const Plan = () => {
   const { navigate } = useRouter();
+
+  const fetchDrugs = async () => {
+    const { data } = await axiosInstance.get("/drugs");
+    return data;
+  };
+
+  const { data: drugs, isLoading } = useSWR("/medications", fetchDrugs);
   return (
     <View className="space-y-2">
       <View className="flex-row items-center justify-between space-x-2">
@@ -95,9 +106,7 @@ const Plan = () => {
       <View>
         <FlatList
           data={drugs as Drug[]}
-          renderItem={({ item }) => (
-            <Item drug={{ ...item, times: sortTimes(item.times) }} />
-          )}
+          renderItem={({ item }) => <Item drug={{ ...item }} />}
         />
       </View>
     </View>

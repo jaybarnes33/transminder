@@ -1,6 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Slot } from "expo-router";
-
 import {
   useFonts,
   Quicksand_300Light,
@@ -16,6 +15,7 @@ import "react-native-reanimated";
 
 import { AuthProvider } from "@/context/Auth";
 import { BottomSheetModalProvider } from "@/context/BottomSheet";
+import { registerForPushNotificationsAsync } from "@/utils/notification";
 
 export {
   // Catch any errors thrown by the Layout component.

@@ -38,9 +38,16 @@ export type Drug = {
   name: string;
   dosage: string;
   type: "pill" | "patch" | "injection" | "syrup";
-  times: { taken: boolean; time: string }[] | string[] | [];
-  notes: string[];
+  times: string[];
+  notes: string;
   unit: string;
 };
 
 export type IconName = keyof typeof icons;
+
+export type MoodLog = {
+  mood: string;
+  feelings: string[];
+  notes: string;
+  createdAt: string;
+};

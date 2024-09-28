@@ -246,7 +246,14 @@ export const countries = [
   { name: "Zimbabwe", flag: "🇿🇼" },
 ];
 
-export const drugTypes = ["pill", "liquid", "injection", "gel", "patch"];
+export const drugTypes = [
+  "capsule",
+  "tablet",
+  "liquid",
+  "injection",
+  "gel",
+  "patch",
+];
 
 export const doses = [
   "Milligrams (mg)",

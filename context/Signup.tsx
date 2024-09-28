@@ -9,6 +9,7 @@ import { useBottomSheetModal } from "./BottomSheet";
 import EditItem from "@/components/Settings/EditItem";
 import { mutate } from "swr";
 import { ImagePickerAsset } from "expo-image-picker";
+import { registerForPushNotificationsAsync } from "@/utils/notification";
 
 interface SignupPayload {
   email: string;
@@ -117,6 +118,7 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
         }
         if (step === 7) {
           handleChange("allowNotifications", true);
+          const token = await registerForPushNotificationsAsync();
         }
         setStep((prev) => prev + 1);
       } else {

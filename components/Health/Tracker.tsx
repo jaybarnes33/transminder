@@ -1,23 +1,80 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { MoodLog } from "@/types/global";
+import axiosInstance from "@/lib/axios";
+import useSWR from "swr";
+import Emoji from "../Core/Emoji";
+import Icon from "../Core/Icon";
 
 const Tracker = () => {
-  return (
+  const { navigate } = useRouter();
+
+  const [moodLog, setMoodLog] = useState<MoodLog | undefined>();
+
+  const fetchMoodLog = async () => {
+    const {
+      data: { moodLog },
+    } = await axiosInstance.get("/mood/today");
+    console.log(moodLog);
+    return moodLog;
+  };
+
+  const { data, error, isLoading } = useSWR("/mood/today", fetchMoodLog);
+  return isLoading || !data?.mood ? (
     <View className="bg-purple-500 relative rounded-[20px] h-[126] items-center space-y-3 pt-4 my-4">
       <View>
         <Text className="font-main text-white">Daily Tracker</Text>
       </View>
-      <Text className="font-main font-base font-fwbold text-white">
+      <Text className=" font-base font-fwbold text-white">
         How are you feeling today?
       </Text>
-
-      <TouchableOpacity className="bg-white p-2 w-[144] items-center rounded-[70px] relative z-[99]">
+      <TouchableOpacity
+        onPress={() => navigate("/(app)/(mood)")}
+        className="bg-white p-2 w-[144] items-center rounded-[70px] relative z-[99]"
+      >
         <Text className="font-fwbold text-purple-500">Log your mood</Text>
       </TouchableOpacity>
       <Image
         className="absolute w-full bottom-0"
         source={require("@/assets/images/track_bg.png")}
       />
+    </View>
+  ) : (
+    <View className="h-[116px] bg-white p-4 rounded-[20px] my-4">
+      <TouchableOpacity
+        onPress={() =>
+          navigate({
+            pathname: "/(app)/(mood)",
+            params: { id: data._id },
+          })
+        }
+        className="absolute right-4 top-4 bg-gray-200 px-5 rounded-full py-2 z-[99]"
+      >
+        <Text>Update</Text>
+      </TouchableOpacity>
+      <View className="space-y-2">
+        <View className="flex-row space-x-1 items-center">
+          <Icon name="sun" />
+          <Text className="text-ring font-fwbold capitalize text-sm ">
+            Daily tracker
+          </Text>
+        </View>
+        <Text className="font-fwbold text-base">Feeling {data.mood}</Text>
+        <View className="flex-row space-x-3">
+          {data.feelings.map((item: string) => (
+            <View
+              className="flex-row space-x-1 bg-[#EEFBF3] py-1 px-3 rounded-full items-center"
+              key={item}
+            >
+              <Emoji name={item} size="sm" />
+              <Text className="font-fwbold text-gray-400 text-xs capitalize">
+                {item}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
     </View>
   );
 };
