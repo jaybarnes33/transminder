@@ -16,7 +16,7 @@ import Message from "@/components/Core/Message";
 import Input from "@/components/Core/Input";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import { mutate } from "swr";
-import Google from "@/components/Auth/Google";
+// import Google from "@/components/Auth/Google";
 
 const Login = () => {
   const [form, setForm] = React.useState({
@@ -130,7 +130,7 @@ const Login = () => {
             <Text className="font-main font-semibold text-gray-500">OR</Text>
             <View className="h-px bg-gray-300  w-1/2   " />
           </View>
-          <Google />
+          {/* <Google /> */}
         </View>
       </SafeAreaView>
     </UnAuthContent>

@@ -1,3 +1,5 @@
+import { MoodLog } from "@/types/global";
+
 export const getDaysOfWeek = () => {
   const currentDate = new Date();
   const currentDay = currentDate.getDay();
@@ -58,3 +60,55 @@ export const sortTimes = (arr: { taken: boolean; time: string }[]) => {
 
   return sortedArr;
 };
+
+export function getLastNDaysWithDayInitials(n: number) {
+  const result = [];
+
+  for (let i = 0; i < n; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - i); // Subtract i days from current date
+
+    // Get the first letter of the day of the week
+    const dayOfWeek = date
+      .toLocaleDateString("en-US", { weekday: "short" })
+      .charAt(0);
+
+    // Format date as YYYY-MM-DD
+    const formattedDate = date.toISOString().split("T")[0];
+
+    result.push({
+      date: formattedDate,
+      dayOfWeek,
+    });
+  }
+
+  return result.reverse(); // Reverse to show the oldest date first
+}
+
+export function checkLogsForDays(
+  logs: MoodLog[],
+  days: { date: string; dayOfWeek: string }[]
+) {
+  // Initialize the result array
+  const result = [];
+
+  for (const day of days) {
+    // Find if any log matches the current day
+    const logForDay = logs.find((log) => {
+      // Extract date from the createdAt field (formatted as YYYY-MM-DD)
+      const logDate = new Date(log.createdAt).toISOString().split("T")[0];
+      return logDate === day.date;
+    });
+
+    // Push result with information about whether a log exists and the mood
+    result.push({
+      dayOfWeek: day.dayOfWeek,
+      hasLog: !!logForDay, // true if log exists, false otherwise
+      mood: logForDay ? logForDay.mood : null, // Include mood if log exists, otherwise null
+    });
+  }
+
+  return result;
+}
+
+// Example usage:

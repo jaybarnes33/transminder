@@ -5,7 +5,7 @@ import Appointment from "./Appointment";
 
 const Appointments = () => {
   return (
-    <View>
+    <View className="my-4">
       <Heading text="Appointments" more="View Calendar" />
       <View className="mt-2">
         <Appointment

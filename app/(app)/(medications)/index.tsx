@@ -5,9 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { drugs } from "@/constants";
 import Icon from "@/components/Core/Icon";
 import { Drug, IconName } from "@/types/global";
 import clsx from "clsx";
@@ -15,6 +13,7 @@ import Back from "@/components/Core/Back";
 import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
 import useSWR from "swr";
+import EmptyPlan from "@/components/Health/Empty/EmptyPlan";
 
 const Item = ({ drug }: { drug: Drug }) => {
   return (
@@ -86,9 +85,10 @@ const Medications = () => {
         ) : (
           <FlatList
             contentContainerStyle={{ paddingBottom: 100 }}
+            ListEmptyComponent={EmptyPlan}
             data={drugs}
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.name}
+            keyExtractor={(item) => item._id}
             renderItem={({ item }) => <Item drug={item} />}
           />
         )}

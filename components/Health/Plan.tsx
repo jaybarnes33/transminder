@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Drug, IconName } from "@/types/global";
 import Icon from "../Core/Icon";
 import { FlatList } from "react-native-gesture-handler";
-import { drugs } from "@/constants";
-import { sortTimes } from "@/utils";
 import clsx from "clsx";
 import Heading from "../Core/Heading";
 import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
 import useSWR from "swr";
+import EmptyPlan from "./Empty/EmptyPlan";
 
 const Item = ({ drug }: { drug: Drug }) => {
   const [showButtons, setShowButtons] = useState(false);
@@ -71,12 +70,12 @@ const Item = ({ drug }: { drug: Drug }) => {
       {showButtons && (
         <View className="flex-row space-x-3 py-3 border-t border-neutral-400 w-full mt-3 flex-1">
           <TouchableOpacity className="flex-1 h-[40] bg-gray-200 rounded-full justify-center">
-            <Text className="text-dark text-center font-fwbold font-main text-sm">
+            <Text className="text-dark text-center font-fwbold  text-sm">
               Skipped
             </Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 h-[40] justify-center rounded-full bg-blue-500">
-            <Text className="text-white text-center font-fwbold font-main text-sm">
+            <Text className="text-white text-center font-fwbold  text-sm">
               Taken
             </Text>
           </TouchableOpacity>
@@ -89,11 +88,11 @@ const Plan = () => {
   const { navigate } = useRouter();
 
   const fetchDrugs = async () => {
-    const { data } = await axiosInstance.get("/drugs");
+    const { data } = await axiosInstance.get("/drugs?size=5");
     return data;
   };
 
-  const { data: drugs, isLoading } = useSWR("/medications", fetchDrugs);
+  const { data: drugs, isLoading } = useSWR("/medications?size", fetchDrugs);
   return (
     <View className="space-y-2">
       <View className="flex-row items-center justify-between space-x-2">
@@ -105,7 +104,9 @@ const Plan = () => {
       </View>
       <View>
         <FlatList
-          data={drugs as Drug[]}
+          data={drugs}
+          ListEmptyComponent={EmptyPlan}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => <Item drug={{ ...item }} />}
         />
       </View>

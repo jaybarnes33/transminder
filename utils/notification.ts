@@ -17,8 +17,6 @@ export async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    alert(token);
-    console.log(token);
 
     return token;
   } catch (error) {

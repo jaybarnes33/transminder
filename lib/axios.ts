@@ -1,4 +1,9 @@
-import { checkTokenExpiration, getTokens, setTokens } from "@/utils/auth";
+import {
+  checkTokenExpiration,
+  getTokens,
+  logout,
+  setTokens,
+} from "@/utils/auth";
 import { Platform } from "react-native";
 import axios, {
   AxiosInstance,
@@ -33,6 +38,10 @@ axiosInstance.interceptors.request.use(
       if (!checkTokenExpiration(token as string)) {
         config.headers["Authorization"] = `Bearer ${token}`;
       } else {
+        if (checkTokenExpiration(refreshToken)) {
+          logout();
+          return config;
+        }
         const { data } = await axios.get(`${baseURL}/auth/refresh`, {
           headers: {
             Authorization: `Refresh ${refreshToken}`,

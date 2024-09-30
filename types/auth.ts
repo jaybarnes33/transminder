@@ -23,5 +23,6 @@ export interface User {
   avatar: string;
   age: string;
   googleId?: string;
+  notificationTokens: string[];
   country: string;
 }

@@ -19,6 +19,7 @@ interface SignupPayload {
   genderIdentity: string;
   allowNotifications: boolean;
   avatar: ImagePickerAsset;
+  notificationToken: string;
 }
 
 interface SignUpContextValue {
@@ -64,16 +65,18 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
   };
   const handleSignup = async () => {
     const formData = new FormData();
+
     //@ts-ignore
     formData.append("avatar", {
-      uri: details.avatar.uri,
-      type: details.avatar.type,
-      name: details.avatar.fileName,
+      uri: details?.avatar?.uri,
+      type: details?.avatar?.type,
+      name: details?.avatar?.fileName,
     });
     formData.append("email", details.email);
     formData.append("name", details.name);
     formData.append("password", details.password);
     formData.append("genderIdentity", details.genderIdentity);
+    formData.append("notificationToken", details.notificationToken);
     formData.append(
       "allowNotifications",
       details.allowNotifications.toString()
@@ -119,12 +122,16 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
         if (step === 7) {
           handleChange("allowNotifications", true);
           const token = await registerForPushNotificationsAsync();
+          if (token) {
+            handleChange("notificationToken", token);
+          }
         }
         setStep((prev) => prev + 1);
       } else {
         await handleSignup();
       }
     } catch (error: unknown) {
+      console.log(error);
       setError(
         (error as ErrorObj).response?.data?.error ?? (error as ErrorObj).message
       );

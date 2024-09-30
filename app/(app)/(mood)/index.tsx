@@ -92,6 +92,7 @@ const Mood = () => {
       setLoading(true);
       await axiosInstance.post("/mood", moodData);
       mutate("/mood/today");
+      mutate("/mood");
       navigate("/(app)/(tabs)");
     } catch (error) {
       //@ts-ignore

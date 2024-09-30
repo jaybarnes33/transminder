@@ -10,46 +10,6 @@ export const genders = [
   "Prefer not to answer",
 ];
 
-export const drugs: Drug[] = [
-  {
-    name: "Estradiol",
-    type: "pill",
-    dosage: "2 mg",
-    times: [
-      { taken: false, time: "08:00 AM" },
-      { taken: false, time: "08:00 PM" },
-    ],
-    notes: ["Take with or without food."],
-  },
-  {
-    name: "Spironolactone",
-    type: "pill",
-    dosage: "100 mg",
-    times: [
-      { taken: false, time: "09:00 AM" },
-      { taken: false, time: "09:00 PM" },
-    ],
-    notes: ["Take with food to avoid stomach upset."],
-  },
-  {
-    name: "Testosterone",
-    type: "injection",
-    dosage: "50 mg",
-    times: [{ taken: false, time: "10:00 AM" }],
-    notes: ["Administer as directed by your healthcare provider."],
-  },
-  {
-    name: "Progesterone",
-    type: "pill",
-    dosage: "200 mg",
-    times: [
-      { taken: false, time: "10:00 AM" },
-      { taken: false, time: "10:00 PM" },
-    ],
-    notes: ["Take at bedtime to avoid dizziness."],
-  },
-];
-
 export const countries = [
   { name: "Afghanistan", flag: "🇦🇫" },
   { name: "Albania", flag: "🇦🇱" },
