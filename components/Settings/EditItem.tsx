@@ -126,7 +126,7 @@ const EditItem = ({
     name === "age" && (parseInt(value) < 18 || parseInt(value) > 100);
 
   return (
-    <View className={clsx(["   mt-2  px-4"])}>
+    <View className={clsx(["   mt-5  px-4"])}>
       <View className="flex-row items-center space-x-2">
         {step === 2 && <Back action={() => setStep(1)} />}
         <Text className=" text-xl flex-1  font-fwbold text-center capitalize ">

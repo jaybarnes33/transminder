@@ -25,8 +25,8 @@ const Feeling = ({
   return (
     <TouchableOpacity
       className={clsx([
-        "w-[25%] items-center space-y-1  rounded-full",
-        type === "mood" && "w-[20%]",
+        " items-center space-y-1  rounded-full",
+        type === "feeling" && "w-1/4",
       ])}
       key={item}
       onPress={() => onPress(type, item)}
@@ -54,7 +54,14 @@ const Feeling = ({
           </View>
         )}
       </View>
-      <Text className="font-main text-base capitalize text-center">{item}</Text>
+      <Text
+        className={clsx([
+          "font-main text-base capitalize text-center",
+          type === "feeling" && "text-sm",
+        ])}
+      >
+        {item}
+      </Text>
     </TouchableOpacity>
   );
 };

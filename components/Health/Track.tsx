@@ -72,8 +72,11 @@ const Track = () => {
               </Text>
             </View>
             <View className="flex-row absolute space-x-2 bottom-4 right-4">
-              {checkLogsForDays(data.logs, days).map((d) => (
-                <View className="items-center space-y-1">
+              {checkLogsForDays(data.logs, days).map((d, index) => (
+                <View
+                  className="items-center space-y-1"
+                  key={`${d.dayOfWeek}-${index}`}
+                >
                   <View
                     className={clsx([
                       "h-2 w-2 rounded-full",

@@ -1,11 +1,5 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-} from "react-native";
-import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRouter } from "expo-router";
 import Back from "@/components/Core/Back";
@@ -16,7 +10,7 @@ import Message from "@/components/Core/Message";
 import Input from "@/components/Core/Input";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import { mutate } from "swr";
-// import Google from "@/components/Auth/Google";
+import Google from "@/components/Auth/Google";
 
 const Login = () => {
   const [form, setForm] = React.useState({
@@ -130,7 +124,7 @@ const Login = () => {
             <Text className="font-main font-semibold text-gray-500">OR</Text>
             <View className="h-px bg-gray-300  w-1/2   " />
           </View>
-          {/* <Google /> */}
+          <Google />
         </View>
       </SafeAreaView>
     </UnAuthContent>

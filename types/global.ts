@@ -34,7 +34,7 @@ export interface ErrorObj {
   message: string;
 }
 
-export type Drug = {
+export type DrugPayload = {
   name: string;
   dosage: string;
   type: "pill" | "patch" | "injection" | "syrup";
@@ -42,6 +42,12 @@ export type Drug = {
   notes: string;
   unit: string;
 };
+
+export interface Drug extends DrugPayload {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export type IconName = keyof typeof icons;
 

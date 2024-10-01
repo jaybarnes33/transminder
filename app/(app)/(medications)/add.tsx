@@ -7,23 +7,23 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Drug, IconName } from "@/types/global";
+import { Drug, DrugPayload, IconName } from "@/types/global";
 import Input from "@/components/Core/Input";
 import clsx from "clsx";
 import Back from "@/components/Core/Back";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { doses, drugTypes } from "@/constants";
 import Icon from "@/components/Core/Icon";
 import { Feather, FontAwesome6, Octicons } from "@expo/vector-icons";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import axiosInstance from "@/lib/axios";
 import Message from "@/components/Core/Message";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 
 const Add = () => {
-  const [drug, setDrug] = useState<Drug>({
+  const [drug, setDrug] = useState<DrugPayload>({
     name: "",
     times: [new Date().toTimeString().split(" ")[0]],
     dosage: "",
@@ -32,10 +32,13 @@ const Add = () => {
     unit: "",
   });
 
+  const { id } = useLocalSearchParams();
+
   const [error, setError] = useState("");
   const { navigate } = useRouter();
   const [step, setStep] = useState(0);
 
+  const isEdit = !!id;
   const [show, setShow] = useState(false);
   const [activeReminderIndex, setActiveReminderIndex] = useState<number | null>(
     null
@@ -77,8 +80,9 @@ const Add = () => {
   };
 
   const handleBack = () => {
-    if (step === 0) {
+    if (step < 1) {
       navigate("/(app)/(medications)");
+      return;
     }
     setStep((step: number) => step - 1);
   };
@@ -87,11 +91,32 @@ const Add = () => {
     setDrug((prev) => ({ ...prev, [key]: value }));
   };
 
+  const [name, setName] = useState("");
+
+  const fetchDrug = async () => {
+    const { data } = await axiosInstance.get(`/drugs/${id}`);
+    return data;
+  };
+
+  const {
+    data,
+    isLoading,
+    error: fetchError,
+  } = useSWR(`/drug/${id}`, fetchDrug);
+  useEffect(() => {
+    if (isEdit && data?.name) {
+      setDrug(data);
+      setName(data.name);
+    }
+  }, [isEdit, data]);
   const addDrug = async () => {
     try {
-      console.log({ drug });
-      const { data } = await axiosInstance.post("/drugs", drug);
+      console.log({ isEdit });
+      !isEdit
+        ? await axiosInstance.post("/drugs", drug)
+        : await axiosInstance.put(`/drugs/${id}`, drug);
       mutate("/medications");
+      mutate("/medications?size");
       navigate("/(medications)");
     } catch (error) {
       console.error(error);
@@ -104,7 +129,7 @@ const Add = () => {
     0: (
       <View className="space-y-10">
         <Text className="font-fwbold text-xl text-center capitalize">
-          Add medication name
+          {isEdit ? `Edit ${name}` : "Add medication name"}
         </Text>
         <View>
           <Input
@@ -333,7 +358,11 @@ const Add = () => {
             <Back action={handleBack} />
             <View>
               <Text className="font-main text-base text-center  font-semibold">
-                {step === 0 ? " Add Medication" : drug.name}
+                {step === 0
+                  ? !isEdit
+                    ? " Add Medication"
+                    : `Update ${name}`
+                  : drug.name}
               </Text>
               {step > 1 && (
                 <Text className="text-gray-500 capitalize text-sm text-center">

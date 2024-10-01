@@ -119,7 +119,7 @@ const Mood = () => {
         </Text>
         <View className="space-y-2 ">
           <Text className="font-semibold text-base">Mood</Text>
-          <View className="flex-row justify-between px-4 py-5 bg-white  items-center rounded-[20px]">
+          <View className="flex-row justify-between space-x-4 px-4 py-5 bg-white  items-center rounded-[20px]">
             {moods.map((mood) => (
               <Feeling
                 item={mood}
@@ -133,7 +133,7 @@ const Mood = () => {
         </View>
         <View className="space-y-2">
           <Text className="font-semibold text-base">Feeling</Text>
-          <View className="flex-row justify-between flex-wrap px-4 py-5 bg-white  items-center rounded-[20px] space-y-3">
+          <View className="flex-row  justify-between  flex-wrap px-4x py-5 bg-white  items-center rounded-[20px] space-y-3">
             {feelings.map((feeling) => (
               <Feeling
                 key={feeling}
@@ -148,12 +148,12 @@ const Mood = () => {
         <View className="space-y-4  pb-40">
           <Text className="font-semibold text-base">Add note</Text>
           <View className="relative">
-            <View className="flex-row items-start rounded-xl bg-gray-200">
+            <View className="flex-row h-[100px] items-start rounded-xl bg-gray-200">
               <TextInput
-                className="flex-1 h-[120px]  p-4"
+                className="flex-1  p-4"
                 multiline
+                numberOfLines={10}
                 value={moodData.notes}
-                numberOfLines={5}
                 onChangeText={(text) => handleChange("notes", text)}
                 placeholder="Share what's on your mind...."
               />

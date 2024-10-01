@@ -13,7 +13,8 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { Keyboard } from "react-native";
+import { Keyboard, Text, View } from "react-native";
+import Handle from "@/components/Core/Handle";
 
 type BottomSheetModalContextType = {
   showModal: (content: React.ReactNode) => void;
@@ -57,6 +58,7 @@ export const BottomSheetModalProvider: React.FC<{
         <GorhomBottomSheetModalProvider>
           {children}
           <BottomSheetModal
+            handleComponent={Handle}
             ref={bottomSheetModalRef}
             index={1}
             snapPoints={snapPoints}
