@@ -45,6 +45,7 @@ const DrugDetail = ({ drug }: { drug: Drug }) => {
         dismissModal();
         mutate("/medications");
         mutate("/medications?size");
+        mutate(`/drug/${drug._id}`);
         navigate("/(app)/(medications)");
       } catch (error) {
         //@ts-ignore

@@ -20,6 +20,6 @@ export async function registerForPushNotificationsAsync() {
 
     return token;
   } catch (error) {
-    alert(JSON.stringify(error));
+    alert("Failed to set notification settings");
   }
 }

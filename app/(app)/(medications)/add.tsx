@@ -108,7 +108,10 @@ const Add = () => {
       setDrug(data);
       setName(data.name);
     }
-  }, [isEdit, data]);
+    if (!isLoading && fetchError) {
+      setError("Failed to load data");
+    }
+  }, [isEdit, data, fetchError]);
   const addDrug = async () => {
     try {
       console.log({ isEdit });
