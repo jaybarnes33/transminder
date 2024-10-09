@@ -15,7 +15,7 @@ const Track = () => {
     return data;
   };
 
-  const { data, isLoading: loadingMood, error } = useSWR("/mood", getLogData);
+  const { data, isLoading: loadingMood } = useSWR("/mood", getLogData);
 
   const moodScale = {
     5: "Mostly Awesome",
@@ -43,53 +43,67 @@ const Track = () => {
 
       <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm space-y-1">
         {!loadingMood ? (
-          <>
-            <View className="flex-row  justify-between items-center">
-              <Text className="font-main text-base">Well-being</Text>
-              <Text className="font-semibold text-base">Last 7 days</Text>
-            </View>
-            <Text className="text-xl font-fwbold">
-              {data?.averageMoodScore
-                ? moodScale[
-                    Math.round(data.averageMoodScore) as keyof typeof moodScale
-                  ]
-                : "Not enough data"}
-            </Text>
-            <View className="flex-row  space-x-2 items-center">
-              {isGood ? (
-                <Octicons name="check-circle-fill" size={16} color="#46C17E" />
-              ) : (
-                <Ionicons name="alert-circle-sharp" size={16} color="#FD8C6C" />
-              )}
-
-              <Text
-                className={clsx(
-                  " text-[#FD8C6C] font-fwbold text-sm",
-                  isGood && "text-[#46C17E]"
-                )}
-              >
-                {isGood ? "Good" : "Find a balance"}
+          data.logs?.length ? (
+            <>
+              <View className="flex-row  justify-between items-center">
+                <Text className="font-main text-base">Well-being</Text>
+                <Text className="font-semibold text-base">Last 7 days</Text>
+              </View>
+              <Text className="text-xl font-fwbold">
+                {data?.averageMoodScore
+                  ? moodScale[
+                      Math.round(
+                        data.averageMoodScore
+                      ) as keyof typeof moodScale
+                    ]
+                  : "Not enough data"}
               </Text>
-            </View>
-            <View className="flex-row absolute space-x-2 bottom-4 right-4">
-              {checkLogsForDays(data.logs, days).map((d, index) => (
-                <View
-                  className="items-center space-y-1"
-                  key={`${d.dayOfWeek}-${index}`}
+              <View className="flex-row  space-x-2 items-center">
+                {isGood ? (
+                  <Octicons
+                    name="check-circle-fill"
+                    size={16}
+                    color="#46C17E"
+                  />
+                ) : (
+                  <Ionicons
+                    name="alert-circle-sharp"
+                    size={16}
+                    color="#FD8C6C"
+                  />
+                )}
+
+                <Text
+                  className={clsx(
+                    " text-[#FD8C6C] font-fwbold text-sm",
+                    isGood && "text-[#46C17E]"
+                  )}
                 >
+                  {isGood ? "Good" : "Find a balance"}
+                </Text>
+              </View>
+              <View className="flex-row absolute space-x-2 bottom-4 right-4">
+                {checkLogsForDays(data.logs, days).map((d, index) => (
                   <View
-                    className={clsx([
-                      "h-2 w-2 rounded-full",
-                      moodColors[d.mood as keyof typeof moodColors],
-                    ])}
-                  ></View>
-                  <Text className="font-semibold text-gray-500">
-                    {d.dayOfWeek}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </>
+                    className="items-center space-y-1"
+                    key={`${d.dayOfWeek}-${index}`}
+                  >
+                    <View
+                      className={clsx([
+                        "h-2 w-2 rounded-full",
+                        moodColors[d.mood as keyof typeof moodColors],
+                      ])}
+                    ></View>
+                    <Text className="font-semibold text-gray-500">
+                      {d.dayOfWeek}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : (
+            <Text className="font-main text-base">No mood data</Text>
+          )
         ) : (
           <Skeleton height={50} />
         )}

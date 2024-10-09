@@ -10,6 +10,7 @@ import {
 import React, { ReactNode, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Drug, DrugPayload, IconName } from "@/types/global";
+import * as Notification from "expo-notifications";
 import Input from "@/components/Core/Input";
 import clsx from "clsx";
 import Back from "@/components/Core/Back";
@@ -91,6 +92,31 @@ const Add = () => {
     setDrug((prev) => ({ ...prev, [key]: value }));
   };
 
+  async function scheduleDailyNotification({
+    hours,
+    minutes,
+  }: {
+    hours: number;
+    minutes: number;
+  }) {
+    await Notification.scheduleNotificationAsync({
+      content: {
+        title: "Transminder",
+        body: `It's time 🕒 to take your medication. ${drug.dosage} ${
+          drug.unit ? drug.unit : ""
+        } (${drug.type}) of ${drug.name} - ${drug.notes} `,
+        priority: Notification.AndroidNotificationPriority.MAX,
+        sound: true,
+        vibrate: [0, 250, 250, 250],
+      },
+
+      trigger: {
+        hour: hours,
+        minute: minutes,
+        repeats: true,
+      },
+    });
+  }
   const [name, setName] = useState("");
 
   const fetchDrug = async () => {
@@ -108,7 +134,7 @@ const Add = () => {
       setDrug(data);
       setName(data.name);
     }
-    if (!isLoading && fetchError) {
+    if (isEdit && !isLoading && fetchError) {
       setError("Failed to load data");
     }
   }, [isEdit, data, fetchError]);
@@ -118,6 +144,18 @@ const Add = () => {
       !isEdit
         ? await axiosInstance.post("/drugs", drug)
         : await axiosInstance.put(`/drugs/${id}`, drug);
+
+      drug.times.forEach(async (time) => {
+        try {
+          let arr = time.split(":");
+          await scheduleDailyNotification({
+            hours: Number(arr[0]),
+            minutes: Number(arr[1].split(":")[0]),
+          });
+        } catch (error) {
+          alert("Error scheduling notification for " + drug.name);
+        }
+      });
       mutate("/medications");
       mutate("/medications?size");
       navigate("/(medications)");

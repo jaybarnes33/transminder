@@ -24,6 +24,7 @@ const Input = (props: TextInputProps & { name?: string }) => {
         className={clsx([
           "h-12 justify-center bg-gray-200   rounded-xl font-main font-semibold w-full",
           focus && " border-2 border-ring ",
+          props.multiline && "h-[100px] py-2",
         ])}
       >
         <TextInput

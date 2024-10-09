@@ -15,7 +15,6 @@ import "react-native-reanimated";
 
 import { AuthProvider } from "@/context/Auth";
 import { BottomSheetModalProvider } from "@/context/BottomSheet";
-import { registerForPushNotificationsAsync } from "@/utils/notification";
 
 export {
   // Catch any errors thrown by the Layout component.

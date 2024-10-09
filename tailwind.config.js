@@ -82,6 +82,7 @@ module.exports = {
         blue: {
           500: "#24B2FF",
           600: "#0D96FF",
+          700: "#067FF3",
         },
         ring: "#bb5adf",
       },

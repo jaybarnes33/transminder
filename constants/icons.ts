@@ -34,4 +34,5 @@ export const icons = {
   capsule: require("@/assets/icons/pill.png"),
   pencil: require("@/assets/icons/pencil.png"),
   sun: require("@/assets/icons/day.png"),
+  drug: require("@/assets/icons/drug.png"),
 };

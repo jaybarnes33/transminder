@@ -23,3 +23,15 @@ export async function registerForPushNotificationsAsync() {
     alert("Failed to set notification settings");
   }
 }
+
+export const generateNotification = async () => {
+  //show the notification to the user
+  Notifications.scheduleNotificationAsync({
+    //set the content of the notification
+    content: {
+      title: "Demo title",
+      body: "Demo body",
+    },
+    trigger: null,
+  });
+};
