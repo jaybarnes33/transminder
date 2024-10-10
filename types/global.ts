@@ -37,8 +37,10 @@ export interface ErrorObj {
 export type DrugPayload = {
   name: string;
   dosage: string;
+  start: string;
   type: "pill" | "patch" | "injection" | "syrup";
   times: string[];
+  repeat: string;
   notes: string;
   unit: string;
 };
@@ -47,6 +49,16 @@ export interface Drug extends DrugPayload {
   _id: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Intake {
+  _id: string;
+  drug: Drug;
+  drugName: string;
+  dosage: string;
+  time: string; // e.g., "14:00:00"
+  taken: boolean;
+  user: string; // Reference to the User model
 }
 
 export type IconName = keyof typeof icons;

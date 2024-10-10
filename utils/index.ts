@@ -111,4 +111,22 @@ export function checkLogsForDays(
   return result;
 }
 
-// Example usage:
+export const filterTimes = (times: string[]): string[] => {
+  const currentTime = new Date(); // Get current time
+
+  return times.filter((timeString) => {
+    // Parse the time string into a Date object for today
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    const timeDate = new Date();
+    timeDate.setHours(hours, minutes, seconds, 0);
+
+    // Get the time difference in milliseconds
+    const timeDifference = currentTime.getTime() - timeDate.getTime();
+
+    // Check if the time is in the future or passed less than an hour ago
+    return (
+      timeDate > currentTime ||
+      (timeDifference >= 0 && timeDifference <= 3600000)
+    );
+  });
+};

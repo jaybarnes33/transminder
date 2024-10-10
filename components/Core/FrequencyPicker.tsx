@@ -9,9 +9,9 @@ const FrequencyPicker = ({
   handleChange: (val: string) => void;
 }) => {
   const data = [
-    { label: "Every day", value: "everyday" },
-    { label: "Every week", value: "everyweek" },
-    { label: "Every month", value: "everymonth" },
+    { label: "Every day", value: "daily" },
+    { label: "Every week", value: "weekly" },
+    { label: "Every month", value: "monthly" },
     { label: "No repeat", value: "none" },
   ];
 

@@ -22,11 +22,15 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import axiosInstance from "@/lib/axios";
 import Message from "@/components/Core/Message";
 import useSWR, { mutate } from "swr";
+import DatePicker from "@/components/Core/DatePicker";
+import FrequencyPicker from "@/components/Core/FrequencyPicker";
 
 const Add = () => {
   const [drug, setDrug] = useState<DrugPayload>({
     name: "",
     times: [new Date().toTimeString().split(" ")[0]],
+    start: new Date().toISOString(),
+    repeat: "daily",
     dosage: "",
     type: "" as Drug["type"],
     notes: "",
@@ -44,6 +48,16 @@ const Add = () => {
   const [activeReminderIndex, setActiveReminderIndex] = useState<number | null>(
     null
   );
+
+  const getSchedule = () => {
+    const day = new Date(drug.start);
+
+    return {
+      repeat: drug.repeat,
+      day: day.getDay(),
+      date: day.getDate(),
+    };
+  };
 
   const handleDateChange = (
     event: any,
@@ -69,7 +83,7 @@ const Add = () => {
     1: !!drug.type,
     2: !!drug.dosage,
     3: !!drug.times,
-    4: !!drug.notes,
+    4: true,
   };
 
   const handleNext = async () => {
@@ -92,31 +106,14 @@ const Add = () => {
     setDrug((prev) => ({ ...prev, [key]: value }));
   };
 
-  async function scheduleDailyNotification({
-    hours,
-    minutes,
-  }: {
-    hours: number;
-    minutes: number;
-  }) {
-    await Notification.scheduleNotificationAsync({
-      content: {
-        title: "Transminder",
-        body: `It's time 🕒 to take your medication. ${drug.dosage} ${
-          drug.unit ? drug.unit : ""
-        } (${drug.type}) of ${drug.name} - ${drug.notes} `,
-        priority: Notification.AndroidNotificationPriority.MAX,
-        sound: true,
-        vibrate: [0, 250, 250, 250],
-      },
+  const handleStart = (val: string) => {
+    handleChange("start", val);
+  };
 
-      trigger: {
-        hour: hours,
-        minute: minutes,
-        repeats: true,
-      },
-    });
-  }
+  const handleFreq = (val: string) => {
+    handleChange("repeat", val);
+  };
+
   const [name, setName] = useState("");
 
   const fetchDrug = async () => {
@@ -142,21 +139,17 @@ const Add = () => {
     try {
       console.log({ isEdit });
       !isEdit
-        ? await axiosInstance.post("/drugs", drug)
-        : await axiosInstance.put(`/drugs/${id}`, drug);
-
-      drug.times.forEach(async (time) => {
-        try {
-          let arr = time.split(":");
-          await scheduleDailyNotification({
-            hours: Number(arr[0]),
-            minutes: Number(arr[1].split(":")[0]),
+        ? await axiosInstance.post("/drugs", {
+            ...drug,
+            schedule: getSchedule(),
+          })
+        : await axiosInstance.put(`/drugs/${id}`, {
+            ...drug,
+            schedule: getSchedule(),
           });
-        } catch (error) {
-          alert("Error scheduling notification for " + drug.name);
-        }
-      });
+
       mutate("/medications");
+      mutate("/intake/generate");
       mutate("/medications?size");
       navigate("/(medications)");
     } catch (error) {
@@ -275,21 +268,14 @@ const Add = () => {
             <TouchableOpacity className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
               <Text className="font-semibold text-base">Start Date</Text>
               <View className="flex-row space-x-2 items-center">
-                <Feather name="calendar" color="#0D96FF" />
-                <Text className="text-[#0d96ff] font-semibold text-base">
-                  Today
-                </Text>
+                <DatePicker value={drug.start} handleChange={handleStart} />
                 <Feather name="chevron-right" size={20} color={"gray"} />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
+            <TouchableOpacity className="h-[50]  rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
               <Text className="font-semibold text-base">Repeat</Text>
               <View className="flex-row space-x-2 items-center">
-                <FontAwesome6 name="repeat" color="#0D96FF" />
-                <Text className="text-[#0d96ff] font-semibold text-base">
-                  Everyday
-                </Text>
-                <Feather name="chevron-right" size={20} color={"gray"} />
+                <FrequencyPicker handleChange={handleFreq} />
               </View>
             </TouchableOpacity>
           </View>
@@ -319,24 +305,26 @@ const Add = () => {
                   >
                     <Text className="text-base">{time}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                      setDrug((prev) => ({
-                        ...prev,
-                        times: prev.times.filter((_, i) => i !== index),
-                      }))
-                    }
-                  >
-                    <Octicons name="trash" size={24} color="red" />
-                  </TouchableOpacity>
+                  {drug.times.length > 0 && (
+                    <TouchableOpacity
+                      onPress={() =>
+                        setDrug((prev) => ({
+                          ...prev,
+                          times: prev.times.filter((_, i) => i !== index),
+                        }))
+                      }
+                    >
+                      <Octicons name="trash" size={24} color="red" />
+                    </TouchableOpacity>
+                  )}
                 </View>
               ))}
               {drug.times.length > 0 && drug.times.length <= 6 && (
                 <TouchableOpacity
                   onPress={() =>
                     handleChange("times", [
-                      new Date().toTimeString().split(" ")[0],
                       ...drug.times,
+                      new Date().toTimeString().split(" ")[0],
                     ])
                   }
                   className="bg-blue-100 my-2 rounded-lg py-3 px-3 flex-row space-x-3 items-center"
