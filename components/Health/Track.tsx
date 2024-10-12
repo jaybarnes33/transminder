@@ -110,9 +110,7 @@ const Track = () => {
             </View>
           </View>
         ) : (
-          <View className="mt-2">
-            <EmptyIntake />
-          </View>
+          <EmptyIntake />
         )
       ) : (
         <View className="my-4">

@@ -4,7 +4,7 @@ import Icon from "../Core/Icon";
 
 const Premium = () => {
   return (
-    <View className="mt-4 mb-14 p-4 h-[280px] bg-white rounded-[20px]">
+    <View className="mt-4 mb-14 p-4 h-[31vh] bg-white rounded-[20px]">
       <View className="flex-row items-center space-x-2">
         <Text className="text-lg font-fwbold">Transminder</Text>
         <Image source={require("@/assets/images/premium.png")} />

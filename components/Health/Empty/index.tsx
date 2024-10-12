@@ -21,7 +21,7 @@ const EmptyState = ({
   color = "bg-purple-500",
 }: EmptyStateProps) => {
   return (
-    <View className="bg-white px-4 py-2 shadow rounded-[20px] space-y-w">
+    <View className="bg-white px-4 py-2 shadow rounded-[20px] space-y-w mt-2">
       <View className="flex-row space-x-4 items-center">
         <Image source={image} />
         <View className="w-[70%] pr-8">
@@ -32,7 +32,7 @@ const EmptyState = ({
         </View>
       </View>
 
-      {!buttonLabel && (
+      {!!buttonLabel && (
         <>
           <Image
             source={require("@/assets/images/line.png")}

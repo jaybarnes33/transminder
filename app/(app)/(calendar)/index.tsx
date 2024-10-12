@@ -99,22 +99,10 @@ const Wrapper: React.FC = () => {
   const renderCustomHeader = (date: Date) => {
     const currentMonth = new Date(date.toString());
     return (
-      <View className="flex-row justify-between items-center w-full h-8">
+      <View className="flex-row h-8">
         <Text className="font-fwbold text-base">
           {formatDate(currentMonth, "MMMM yyyy")}
         </Text>
-        <View className="flex-row items-center space-x-2">
-          <TouchableOpacity
-            onPress={() => handleMonthChange(subMonths(currentMonth, 1))}
-          >
-            <Feather name="chevron-left" size={24} color={"#bb5adf"} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleMonthChange(addMonths(currentMonth, 1))}
-          >
-            <Feather name="chevron-right" size={24} color={"#bb5adf"} />
-          </TouchableOpacity>
-        </View>
       </View>
     );
   };
@@ -140,7 +128,20 @@ const Wrapper: React.FC = () => {
           enableSwipeMonths
           hideExtraDays
           date={day}
-          hideArrows
+          renderArrow={(direction) => (
+            <View
+              className={clsx([
+                "-top-1",
+                direction === "left" && " left-[65vw]",
+              ])}
+            >
+              <Feather
+                name={`chevron-${direction}`}
+                size={24}
+                color={"#bb5adf"}
+              />
+            </View>
+          )}
           theme={{
             backgroundColor: "transparent",
             calendarBackground: "transparent",

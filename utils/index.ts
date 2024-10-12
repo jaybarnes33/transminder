@@ -93,6 +93,7 @@ export function checkLogsForDays(logs: MoodLog[], days: DayObj[]) {
   for (const day of days) {
     // Find if any log matches the current day
     const logForDay =
+      logs &&
       logs.length &&
       logs.find((log) => {
         // Extract date from the createdAt field (formatted as YYYY-MM-DD)
