@@ -21,6 +21,8 @@ import { MoodLog } from "@/types/global";
 
 const Mood = () => {
   const moods = ["terrible", "bad", "okay", "good", "awesome"];
+
+  const { date } = useLocalSearchParams();
   const feelings = [
     "happy",
     "tired",
@@ -40,11 +42,13 @@ const Mood = () => {
     "desperate",
   ];
 
-  const [moodData, setMoodData] = useState<Omit<MoodLog, "createdAt">>({
-    mood: "",
-    feelings: [],
-    notes: "",
-  });
+  const [moodData, setMoodData] = useState<Omit<MoodLog, "createdAt" | "date">>(
+    {
+      mood: "",
+      feelings: [],
+      notes: "",
+    }
+  );
 
   const { id } = useLocalSearchParams();
 
@@ -90,8 +94,8 @@ const Mood = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await axiosInstance.post("/mood", moodData);
-      mutate("/mood/today");
+      await axiosInstance.post("/mood", { ...moodData, date });
+      mutate(`/mood/${date}`);
       mutate("/mood");
       navigate("/(app)/(tabs)");
     } catch (error) {
@@ -107,7 +111,7 @@ const Mood = () => {
       <View className="flex-row items-center justify-between">
         <Back />
         <Text className="font-main text-base text-center flex-1 -ml-4">
-          {format(new Date(), "EEEE, d LLLL yyy")}{" "}
+          {format(new Date(date as string), "EEEE, d LLLL yyy")}{" "}
         </Text>
       </View>
       <ScrollView

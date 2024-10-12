@@ -1,21 +1,29 @@
 import { View, Text, Platform, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Feather } from "@expo/vector-icons";
 
 const DatePicker = ({
   value,
+  isEdit = false,
   handleChange,
 }: {
   handleChange: (val: string) => void;
   value: string;
+  isEdit: boolean;
 }) => {
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    setShow(isEdit);
+  }, [isEdit]);
   return (
     <View className="flex-row items-center">
       {!show && (
         <TouchableOpacity
-          onPress={() => setShow(true)}
+          onPress={() => {
+            setShow(true);
+          }}
           className="flex-row space-x-1 items-center"
         >
           <Feather name="calendar" color="#0D96FF" />

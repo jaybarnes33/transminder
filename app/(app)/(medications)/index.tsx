@@ -16,8 +16,9 @@ import useSWR, { mutate } from "swr";
 import EmptyPlan from "@/components/Health/Empty/EmptyPlan";
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import { Defs, LinearGradient, Rect, Stop, Svg } from "react-native-svg";
-import { formatDate } from "date-fns";
+import { format, formatDate } from "date-fns";
 import { useState } from "react";
+import { formatDrugTimes } from "@/utils";
 
 const DrugDetail = ({ drug }: { drug: Drug }) => {
   const { navigate } = useRouter();
@@ -76,7 +77,7 @@ const DrugDetail = ({ drug }: { drug: Drug }) => {
           </View>
           <Text className="font-fwbold text-xl text-dark">{drug.name}</Text>
           <Text className="text-blue-500 text-base font-semibold">
-            Everyday at {drug.times.join(",")}
+            {formatDrugTimes(drug.times, drug.start, drug.schedule.repeat)}
           </Text>
         </View>
         <View className="mt-4  bg-white p-4 space-y-3 rounded-[20px] shadow">
@@ -136,33 +137,40 @@ const Item = ({ drug }: { drug: Drug }) => {
   const viewDetails = () => {
     showModal(<DrugDetail drug={drug} />);
   };
-  return (
+  return drug.times.map((time) => (
     <TouchableOpacity
+      key={`${drug._id}-${time}`}
       onPress={viewDetails}
       className={" bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center  "}
     >
       <View className="flex-row justify-between space-x-4 items-center">
-        <View
-          className={clsx([
-            "h-10 w-10 items-center justify-center rounded-full",
-            "bg-blue-100",
-          ])}
-        >
-          <Icon name={drug.type as IconName} />
-        </View>
-        <View className="flex-1">
-          <Text className="font-main text-neutral-400 text-sm font-semibold capitalize">
-            {drug.type}
-          </Text>
-          <Text className="font-main text-base font-semibold">{drug.name}</Text>
+        <View className="flex-row flex-1 space-x-2">
+          <View
+            className={clsx([
+              "h-10 w-10 items-center justify-center rounded-full",
+              "bg-blue-100",
+            ])}
+          >
+            <Icon name={drug.type as IconName} />
+          </View>
+          <View>
+            <Text className="font-main text-neutral-400 text-sm font-semibold capitalize">
+              {drug.type}
+            </Text>
+            <Text className="font-main text-base font-semibold">
+              {drug.name}
+            </Text>
+          </View>
         </View>
         <View>
-          <Text className="font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
-            Today, <Text className="uppercase">{drug.times[0]}</Text>
+          <Text className="font-fwbold text-blue-500 text-sm ">
+            <Text>
+              {formatDrugTimes([time], drug.start, drug.schedule.repeat)}
+            </Text>
           </Text>
-          <View className="flex-row justify-between items-center">
+          <View className="flex-row justify-end items-center">
             {!!drug.notes && (
-              <Text className="font-main text-neutral-400 font-semibold text-sm">
+              <Text className="font-main mr-1 text-neutral-400 font-semibold text-sm">
                 1 note
               </Text>
             )}
@@ -171,7 +179,7 @@ const Item = ({ drug }: { drug: Drug }) => {
         </View>
       </View>
     </TouchableOpacity>
-  );
+  ));
 };
 
 const Medications = () => {

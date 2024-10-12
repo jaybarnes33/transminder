@@ -1,4 +1,13 @@
-import { MoodLog } from "@/types/global";
+import { DayObj, Intake, MoodLog } from "@/types/global";
+import { differenceInMinutes, format, parse } from "date-fns";
+
+export const transformDate = (date: Date) => {
+  return {
+    dayOfWeek: date.toLocaleDateString("en-US", { weekday: "short" }),
+    dayOfMonth: date.getDate(),
+    date: date.toISOString(),
+  };
+};
 
 export const getDaysOfWeek = () => {
   const currentDate = new Date();
@@ -9,10 +18,8 @@ export const getDaysOfWeek = () => {
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(sunday);
     date.setDate(sunday.getDate() + i);
-    return {
-      dayOfWeek: date.toLocaleDateString("en-US", { weekday: "short" }),
-      dayOfMonth: date.getDate(),
-    };
+    date.setHours(0, 0, 0, 0);
+    return transformDate(date);
   });
 };
 
@@ -68,41 +75,34 @@ export function getLastNDaysWithDayInitials(n: number) {
     const date = new Date();
     date.setDate(date.getDate() - i); // Subtract i days from current date
 
-    // Get the first letter of the day of the week
-    const dayOfWeek = date
-      .toLocaleDateString("en-US", { weekday: "short" })
-      .charAt(0);
+    date.setHours(0, 0, 0, 0);
 
     // Format date as YYYY-MM-DD
-    const formattedDate = date.toISOString().split("T")[0];
 
-    result.push({
-      date: formattedDate,
-      dayOfWeek,
-    });
+    result.push(transformDate(date));
   }
 
   return result.reverse(); // Reverse to show the oldest date first
 }
 
-export function checkLogsForDays(
-  logs: MoodLog[],
-  days: { date: string; dayOfWeek: string }[]
-) {
+export function checkLogsForDays(logs: MoodLog[], days: DayObj[]) {
+  console.log({ logs });
   // Initialize the result array
   const result = [];
 
   for (const day of days) {
     // Find if any log matches the current day
-    const logForDay = logs.find((log) => {
-      // Extract date from the createdAt field (formatted as YYYY-MM-DD)
-      const logDate = new Date(log.createdAt).toISOString().split("T")[0];
-      return logDate === day.date;
-    });
+    const logForDay =
+      logs.length &&
+      logs.find((log) => {
+        // Extract date from the createdAt field (formatted as YYYY-MM-DD)
+        const logDate = new Date(log.date).toISOString().split("T")[0];
+        return logDate === day.date.split("T")[0];
+      });
 
     // Push result with information about whether a log exists and the mood
     result.push({
-      dayOfWeek: day.dayOfWeek,
+      ...day,
       hasLog: !!logForDay, // true if log exists, false otherwise
       mood: logForDay ? logForDay.mood : null, // Include mood if log exists, otherwise null
     });
@@ -130,3 +130,145 @@ export const filterTimes = (times: string[]): string[] => {
     );
   });
 };
+
+export const convertColor = (hexCode: string, type: string) => {
+  return `${type}-[${hexCode}]`;
+};
+
+const getDayOfWeek = (dateString?: string) => {
+  const date = dateString ? new Date(dateString) : new Date();
+  return format(date, "EEEE"); // Returns the full day name (e.g., "Monday")
+};
+
+export const formatDrugTimes = (
+  times: string[],
+  startDate?: string,
+  frequency?: "weekly" | "everyday" | "monthly" | "once"
+) => {
+  const dayOfWeek = getDayOfWeek(startDate); // Get the day of the week for the startDate
+
+  // Format the times
+  const formattedTimes = times
+    .map((time) => {
+      const splitTime = time.split(":").map((t) => Number.parseInt(t));
+      const date = new Date().setHours(splitTime[0], splitTime[1]);
+      return format(date, "hh:mm aa"); // Format time as 'hh:mm AM/PM'
+    })
+    .join(", ");
+
+  // Return the message based on the frequency
+  switch (frequency) {
+    case "everyday":
+      return `Everyday at ${formattedTimes}`;
+    case "weekly":
+      return `Every ${dayOfWeek} at ${formattedTimes}`;
+    case "monthly":
+      return `Every month on the ${new Date(
+        startDate || Date.now()
+      ).getDate()} at ${formattedTimes}`;
+    default:
+      return formattedTimes; // If no frequency, just return the times
+  }
+};
+
+export const getDrugStatus = (
+  drugStatus: string | null,
+  time: string
+): string => {
+  // Parse the time string (e.g., "14:30" -> "2:30 PM") and compare it with the current time
+  const currentTime = new Date();
+
+  const splitTime = time.split(":").map((i) => Number.parseInt(i));
+  const drugTime = new Date().setHours(splitTime[0], splitTime[1]); // Assumes the time format is 24-hour (e.g., "14:30")
+
+  // Calculate the time difference in minutes between the current time and the drug time
+  const timeDifference = differenceInMinutes(currentTime, drugTime);
+
+  // If the drug has already been marked as taken or skipped, return the current status
+  if (drugStatus === "taken" || drugStatus === "skipped") {
+    return drugStatus;
+  }
+
+  // If the time difference is more than 60 minutes and not taken, it's missed
+  if (timeDifference > 60) {
+    return "missed";
+  }
+
+  // Otherwise, it's still pending
+  return "pending";
+};
+
+const thresholds: { [key: number]: [string, string] } = {
+  1.5: ["Need a break?", "Mostly Terrible"],
+  2.5: ["Find support", "Mostly Bad"],
+  3.5: ["Maintain balance", "Mostly Okay"],
+  4.5: ["Keep building", "Mostly Good"],
+  5.0: ["Share the joy", "Mostly Awesome"],
+};
+
+export function getAverageMood(moodScore: number): [string, string] {
+  const threshold =
+    Object.keys(thresholds)
+      .map(Number)
+      .find((key) => moodScore <= key) || 5.0; // Default to the highest threshold
+
+  return thresholds[threshold];
+}
+
+export const getMonth = (date: Date = new Date()): number => {
+  return date.getMonth() + 1; // getMonth() returns 0-indexed month, so add 1
+};
+
+export function checkIntakeForDays(
+  intakes: Pick<Intake, "createdAt" | "status">[],
+  days: DayObj[]
+) {
+  console.log({ intakes });
+  // Initialize the result array
+  const result = [];
+
+  for (const day of days) {
+    // Find if any intake matches the current day
+    const intakeForDay =
+      intakes.length &&
+      intakes.find((intake) => {
+        // Extract date from the createdAt field (formatted as YYYY-MM-DD)
+        const intakeDate = new Date(intake.createdAt)
+          .toISOString()
+          .split("T")[0];
+        return intakeDate === day.date.split("T")[0];
+      });
+
+    // Push result with information about whether an intake exists and its status
+    result.push({
+      ...day,
+      hasIntake: !!intakeForDay, // true if intake exists, false otherwise
+      status: intakeForDay ? intakeForDay.status : null, // Include status if intake exists, otherwise null
+    });
+  }
+
+  return result;
+}
+
+export function getIntakeStatus(
+  completedIntakes: number,
+  totalIntakes: number
+): [string, string] {
+  if (totalIntakes === 0) {
+    return ["no intake planned", "text-gray-500"];
+  }
+
+  const completionRate = (completedIntakes / totalIntakes) * 100;
+
+  const statusMap: { [key: number]: [string, string] } = {
+    100: ["completed", "text-green-500"],
+    50: ["partial", "text-yellow-500"],
+    0: ["missed", "text-red-400"],
+  };
+
+  return completionRate === 100
+    ? statusMap[100]
+    : completionRate >= 50
+    ? statusMap[50]
+    : statusMap[0];
+}

@@ -14,7 +14,7 @@ const Auth = () => {
         <View className="items-center h-[70vh] justify-center  space-y-4">
           <Image source={require("@/assets/images/logo2.png")} />
           <View className="w-full items-center">
-            <Text className="font-fwbold font-main text-2xl text-center">
+            <Text className="font-fwbold  text-2xl text-center">
               Welcome to Transminder
             </Text>
             <Text className="text-center font-main max-w-[200px] ">

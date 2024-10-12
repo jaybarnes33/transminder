@@ -5,11 +5,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Input from "@/components/Core/Input";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { containsNumber, containsSymbol, isValidEmail } from "@/utils";
 import clsx from "clsx";
 import axiosInstance from "@/lib/axios";
@@ -37,12 +37,12 @@ const Forgot = () => {
   useEffect(() => {
     if (email && !formData.email) {
       setFormData({ ...formData, email });
-      setStep("otp");
-      requestOtp();
+      setStep("change");
     }
   }, [email]);
 
   const validations = {
+    change: true,
     email: isValidEmail(formData.email),
     otp: formData.otp.length === 6,
     reset:
@@ -81,6 +81,23 @@ const Forgot = () => {
   };
 
   const components = {
+    change: (
+      <View className="space-y-4">
+        <View className="space-y-2">
+          <Text className="font-fwbold text-2xl text-center">
+            Change your password
+          </Text>
+          <View>
+            <Text className="font-main text-base  text-center text-neutral-500">
+              Request an OTP to be sent to your email
+            </Text>
+            <Text className="font-fwbold text-center text-neutral-500">
+              {formData.email}
+            </Text>
+          </View>
+        </View>
+      </View>
+    ),
     email: (
       <View className=" space-y-4">
         <Image
@@ -204,11 +221,15 @@ const Forgot = () => {
     ),
   };
 
-  const { navigate } = useRouter();
+  const { navigate, back } = useRouter();
 
   const handleNext = async () => {
     setLoading(true);
     try {
+      if (step === "change") {
+        await requestOtp();
+        setStep("otp");
+      }
       if (step === "email") {
         await requestOtp();
         setStep("otp");
@@ -234,17 +255,21 @@ const Forgot = () => {
   };
 
   const titles = {
+    change: "Reset Password",
     email: email ? "Update Password" : "Forgot Password",
     otp: "Check your email",
     reset: "Set a new password",
   };
 
   const handleBack = () => {
-    if (step === "otp") {
-      setStep("email");
-    }
-    if (step === "reset") {
+    if (step === "change") {
+      navigate("/(app)/(settings)/account");
+    } else if (step === "otp") {
+      !!email ? setStep("change") : setStep("email");
+    } else if (step === "reset") {
       setStep("otp");
+    } else {
+      back();
     }
   };
 
@@ -257,10 +282,17 @@ const Forgot = () => {
   }, [resend, step]);
 
   const buttonText = {
+    change: "Request OTP",
     email: "Reset Password",
     otp: "Next",
     reset: "Next",
     success: "Login",
+  };
+
+  const hideBack = !!email && step === "otp";
+
+  const cancel = () => {
+    !!email ? navigate("/(app)/(settings)/account") : navigate("/Login");
   };
   return (
     <SafeAreaView className="bg-purple-50 flex-1 px-4">
@@ -269,11 +301,17 @@ const Forgot = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {step !== "success" && (
-          <View className="flex-row items-center py-2">
-            <Back action={step !== "email" ? handleBack : undefined} />
-            <Text className="font-main -ml-4 flex-1 text-center text-base text-dark">
+          <View className="flex-row relative justify-center items-center py-2">
+            {!hideBack && <Back action={handleBack} />}
+            <Text className="font-main  flex-1 text-center text-base text-dark">
               {titles[step]}
             </Text>
+            <TouchableOpacity
+              onPress={cancel}
+              className="absolute right-0  z-[999]  "
+            >
+              <Text className="font-main text-base">Cancel</Text>
+            </TouchableOpacity>
           </View>
         )}
         {error && <Message message={error} />}

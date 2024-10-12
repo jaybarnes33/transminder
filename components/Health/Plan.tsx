@@ -4,6 +4,7 @@ import {
   Touchable,
   TouchableOpacity,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Drug, IconName, Intake } from "@/types/global";
@@ -15,6 +16,10 @@ import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
 import useSWR, { mutate } from "swr";
 import EmptyPlan from "./Empty/EmptyPlan";
+import { format } from "date-fns";
+import { getDrugStatus } from "@/utils";
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { icons } from "@/constants/icons";
 
 const Item = ({ item }: { item: Intake }) => {
   const [showButtons, setShowButtons] = useState(false);
@@ -45,6 +50,7 @@ const Item = ({ item }: { item: Intake }) => {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
+  const canEdit = showButtons && item.status === "pending";
   const changeState = async (action: "skipped" | "taken") => {
     setLoading((prev) => ({ ...prev, [action]: true }));
     await axiosInstance.get(`/drugs/intake/${item._id}?action=${action}`);
@@ -52,6 +58,13 @@ const Item = ({ item }: { item: Intake }) => {
     mutate("/intake?size");
     setLoading((prev) => ({ ...prev, [action]: false }));
   };
+
+  const splitTime = item.time.split(":").map((t) => Number.parseInt(t));
+
+  const time = new Date();
+  time.setHours(splitTime[0], splitTime[1]);
+
+  const status = getDrugStatus(item.status, item.time);
 
   return (
     <View
@@ -64,32 +77,61 @@ const Item = ({ item }: { item: Intake }) => {
             "bg-blue-100",
           ])}
         >
-          <Icon name={item.drug.type as IconName} />
+          <Icon name={item.drug?.type as IconName} />
         </View>
         <View className="flex-1">
           <Text className="font-main text-neutral-400 text-sm font-semibold capitalize">
-            {item.drug.type}
+            {item.drug?.type}
           </Text>
           <Text className="font-main text-base font-semibold">
             {item.drugName}
           </Text>
         </View>
         <View>
-          <Text className="font-fwbold text-blue-500 text-capitalize   text-sm capitalize">
-            Today, <Text className="uppercase">{item.time}</Text>
+          <Text
+            className={clsx([
+              "font-fwbold text-blue-500    text-sm capitalize",
+              item.status !== "pending" && "text-neutral-400",
+            ])}
+          >
+            {item.status !== "pending" ? "Earlier today" : "Today"},
+            <Text className="uppercase"> {format(time, "hh:mm aa")}</Text>
           </Text>
-          {/* {!!drug?.notes && (
-            <View className="flex-row justify-between items-center">
-              <Text className="font-main text-neutral-400 font-semibold text-sm">
-                1 note
+          {!!item.drug?.notes && (
+            <View className="flex-row  justify-end items-center">
+              <Text className=" mr-2 text-neutral-400 font-fwbold text-xs">
+                1 note attached
               </Text>
               <Icon name="push-pin" />
             </View>
-          )} */}
+          )}
+          {status !== "pending" && (
+            <View
+              className={clsx([
+                "ml-auto flex-row mt-1 h-5 items-center justify-center",
+              ])}
+            >
+              <Text
+                className={clsx([
+                  "font-semibold text-sm capitalize",
+                  status === "skipped" && "text-dark",
+                  status === "taken" && "text-blue-500",
+                  status === "missed" && "text-red-500",
+                ])}
+              >
+                {status}&nbsp;
+              </Text>
+              <Text>{icons[status as keyof typeof icons]}</Text>
+            </View>
+          )}
         </View>
       </View>
-      {showButtons && (
-        <View className="flex-row space-x-3 py-3 border-t border-neutral-400 w-full mt-3 flex-1">
+      {canEdit && status === "pending" && (
+        <View className="flex-row space-x-3 py-3 w-full mt-3 flex-1">
+          <Image
+            className="absolute w-full"
+            source={require("@/assets/images/line.png")}
+          />
           <TouchableOpacity
             onPress={() => changeState("skipped")}
             className="flex-1 h-[40] bg-gray-200  space-x-2 flex-row rounded-full justify-center items-center"
@@ -127,7 +169,7 @@ const Plan = () => {
   };
 
   const generateIntakes = async () => {
-    const { data } = await axiosInstance.get("/drugs/intake/generate/?size=5");
+    const { data } = await axiosInstance.get("/drugs/intake/generate");
 
     mutate("/intake?size");
     return data;
@@ -140,14 +182,14 @@ const Plan = () => {
       <View className="flex-row items-center justify-between space-x-2">
         <Heading
           text="Your plan"
-          more="View plan"
+          more="View meds"
           moreAction={() => navigate("/(medications)")}
         />
       </View>
       <View>
         <FlatList
           data={drugs}
-          ListEmptyComponent={EmptyPlan}
+          ListEmptyComponent={<EmptyPlan />}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => <Item item={{ ...item }} />}
         />

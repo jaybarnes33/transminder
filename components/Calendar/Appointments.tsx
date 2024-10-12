@@ -6,14 +6,27 @@ import { useRouter } from "expo-router";
 import useSWR from "swr";
 import axiosInstance from "@/lib/axios";
 import { FlatList } from "react-native-gesture-handler";
+import EmptyEvents from "../Health/Empty/EmptyEvents";
 
-const Appointments = ({ limitted }: { limitted?: boolean }) => {
+const Appointments = ({
+  limitted,
+  date,
+}: {
+  limitted?: boolean;
+  date?: string;
+}) => {
   const { navigate } = useRouter();
 
-  const { data, isLoading } = useSWR("/events", async () => {
-    const { data: res } = await axiosInstance.get("/events");
-    return res;
-  });
+  const { data, isLoading } = useSWR(
+    `/events?date=${date ? date : ""}`,
+    async () => {
+      const { data: res } = await axiosInstance.get(
+        `/events?date=${date ? date : ""}`
+      );
+
+      return res.events;
+    }
+  );
 
   return (
     <View className="mb-4">
@@ -21,7 +34,7 @@ const Appointments = ({ limitted }: { limitted?: boolean }) => {
         <View className="mt-4">
           <Heading
             text="Appointments"
-            more="View Calendar"
+            more="View calendar"
             moreAction={() => navigate("/(app)/(calendar)")}
           />
         </View>
@@ -34,13 +47,9 @@ const Appointments = ({ limitted }: { limitted?: boolean }) => {
         ) : (
           <FlatList
             data={data}
-            ListEmptyComponent={
-              <View>
-                <Text>No appointments scheduled</Text>
-              </View>
-            }
+            ListEmptyComponent={<EmptyEvents />}
             keyExtractor={(item) => item._id}
-            renderItem={({ item }) => <Appointment event={item} />}
+            renderItem={({ item }) => <Appointment event={item} date={date} />}
           />
         )}
       </View>

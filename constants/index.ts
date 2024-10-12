@@ -222,3 +222,39 @@ export const doses = [
   "Milliliters (ml)",
   "Percentage (%)",
 ];
+
+export const moodColors = {
+  terrible: "bg-red-500",
+  bad: "bg-orange-500",
+  okay: "bg-yellow-500",
+  good: "bg-green-300",
+  awesome: "bg-green-500",
+  null: "bg-gray-400",
+};
+
+export const eventColors = {
+  event: {
+    color: "#B85ADF",
+    text: "text-event",
+    bg: "bg-event",
+    border: "border-event",
+  },
+  "health_check-in": {
+    color: "#4DA2F4",
+    text: "text-health_check-in",
+    bg: "bg-health_check-in",
+    border: "border-health_check-in",
+  },
+  community: {
+    color: "#FDCBF4",
+    text: "text-community",
+    bg: "bg-community",
+    border: "border-community",
+  },
+  milestones: {
+    color: "#F6D95D",
+    text: "text-milestones",
+    bg: "bg-milestones",
+    border: "border-milestones",
+  },
+};

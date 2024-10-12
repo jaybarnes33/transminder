@@ -1,21 +1,29 @@
-import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
-import { useState } from "react";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 const FrequencyPicker = ({
   handleChange,
+  val,
 }: {
   handleChange: (val: string) => void;
+  val?: string;
 }) => {
   const data = [
-    { label: "Every day", value: "daily" },
-    { label: "Every week", value: "weekly" },
-    { label: "Every month", value: "monthly" },
-    { label: "No repeat", value: "none" },
+    { label: "Everyday", value: "everyday" },
+    { label: "Weekly", value: "weekly" },
+    { label: "Monthly", value: "monthly" },
+    { label: "Once", value: "none" },
   ];
 
   const [value, setValue] = useState<(typeof data)[number]>(data[0]);
+
+  useEffect(() => {
+    if (val) {
+      setValue(data.find((item) => item.value === val) ?? data[0]);
+    }
+  }, [val]);
   const renderItem = (item: { label: string; value: string }) => {
     return (
       <View style={styles.item}>
@@ -59,7 +67,6 @@ const FrequencyPicker = ({
 
 const styles = StyleSheet.create({
   dropdown: {
-    margin: 16,
     height: 50,
     width: 150,
   },

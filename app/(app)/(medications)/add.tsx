@@ -24,6 +24,7 @@ import Message from "@/components/Core/Message";
 import useSWR, { mutate } from "swr";
 import DatePicker from "@/components/Core/DatePicker";
 import FrequencyPicker from "@/components/Core/FrequencyPicker";
+import KeyboardAvoidingScrollView from "@/components/Core/AvoidKeyboard";
 
 const Add = () => {
   const [drug, setDrug] = useState<DrugPayload>({
@@ -268,7 +269,11 @@ const Add = () => {
             <TouchableOpacity className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
               <Text className="font-semibold text-base">Start Date</Text>
               <View className="flex-row space-x-2 items-center">
-                <DatePicker value={drug.start} handleChange={handleStart} />
+                <DatePicker
+                  isEdit={isEdit}
+                  value={drug.start}
+                  handleChange={handleStart}
+                />
                 <Feather name="chevron-right" size={20} color={"gray"} />
               </View>
             </TouchableOpacity>
@@ -305,7 +310,7 @@ const Add = () => {
                   >
                     <Text className="text-base">{time}</Text>
                   </TouchableOpacity>
-                  {drug.times.length > 0 && (
+                  {drug.times.length > 1 && (
                     <TouchableOpacity
                       onPress={() =>
                         setDrug((prev) => ({
@@ -333,6 +338,9 @@ const Add = () => {
                   <Text className="font-semibold text-[#0d96ff]">Add Time</Text>
                 </TouchableOpacity>
               )}
+              <Text className="font-semibold -top-2 text-neutral-400 text-sm">
+                A reminder will be sent by Transminder.
+              </Text>
             </ScrollView>
           </View>
         </View>
@@ -351,7 +359,9 @@ const Add = () => {
             <Text className="text-neutral-500 font-semibold text-base">
               Schedule
             </Text>
-            <Text className="text-dark font-semibold text-base">Everyday</Text>
+            <Text className="text-dark font-semibold text-base capitalize">
+              {drug.repeat}
+            </Text>
           </View>
           <View className="flex-row  justify-between items-center   ">
             <Text className="text-neutral-500 font-semibold text-base">
@@ -362,7 +372,7 @@ const Add = () => {
             </Text>
           </View>
         </View>
-        <View className="w-full space-y-2">
+        <View className="w-full space-y-2 mb-3">
           <Text className="font-main font-semibold">Notes</Text>
           <TextInput
             className="bg-neutral-100 h-[100px] p-3 rounded-lg"
@@ -377,69 +387,64 @@ const Add = () => {
   };
 
   return (
-    <SafeAreaView className="px-4 flex-1 bg-white">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
-      >
-        <View className="space-y-2 my-2">
-          <View className="flex-row justify-between items-center mb-2">
-            <Back action={handleBack} />
-            <View>
-              <Text className="font-main text-base text-center  font-semibold">
-                {step === 0
-                  ? !isEdit
-                    ? " Add Medication"
-                    : `Update ${name}`
-                  : drug.name}
-              </Text>
-              {step > 1 && (
-                <Text className="text-gray-500 capitalize text-sm text-center">
-                  {drug.type} {step > 2 && `${drug.dosage} ${drug.unit}`}
-                </Text>
-              )}
-            </View>
-
-            <TouchableOpacity onPress={() => navigate("/(app)/(medications)")}>
-              <Text className="text-gray-500 text-base">Cancel</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            className={clsx([
-              "w-screen -left-4 px-4 mt-5 flex-row space-x-1  justify-between",
-            ])}
-          >
-            {Object.keys(components).map((_, index) => (
-              <View
-                key={index}
-                className={clsx([
-                  "flex-1 h-1 rounded-full ",
-                  index <= step ? "bg-blue-500" : "bg-gray-200",
-                ])}
-              />
-            ))}
-          </View>
-        </View>
-        {error && <Message message={error} isError />}
-        <View className="mt-4">{components[step]}</View>
-
-        <View className="bg-white mt-auto">
-          <TouchableOpacity
-            disabled={!validations[step]}
-            onPress={handleNext}
-            className={clsx([
-              "h-[50] mb-5 bg-dark items-center justify-center rounded-[30px]",
-              !validations[step] && "bg-gray-500",
-              step == 4 && "bg-blue-500",
-            ])}
-          >
-            <Text className="font-semibold text-white text-base">
-              {step !== 4 ? "Next" : "Done"}
+    <KeyboardAvoidingScrollView className=" flex-1 bg-white">
+      <View className="space-y-2 my-2">
+        <View className="flex-row justify-between items-center mb-2">
+          <Back action={handleBack} />
+          <View>
+            <Text className="font-main text-base text-center  font-semibold">
+              {step === 0
+                ? !isEdit
+                  ? " Add Medication"
+                  : `Update ${name}`
+                : drug.name}
             </Text>
+            {step > 1 && (
+              <Text className="text-gray-500 capitalize text-sm text-center">
+                {drug.type} {step > 2 && `${drug.dosage} ${drug.unit}`}
+              </Text>
+            )}
+          </View>
+
+          <TouchableOpacity onPress={() => navigate("/(app)/(medications)")}>
+            <Text className="text-gray-500 text-base">Cancel</Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <View
+          className={clsx([
+            "w-screen -left-4 px-4 mt-5 flex-row space-x-1  justify-between",
+          ])}
+        >
+          {Object.keys(components).map((_, index) => (
+            <View
+              key={index}
+              className={clsx([
+                "flex-1 h-1 rounded-full ",
+                index <= step ? "bg-blue-500" : "bg-gray-200",
+              ])}
+            />
+          ))}
+        </View>
+      </View>
+      {error && <Message message={error} isError />}
+      <View className="mt-4">{components[step]}</View>
+
+      <View className="bg-white mt-auto">
+        <TouchableOpacity
+          disabled={!validations[step]}
+          onPress={handleNext}
+          className={clsx([
+            "h-[50] mb-5 bg-dark items-center justify-center rounded-[30px]",
+            !validations[step] && "bg-gray-500",
+            step == 4 && "bg-blue-500",
+          ])}
+        >
+          <Text className="font-semibold text-white text-base">
+            {step !== 4 ? "Next" : "Done"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingScrollView>
   );
 };
 

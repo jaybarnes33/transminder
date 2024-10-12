@@ -7,20 +7,18 @@ import useSWR from "swr";
 import Emoji from "../Core/Emoji";
 import Icon from "../Core/Icon";
 
-const Tracker = () => {
+const Tracker = ({ date }: { date: string }) => {
   const { navigate } = useRouter();
-
-  const [moodLog, setMoodLog] = useState<MoodLog | undefined>();
 
   const fetchMoodLog = async () => {
     const {
       data: { moodLog },
-    } = await axiosInstance.get("/mood/today");
-    console.log(moodLog);
+    } = await axiosInstance.get(`/mood/date?date=${date}`);
+    console.log({ moodLog });
     return moodLog;
   };
 
-  const { data, error, isLoading } = useSWR("/mood/today", fetchMoodLog);
+  const { data, error, isLoading } = useSWR(`/mood/${date}`, fetchMoodLog);
   return isLoading || !data?.mood ? (
     <View className="bg-purple-500 relative rounded-[20px] h-[126] items-center space-y-3 pt-4 my-4">
       <View>
@@ -30,7 +28,9 @@ const Tracker = () => {
         How are you feeling today?
       </Text>
       <TouchableOpacity
-        onPress={() => navigate("/(app)/(mood)")}
+        onPress={() =>
+          navigate({ pathname: "/(app)/(mood)", params: { date } })
+        }
         className="bg-white p-2 w-[144] items-center rounded-[70px] relative z-[99]"
       >
         <Text className="font-fwbold text-purple-500">Log your mood</Text>
@@ -41,12 +41,16 @@ const Tracker = () => {
       />
     </View>
   ) : (
-    <View className="h-[116px] bg-white p-4 rounded-[20px] my-4">
+    <View className="h-[116px] relative bg-white p-4 rounded-[20px] my-4">
+      <Image
+        source={require("@/assets/images/tracker-backdrop.png")}
+        className="absolute right-0 bottom-0"
+      />
       <TouchableOpacity
         onPress={() =>
           navigate({
             pathname: "/(app)/(mood)",
-            params: { id: data._id },
+            params: { id: data._id, date },
           })
         }
         className="absolute right-4 top-4 bg-gray-200 px-5 rounded-full py-2 z-[99]"

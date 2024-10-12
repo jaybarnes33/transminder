@@ -7,13 +7,19 @@ import { Dimensions } from "react-native";
 import Tracker from "@/components/Health/Tracker";
 import Header from "@/components/Core/Header";
 import Plan from "@/components/Health/Plan";
-import Appointments from "@/components/Health/Appointments";
+import Appointments from "@/components/Calendar/Appointments";
 import Track from "@/components/Health/Track";
 import Premium from "@/components/Health/Premium";
+import { DayObj } from "@/types/global";
+import { transformDate } from "@/utils";
 const Index = () => {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  const [day, setDay] = React.useState<DayObj>(transformDate(date));
+
   const sections = [
-    { key: "Calendar", component: <Calendar /> },
-    { key: "Tracker", component: <Tracker /> },
+    { key: "Calendar", component: <Calendar day={day} setDay={setDay} /> },
+    { key: "Tracker", component: <Tracker date={day.date} /> },
     { key: "Plan", component: <Plan /> },
     { key: "Appointments", component: <Appointments /> },
     { key: "Track", component: <Track /> },

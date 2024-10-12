@@ -1,6 +1,12 @@
 const tailwindColors = require("./node_modules/tailwindcss/colors");
 const colorSafeList = [];
-
+const borderSafeList = [
+  "border-health_check-in",
+  "border-event",
+  "border-health",
+  "border-community",
+  "border-milestones",
+];
 // Skip these to avoid a load of deprecated warnings when tailwind starts up
 const deprecated = [
   "lightBlue",
@@ -24,6 +30,7 @@ for (const colorName in tailwindColors) {
       if (shade in pallette) {
         colorSafeList.push(`text-${colorName}-${shade}`);
         colorSafeList.push(`bg-${colorName}-${shade}`);
+        colorSafeList.push(`border-${colorName}-${shade}`); // Add border color classes
       }
     });
   }
@@ -39,8 +46,12 @@ const fonts = {
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
-  safelist: colorSafeList,
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "./constants/**/*.{js,jsx,ts,tsx}",
+  ],
+  safelist: [...colorSafeList, ...borderSafeList], // Safelist all color-related classes
   theme: {
     extend: {
       fontFamily: {
@@ -49,6 +60,13 @@ module.exports = {
         medium: fonts.medium,
         semibold: fonts.semibold,
         fwbold: fonts.bold,
+      },
+      borderColor: {
+        "health_check-in": "#4da2f4",
+        event: "#b85adf", // Added border class for event
+        health: "#4da2f4",
+        community: "#FDCBF4",
+        milestones: "#F6D95D",
       },
       colors: {
         purple: {
@@ -85,6 +103,12 @@ module.exports = {
           700: "#067FF3",
         },
         ring: "#bb5adf",
+        "health_check-in": "#4da2f4",
+        event: "#b85adf", // Added border class for event
+        health: "#4da2f4",
+        community: "#FDCBF4",
+        milestones: "#F6D95D",
+        danger: "#F87171",
       },
     },
   },

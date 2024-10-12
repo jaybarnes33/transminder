@@ -1,4 +1,5 @@
 import { logout } from "@/utils/auth";
+import { AntDesign, Feather, Ionicons, Octicons } from "@expo/vector-icons";
 
 export const icons = {
   health: require("@/assets/icons/health.png"),
@@ -35,4 +36,9 @@ export const icons = {
   pencil: require("@/assets/icons/pencil.png"),
   sun: require("@/assets/icons/day.png"),
   drug: require("@/assets/icons/drug.png"),
+  location: require("@/assets/icons/location.png"),
+  taken: <Octicons name="check-circle-fill" size={12} color="#2fb2ff" />,
+  skipped: <Ionicons name="close-circle-sharp" size={12} color={"#020202"} />,
+  missed: <AntDesign name="exclamationcircle" size={12} color={"#ef4444"} />,
+  pending: <AntDesign name="clockcircle" size={12} color={"gray"} />,
 };
