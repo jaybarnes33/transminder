@@ -1,14 +1,5 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-} from "react-native";
+import { View, Text, TouchableOpacity, Keyboard } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Core/Back";
 import clsx from "clsx";
 import Input from "@/components/Core/Input";
@@ -50,11 +41,7 @@ const Wrapper = () => {
     end: "",
   });
 
-  const isValid =
-    !!formData.location &&
-    !!formData.name &&
-    !!formData.start &&
-    !!formData.end;
+  const isValid = !!formData.name && !!formData.start && !!formData.end;
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingEvent, setLoadingEvent] = useState(false);
