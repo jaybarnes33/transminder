@@ -189,7 +189,7 @@ const Add = () => {
               onPress={() => handleChange("type", type)}
               className={clsx([
                 "p-2 px-3 flex-row justify-between rounded-xl h-[50] items-center space-x-2 bg-gray-200",
-                drug.type === type && "bg-blue-500",
+                drug.type === type && "bg-blue-00",
               ])}
             >
               <Icon
@@ -349,7 +349,7 @@ const Add = () => {
     4: (
       <View className="space-y-10 items-center">
         <View className="items-center space-y-3">
-          <View className="h-12 w-12 bg-blue-100 items-center justify-center rounded-full">
+          <View className="h-12 w-12 bg-blue-500 items-center justify-center rounded-full">
             <Icon name={`${drug.type}-active` as IconName} />
           </View>
           <Text className="font-fwbold text-xl text-center">{drug.name}</Text>
@@ -377,6 +377,7 @@ const Add = () => {
           <TextInput
             className="bg-neutral-100 h-[100px] p-3 rounded-lg"
             value={drug.notes}
+            placeholder="Add notes..."
             onChangeText={(text) => handleChange("notes", text)}
             multiline
             numberOfLines={10}
