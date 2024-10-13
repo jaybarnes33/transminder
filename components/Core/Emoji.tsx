@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import Svg, { Path, Defs, G, ClipPath } from "react-native-svg";
+import Svg, { Path, Defs, G, ClipPath, Rect } from "react-native-svg";
 
 const Emoji = ({
   name,
@@ -403,6 +403,100 @@ const Emoji = ({
           fill={!active ? (size !== "sm" ? "#000" : "#46C17E") : "#24b2ff"}
           fillOpacity={!active && size !== "sm" ? 0.3 : 1}
         />
+      </Svg>
+    ),
+
+    circle: (
+      <Svg width="25" height="24" viewBox="0 0 25 24" fill="none">
+        <G clipPath="url(#clip0_309_4602)">
+          <Path
+            d="M8.89266 3.69043C7.80074 4.14242 6.80852 4.80502 5.97266 5.64043"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M4.02301 8.55957C3.56957 9.64987 3.33511 10.8187 3.33301 11.9996"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M4.02344 15.4404C4.47542 16.5323 5.13803 17.5246 5.97344 18.3604"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M8.89258 20.3096C9.98288 20.763 11.1517 20.9975 12.3326 20.9996"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M15.7734 20.3104C16.8654 19.8584 17.8576 19.1958 18.6934 18.3604"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M20.6426 15.44C21.096 14.3497 21.3305 13.1808 21.3326 12"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M20.6434 8.55965C20.1914 7.46773 19.5288 6.47552 18.6934 5.63965"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <Path
+            d="M15.773 3.69C14.6827 3.23656 13.5138 3.0021 12.333 3"
+            stroke="#C4C4C4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </G>
+        <Defs>
+          <ClipPath id="clip0_309_4602">
+            <Rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0.333008)"
+            />
+          </ClipPath>
+        </Defs>
+      </Svg>
+    ),
+    emoji: (
+      <Svg width="25" height="24" viewBox="0 0 25 24" fill="none">
+        <G clipPath="url(#clip0_309_4354)">
+          <Path
+            d="M17.5 3.33989C19.0083 4.21075 20.2629 5.46042 21.1398 6.96519C22.0167 8.46997 22.4854 10.1777 22.4994 11.9192C22.5135 13.6608 22.0725 15.3758 21.22 16.8946C20.3676 18.4133 19.1332 19.6831 17.6392 20.5782C16.1452 21.4733 14.4434 21.9627 12.7021 21.998C10.9608 22.0332 9.24055 21.6131 7.71155 20.7791C6.18256 19.9452 4.89787 18.7264 3.98467 17.2434C3.07146 15.7604 2.56141 14.0646 2.505 12.3239L2.5 11.9999L2.505 11.6759C2.561 9.94888 3.06355 8.26585 3.96364 6.79088C4.86373 5.31592 6.13065 4.09934 7.64089 3.25977C9.15113 2.42021 10.8531 1.98629 12.581 2.00033C14.3089 2.01437 16.0036 2.47589 17.5 3.33989ZM9.51 8.99989L9.383 9.00689C9.13995 9.0358 8.91594 9.15285 8.75341 9.33586C8.59088 9.51887 8.50111 9.75513 8.50111 9.99989C8.50111 10.2447 8.59088 10.4809 8.75341 10.6639C8.91594 10.8469 9.13995 10.964 9.383 10.9929L9.5 10.9999L9.627 10.9929C9.87005 10.964 10.0941 10.8469 10.2566 10.6639C10.4191 10.4809 10.5089 10.2447 10.5089 9.99989C10.5089 9.75513 10.4191 9.51887 10.2566 9.33586C10.0941 9.15285 9.87005 9.0358 9.627 9.00689L9.51 8.99989ZM15.51 8.99989L15.383 9.00689C15.1399 9.0358 14.9159 9.15285 14.7534 9.33586C14.5909 9.51887 14.5011 9.75513 14.5011 9.99989C14.5011 10.2447 14.5909 10.4809 14.7534 10.6639C14.9159 10.8469 15.1399 10.964 15.383 10.9929L15.5 10.9999L15.627 10.9929C15.87 10.964 16.0941 10.8469 16.2566 10.6639C16.4191 10.4809 16.5089 10.2447 16.5089 9.99989C16.5089 9.75513 16.4191 9.51887 16.2566 9.33586C16.0941 9.15285 15.87 9.0358 15.627 9.00689L15.51 8.99989Z"
+            fill="black"
+            fillOpacity="0.2"
+          />
+        </G>
+        <Defs>
+          <ClipPath id="clip0_309_4354">
+            <Rect
+              width="24"
+              height="24"
+              fill="white"
+              transform="translate(0.5)"
+            />
+          </ClipPath>
+        </Defs>
       </Svg>
     ),
   };
