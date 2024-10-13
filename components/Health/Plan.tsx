@@ -56,6 +56,7 @@ const Item = ({ item }: { item: Intake }) => {
     await axiosInstance.get(`/drugs/intake/${item._id}?action=${action}`);
 
     mutate("/intake?size");
+    mutate("/intake/analytics");
     setLoading((prev) => ({ ...prev, [action]: false }));
   };
 

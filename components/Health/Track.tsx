@@ -65,7 +65,7 @@ const Track = () => {
               </Text>
             </View>
             <Text className="text-xl font-fwbold">
-              {intakeData?.analytics?.pending} /{" "}
+              {intakeData?.analytics?.taken} /{" "}
               {intakeData?.analytics?.totalIntakes}
             </Text>
             <View className="flex-row  space-x-2 items-center">

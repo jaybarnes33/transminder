@@ -38,6 +38,7 @@ const Day = ({
   isActive: boolean;
   events?: Pick<IEvent, "_id" | "date" | "category" | "repeats">[];
 }) => {
+  console.log({ events });
   return (
     <TouchableOpacity
       className={clsx([

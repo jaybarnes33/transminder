@@ -31,7 +31,7 @@ const Add = () => {
     name: "",
     times: [new Date().toTimeString().split(" ")[0]],
     start: new Date().toISOString(),
-    repeat: "daily",
+    repeat: "everyday",
     dosage: "",
     type: "" as Drug["type"],
     notes: "",
@@ -189,7 +189,7 @@ const Add = () => {
               onPress={() => handleChange("type", type)}
               className={clsx([
                 "p-2 px-3 flex-row justify-between rounded-xl h-[50] items-center space-x-2 bg-gray-200",
-                drug.type === type && "bg-blue-00",
+                drug.type === type && "bg-blue-500",
               ])}
             >
               <Icon
@@ -408,7 +408,9 @@ const Add = () => {
           </View>
 
           <TouchableOpacity onPress={() => navigate("/(app)/(medications)")}>
-            <Text className="text-gray-500 text-base">Cancel</Text>
+            <Text className="text-gray-500 font-semibold text-base">
+              Cancel
+            </Text>
           </TouchableOpacity>
         </View>
         <View

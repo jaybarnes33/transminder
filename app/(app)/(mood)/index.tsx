@@ -22,7 +22,7 @@ import { MoodLog } from "@/types/global";
 const Mood = () => {
   const moods = ["terrible", "bad", "okay", "good", "awesome"];
 
-  const { date } = useLocalSearchParams();
+  const { date = new Date().toISOString() } = useLocalSearchParams();
   const feelings = [
     "happy",
     "tired",
