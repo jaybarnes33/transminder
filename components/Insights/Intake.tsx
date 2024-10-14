@@ -57,13 +57,9 @@ const IntakeInsight = ({ intake }: IntakeProps) => {
                   dayIntakes.map((intake) => {
                     // Create an array with 'taken' number of checkmarks and 'total - taken' number of dashed circles
                     const checkmarks = Array(intake.taken).fill(
-                      <View key={intake.id}>
-                        <Octicons
-                          name="check-circle-fill"
-                          size={24}
-                          color="green"
-                        />
-                      </View>
+                      <Text className="text-blue-400" key={intake.id}>
+                        <Octicons name="check-circle-fill" size={24} />
+                      </Text>
                     );
                     const uncompleted = Array(intake.total - intake.taken).fill(
                       <View>
