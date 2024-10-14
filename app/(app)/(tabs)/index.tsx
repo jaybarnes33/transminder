@@ -21,7 +21,10 @@ const Index = () => {
     { key: "Calendar", component: <Calendar day={day} setDay={setDay} /> },
     { key: "Tracker", component: <Tracker date={day.date} /> },
     { key: "Plan", component: <Plan /> },
-    { key: "Appointments", component: <Appointments /> },
+    {
+      key: "Appointments",
+      component: <Appointments date={new Date().toISOString()} />,
+    },
     { key: "Track", component: <Track /> },
     { key: "Premium", component: <Premium /> },
   ];

@@ -1,50 +1,28 @@
-import { ScrollView, Text, View, VirtualizedList } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  View,
+  VirtualizedList,
+} from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import EmptyInsight from "@/components/Health/Empty/Insight";
-import { getDaysOfWeek } from "@/utils";
+import EmptyInsight from "@/components/Insights/Empty";
+import { getDaysOfWeek, getLastNDaysWithDayInitials } from "@/utils";
 import { format } from "date-fns";
+import axiosInstance from "@/lib/axios";
+import useSWR from "swr";
+import IntakeInsight from "@/components/Insights/Intake";
 
 const Insights = () => {
-  const week = getDaysOfWeek();
+  const week = getLastNDaysWithDayInitials(7);
 
-  const sections = [
-    {
-      key: "intake",
-      component: (
-        <EmptyInsight
-          label="Log your meds"
-          heading="Medication Intake"
-          description="No meds logged yet. Start tracking to gain insights into your intake patterns and progress here."
-        />
-      ),
-    },
-    {
-      key: "well-being",
-      component: (
-        <EmptyInsight
-          label="Log your moods"
-          heading="Well-being"
-          showEmojis
-          description="Nothing logged yet. Start tracking to gain insights into your emotional patterns and well-being here."
-        />
-      ),
-    },
-    {
-      key: "mental health",
-      component: (
-        <EmptyInsight
-          label="Log your emotions"
-          heading="Mental health"
-          description="No emotions logged yet. Start tracking to see insights and view your top five emotions here."
-        />
-      ),
-    },
-  ];
+  const fetchData = async () => {
+    const { data } = await axiosInstance.get("/insights");
+    return data;
+  };
 
-  const getItem = (data: typeof sections, index: number) => data[index];
-
-  const getItemCount = (data: typeof sections) => data.length;
+  const { data, isLoading, error } = useSWR("insights", fetchData);
 
   return (
     <SafeAreaView className="p-4">
@@ -52,21 +30,33 @@ const Insights = () => {
         <View>
           <Text className="font-fwbold text-xl">This week</Text>
           <Text>
-            {format(week[0].date, "MMMM dd")} -{" "}
-            {format(week[6].date, "MMMM dd")}{" "}
+            {format(week[0].date, "MMMM d")} - {format(week[6].date, "MMMM d")}{" "}
           </Text>
         </View>
       </View>
-      <VirtualizedList
-        data={sections}
-        contentContainerStyle={{ paddingBottom: 40 }}
-        initialNumToRender={4}
-        renderItem={({ item }) => item.component}
-        keyExtractor={(item) => item.key}
-        getItem={getItem}
-        getItemCount={getItemCount}
-        showsVerticalScrollIndicator={false}
-      />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {isLoading && <ActivityIndicator />}
+        <EmptyInsight
+          label="Log your moods"
+          heading="Well-being"
+          showEmojis
+          description="Nothing logged yet. Start tracking to gain insights into your emotional patterns and well-being here."
+        />
+        {isLoading || !data?.intake.intakes ? (
+          <EmptyInsight
+            label="Log your meds"
+            heading="Medication Intake"
+            description="No meds logged yet. Start tracking to gain insights into your intake patterns and progress here."
+          />
+        ) : (
+          <IntakeInsight intake={data.intake} />
+        )}
+        <EmptyInsight
+          label="Log your emotions"
+          heading="Mental health"
+          description="No emotions logged yet. Start tracking to see insights and view your top five emotions here."
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
