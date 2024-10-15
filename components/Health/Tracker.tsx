@@ -14,7 +14,6 @@ const Tracker = ({ date }: { date: string }) => {
     const {
       data: { moodLog },
     } = await axiosInstance.get(`/mood/date?date=${date}`);
-    console.log({ moodLog });
     return moodLog;
   };
 

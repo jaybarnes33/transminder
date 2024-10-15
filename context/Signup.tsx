@@ -131,7 +131,6 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
         await handleSignup();
       }
     } catch (error: unknown) {
-      console.log(error);
       setError(
         (error as ErrorObj).response?.data?.error ?? (error as ErrorObj).message
       );

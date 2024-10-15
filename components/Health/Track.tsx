@@ -24,10 +24,9 @@ import EmptyTrack from "./Empty/EmptyTrack";
 import { icons } from "@/constants/icons";
 import { Intake, IntakeStat } from "@/types/global";
 
-const Track = () => {
+const Track = ({ noHeading }: { noHeading?: boolean }) => {
   const getLogData = async () => {
     const { data } = await axiosInstance.get("/mood");
-    console.log({ mood: data });
     return data;
   };
 
@@ -35,7 +34,6 @@ const Track = () => {
 
   const getIntakeData = async () => {
     const { data } = await axiosInstance.get("/drugs/intake/analytics");
-    console.log({ mood: data });
     return data;
   };
 
@@ -53,7 +51,7 @@ const Track = () => {
 
   return (
     <View>
-      <Heading text="Keep Track" description="Last 7 days" />
+      {!noHeading && <Heading text="Keep Track" description="Last 7 days" />}
 
       {!loadingIntake ? (
         intakeData?.analytics.totalIntakes ? (

@@ -20,7 +20,7 @@ import { format, formatDate } from "date-fns";
 import { useState } from "react";
 import { formatDrugTimes } from "@/utils";
 
-const DrugDetail = ({ drug }: { drug: Drug }) => {
+export const DrugDetail = ({ drug }: { drug: Drug }) => {
   const { navigate } = useRouter();
   const { dismissModal } = useBottomSheetModal();
   const editDrug = () => {
@@ -96,7 +96,6 @@ const DrugDetail = ({ drug }: { drug: Drug }) => {
           {!!drug.notes && (
             <View className="flex-col justify-between  border-gray-300  space-y-1 pb-2">
               <Text className="font-semibold text-gray-400">
-                {" "}
                 <Icon name="push-pin" /> Note Added
               </Text>
               <Text className="font-semibold text-dark ">{drug.notes}</Text>
@@ -168,14 +167,14 @@ const Item = ({ drug }: { drug: Drug }) => {
               {formatDrugTimes([time], drug.start, drug.schedule.repeat)}
             </Text>
           </Text>
-          <View className="flex-row justify-end items-center">
-            {!!drug.notes && (
+          {!!drug.notes && (
+            <View className="flex-row justify-end items-center">
               <Text className="font-main mr-1 text-neutral-400 font-semibold text-sm">
                 1 note
               </Text>
-            )}
-            <Icon name="push-pin" />
-          </View>
+              <Icon name="push-pin" />
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>

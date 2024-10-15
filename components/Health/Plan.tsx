@@ -16,9 +16,8 @@ import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
 import useSWR, { mutate } from "swr";
 import EmptyPlan from "./Empty/EmptyPlan";
-import { format } from "date-fns";
+import { differenceInMinutes, format } from "date-fns";
 import { getDrugStatus } from "@/utils";
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import { icons } from "@/constants/icons";
 
 const Item = ({ item }: { item: Intake }) => {
@@ -37,7 +36,9 @@ const Item = ({ item }: { item: Intake }) => {
       const [hours, minutes] = item.time.split(":");
       targetTime.setHours(parseInt(hours), parseInt(minutes), 0);
 
-      if (currentTime >= targetTime) {
+      const diff = differenceInMinutes(targetTime, currentTime);
+
+      if (diff <= 60) {
         setShowButtons(true);
       } else {
         setShowButtons(false);
@@ -54,7 +55,7 @@ const Item = ({ item }: { item: Intake }) => {
   const changeState = async (action: "skipped" | "taken") => {
     setLoading((prev) => ({ ...prev, [action]: true }));
     await axiosInstance.get(`/drugs/intake/${item._id}?action=${action}`);
-
+    setAllowChange(false);
     mutate("/intake?size");
     mutate("/intake/analytics");
     setLoading((prev) => ({ ...prev, [action]: false }));
@@ -67,11 +68,19 @@ const Item = ({ item }: { item: Intake }) => {
 
   const status = getDrugStatus(item.status, item.time);
 
+  const [allowChange, setAllowChange] = useState(false);
   return (
     <View
-      className={" bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center  "}
+      className={clsx([
+        " bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center",
+        canEdit || (allowChange && "h-[140px]"),
+      ])}
     >
-      <View className="flex-row justify-between space-x-4 items-center">
+      <TouchableOpacity
+        disabled={status === "pending"}
+        onPress={() => setAllowChange(true)}
+        className="flex-row justify-between space-x-4 items-center"
+      >
         <View
           className={clsx([
             "h-10 w-10 items-center justify-center rounded-full",
@@ -126,8 +135,8 @@ const Item = ({ item }: { item: Intake }) => {
             </View>
           )}
         </View>
-      </View>
-      {canEdit && status === "pending" && (
+      </TouchableOpacity>
+      {(canEdit || allowChange) && (
         <View className="flex-row space-x-3 py-3 w-full mt-3 flex-1">
           <Image
             className="absolute w-full"

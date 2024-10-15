@@ -47,7 +47,7 @@ const groupNotificationsByDate = (
   return groups;
 };
 
-const Appointments = () => {
+const Notifications = () => {
   const { data, isLoading } = useSWR("/notifications", async () => {
     const { data: res } = await axiosInstance.get("/notifications");
     return res;
@@ -62,14 +62,6 @@ const Appointments = () => {
     return (
       <SafeAreaView className="flex-1 items-center justify-center">
         <ActivityIndicator />
-      </SafeAreaView>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <SafeAreaView className="flex-1 items-center justify-center">
-        <Text>No notifications found</Text>
       </SafeAreaView>
     );
   }
@@ -109,13 +101,17 @@ const Appointments = () => {
         </Text>
       </View>
 
-      <View className="mt-2">
-        {renderNotifications("Today", groupedNotifications.today)}
-        {renderNotifications("Yesterday", groupedNotifications.yesterday)}
-        {renderNotifications("Other Days", groupedNotifications.others)}
-      </View>
+      {data?.length > 0 ? (
+        <View className="mt-2">
+          {renderNotifications("Today", groupedNotifications.today)}
+          {renderNotifications("Yesterday", groupedNotifications.yesterday)}
+          {renderNotifications("Other Days", groupedNotifications.others)}
+        </View>
+      ) : (
+        <Text>No notifications found</Text>
+      )}
     </SafeAreaView>
   );
 };
 
-export default Appointments;
+export default Notifications;

@@ -76,7 +76,6 @@ const Mood = () => {
     try {
       setLoading(true);
       const { data } = await axiosInstance.get(`/mood/${id}`);
-      console.log(data);
       setMoodData(data);
     } catch (error) {
       //@ts-ignore
@@ -97,6 +96,7 @@ const Mood = () => {
       await axiosInstance.post("/mood", { ...moodData, date });
       mutate(`/mood/${date}`);
       mutate("/mood");
+      mutate("/mood-insights");
       navigate("/(app)/(tabs)");
     } catch (error) {
       //@ts-ignore

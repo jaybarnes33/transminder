@@ -91,7 +91,12 @@ const Wrapper = () => {
   }, []);
   const handleChange = (key: string, val: string) => {
     setError("");
-    setFormData((prev) => ({ ...prev, [key]: val }));
+    if (key === "category" && formData.category === val) {
+      // Reset category if the same category is selected again
+      setFormData((prev) => ({ ...prev, category: "" }));
+    } else {
+      setFormData((prev) => ({ ...prev, [key]: val }));
+    }
   };
 
   const handleFrequency = (val: string) => {

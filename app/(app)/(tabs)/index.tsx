@@ -12,6 +12,7 @@ import Track from "@/components/Health/Track";
 import Premium from "@/components/Health/Premium";
 import { DayObj } from "@/types/global";
 import { transformDate } from "@/utils";
+import UpcomingDrugs from "@/components/Health/Upcoming";
 const Index = () => {
   const date = new Date();
   date.setHours(0, 0, 0, 0);
@@ -21,6 +22,7 @@ const Index = () => {
     { key: "Calendar", component: <Calendar day={day} setDay={setDay} /> },
     { key: "Tracker", component: <Tracker date={day.date} /> },
     { key: "Plan", component: <Plan /> },
+    { key: "Upcoming", component: <UpcomingDrugs /> },
     {
       key: "Appointments",
       component: <Appointments date={new Date().toISOString()} />,

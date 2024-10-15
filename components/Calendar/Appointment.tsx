@@ -15,7 +15,6 @@ const Appointment = ({ event, date }: { event: IEvent; date?: string }) => {
   const color =
     eventColors[(event.category ? event.category : "event") as EventColor];
 
-  console.log({ date });
   return (
     <TouchableOpacity
       onPress={() => showModal(<EventDetail event={event} date={date} />)}

@@ -4,42 +4,58 @@ import Emoji from "@/components/Core/Emoji"; // Assuming this is a custom emoji 
 import clsx from "clsx";
 import { getLastNDaysWithDayInitials } from "@/utils";
 import { Ionicons, Octicons } from "@expo/vector-icons";
+import useSWR from "swr";
+import axiosInstance from "@/lib/axios";
+import EmptyInsight from "./Empty";
 
-interface IntakeProps {
-  intake: {
+interface IntakeAnalytics {
+  intakes: {
+    dayOfWeek: string;
     intakes: {
-      dayOfWeek: string;
-      intakes: {
-        name: string;
-        type: string;
-        id: string;
-        total: number;
-        taken: number;
-      }[];
-    }[];
-    drugs: {
-      id: string;
       name: string;
       type: string;
+      id: string;
       total: number;
       taken: number;
     }[];
-  };
+  }[];
+  drugs: {
+    id: string;
+    name: string;
+    type: string;
+    total: number;
+    taken: number;
+  }[];
 }
 
-const IntakeInsight = ({ intake }: IntakeProps) => {
-  console.log({ intake });
-
+const IntakeInsight = () => {
   // Helper function to find intakes for a specific day
+
+  const fetchData = async () => {
+    const { data } = await axiosInstance.get("/insights/meds");
+    return data;
+  };
+
+  const { data, isLoading, error } = useSWR<IntakeAnalytics>(
+    "/insights/med",
+    fetchData
+  );
+
   const getIntakesForDay = (dayOfWeek: string) => {
-    const intakeForDay = intake?.intakes?.find(
+    const intakeForDay = data?.intakes?.find(
       (intake) => intake.dayOfWeek.substring(0, 3) === dayOfWeek
     );
     return intakeForDay ? intakeForDay.intakes : [];
   };
 
-  return (
-    <View className="bg-white mb-4 rounded-[20px] p-4 space-y-4">
+  return isLoading || !data?.intakes.length ? (
+    <EmptyInsight
+      label="Log your meds"
+      heading="Medication Intake"
+      description="No meds logged yet. Start tracking to gain insights into your intake patterns and progress here."
+    />
+  ) : (
+    <View className="bg-white mb-4 shadow rounded-[20px] p-4 space-y-4">
       <Text className="font-semibold text-base">Medication intake</Text>
 
       {/* Days of the week and circles */}
@@ -93,11 +109,11 @@ const IntakeInsight = ({ intake }: IntakeProps) => {
 
       {/* Drug intake summary */}
       <View className="my-3 space-y-2">
-        {intake?.drugs.map((drug) => (
+        {data?.drugs.map((drug) => (
           <View key={drug.id} className="flex-row justify-between items-center">
             <View>
               <Text className="font-semibold text-sm">{drug.name}</Text>
-              <Text className="font-main text-xs text-neutral-400 capitalize">
+              <Text className="font-semibold text-xs text-neutral-400 capitalize">
                 {drug.type}
               </Text>
             </View>
@@ -105,9 +121,9 @@ const IntakeInsight = ({ intake }: IntakeProps) => {
               <Text className="font-fwbold text-sm">
                 {drug.taken}/{drug.total} intake
               </Text>
-              <Text className="font-main text-xs">
+              <Text className="font-fwbold text-xs">
                 {drug.taken === drug.total ? (
-                  <Text className="text-green-500 font-semibold">
+                  <Text className="text-green-500">
                     Complete <Octicons name="check-circle-fill" />
                   </Text>
                 ) : (

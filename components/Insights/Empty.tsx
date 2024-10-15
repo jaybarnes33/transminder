@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getDaysOfWeek } from "@/utils";
+import { getDaysOfWeek, getLastNDaysWithDayInitials } from "@/utils";
 import Emoji from "@/components/Core/Emoji";
 import { Image } from "react-native";
 import clsx from "clsx";
@@ -35,7 +35,7 @@ const EmptyInsight = ({
       </View>
       <View className="flex-row justify-between relative py-2">
         {heading !== "Mental health" ? (
-          getDaysOfWeek().map((item) => (
+          getLastNDaysWithDayInitials(7).map((item) => (
             <View key={item.date} className="items-center space-y-1">
               <View className="mb-1">
                 {showEmojis && <Emoji name="emoji" />}

@@ -41,6 +41,7 @@ export const icons = {
   sun: require("@/assets/icons/day.png"),
   drug: require("@/assets/icons/drug.png"),
   location: require("@/assets/icons/location.png"),
+  "health-report": require("@/assets/icons/health-report.png"),
   taken: <Octicons name="check-circle-fill" size={12} color="#2fb2ff" />,
   skipped: <Ionicons name="close-circle-sharp" size={12} color={"#020202"} />,
   missed: <AntDesign name="exclamationcircle" size={12} color={"#ef4444"} />,

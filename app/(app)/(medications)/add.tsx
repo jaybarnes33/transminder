@@ -67,11 +67,13 @@ const Add = () => {
   ) => {
     if (event.type === "set" && selectedDate) {
       const currentDate = selectedDate;
-
+      console.log({ string: currentDate.toTimeString() });
       setDrug((prev) => ({
         ...prev,
         times: prev.times.map((t, i) =>
-          i === index ? currentDate.toTimeString().split(" ")[0] : t
+          i === index
+            ? currentDate.toTimeString().split(" ")[0].slice(0, 5)
+            : t.slice(0, 5)
         ),
       }));
     }
@@ -151,6 +153,7 @@ const Add = () => {
 
       mutate("/medications");
       mutate("/intake/generate");
+      mutate("/drugs/upcoming");
       mutate("/medications?size");
       navigate("/(medications)");
     } catch (error) {
@@ -329,7 +332,7 @@ const Add = () => {
                   onPress={() =>
                     handleChange("times", [
                       ...drug.times,
-                      new Date().toTimeString().split(" ")[0],
+                      new Date().toTimeString().split(" ")[0].slice(0, 5),
                     ])
                   }
                   className="bg-blue-100 my-2 rounded-lg py-3 px-3 flex-row space-x-3 items-center"

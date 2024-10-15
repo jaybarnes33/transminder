@@ -86,7 +86,6 @@ export function getLastNDaysWithDayInitials(n: number) {
 }
 
 export function checkLogsForDays(logs: MoodLog[], days: DayObj[]) {
-  console.log({ logs });
   // Initialize the result array
   const result = [];
 
@@ -208,14 +207,19 @@ const thresholds: { [key: number]: [string, string] } = {
 };
 
 export function getAverageMood(moodScore: number): [string, string] {
-  const threshold =
-    Object.keys(thresholds)
-      .map(Number)
-      .find((key) => moodScore <= key) || 5.0; // Default to the highest threshold
+  // Get the threshold keys and find the appropriate threshold
+  const threshold = Object.keys(thresholds)
+    .map(Number)
+    .sort((a, b) => a - b) // Ensure the keys are sorted in ascending order
+    .find((key) => moodScore <= key);
+
+  // If no threshold is found, handle it appropriately
+  if (threshold === undefined) {
+    return ["No data", "Mood score too high"];
+  }
 
   return thresholds[threshold];
 }
-
 export const getMonth = (date: Date = new Date()): number => {
   return date.getMonth() + 1; // getMonth() returns 0-indexed month, so add 1
 };
@@ -224,7 +228,6 @@ export function checkIntakeForDays(
   intakes: Pick<Intake, "createdAt" | "status">[],
   days: DayObj[]
 ) {
-  console.log({ intakes });
   // Initialize the result array
   const result = [];
 
