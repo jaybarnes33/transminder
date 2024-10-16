@@ -3,10 +3,11 @@ import React from "react";
 import Emoji from "@/components/Core/Emoji"; // Assuming this is a custom emoji component
 import clsx from "clsx";
 import { getLastNDaysWithDayInitials } from "@/utils";
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
 import useSWR from "swr";
 import axiosInstance from "@/lib/axios";
 import EmptyInsight from "./Empty";
+import Icon from "../Core/Icon";
 
 interface IntakeAnalytics {
   intakes: {
@@ -16,6 +17,8 @@ interface IntakeAnalytics {
       type: string;
       id: string;
       total: number;
+      missed: number;
+      skipped: number;
       taken: number;
     }[];
   }[];
@@ -33,6 +36,7 @@ const IntakeInsight = () => {
 
   const fetchData = async () => {
     const { data } = await axiosInstance.get("/insights/meds");
+    console.log(JSON.stringify(data));
     return data;
   };
 
@@ -71,21 +75,50 @@ const IntakeInsight = () => {
               <View className="justify-center items-end space-y-2">
                 {dayIntakes.length > 0 ? (
                   dayIntakes.map((intake) => {
-                    // Create an array with 'taken' number of checkmarks and 'total - taken' number of dashed circles
+                    // Create an array with 'taken', 'missed', and 'skipped' representations
                     const checkmarks = Array(intake.taken).fill(
                       <Text className="text-blue-400" key={intake.id}>
                         <Octicons name="check-circle-fill" size={24} />
                       </Text>
                     );
-                    const uncompleted = Array(intake.total - intake.taken).fill(
+
+                    const missedIcons = Array(intake.missed).fill(
+                      <Text className="text-red-400">
+                        <AntDesign
+                          name="exclamationcircle"
+                          key={intake.id}
+                          size={24}
+                        />
+                      </Text>
+                    );
+
+                    const skippedIcons = Array(intake.skipped).fill(
+                      <Ionicons
+                        name="close-circle-sharp"
+                        size={24}
+                        color={"#020202"}
+                        key={intake.id}
+                      />
+                    );
+
+                    // Remaining uncompleted intakes will be displayed as dashed circles
+                    const uncompleted = Array(
+                      intake.total -
+                        intake.taken -
+                        intake.missed -
+                        intake.skipped
+                    ).fill(
                       <View>
                         <Emoji key={intake.id} name="circle-dashed" />
                       </View>
                     );
 
-                    return [...checkmarks, ...uncompleted].map(
-                      (item, index) => <View key={index}>{item}</View>
-                    );
+                    return [
+                      ...checkmarks,
+                      ...missedIcons,
+                      ...skippedIcons,
+                      ...uncompleted,
+                    ].map((item, index) => <View key={index}>{item}</View>);
                   })
                 ) : (
                   // If there are no intakes for this day
