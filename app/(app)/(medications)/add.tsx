@@ -32,6 +32,7 @@ const Add = () => {
     times: [new Date().toTimeString().split(" ")[0]],
     start: new Date().toISOString(),
     repeat: "everyday",
+    repeatFrequency: 0,
     dosage: "",
     type: "" as Drug["type"],
     notes: "",
@@ -57,6 +58,7 @@ const Add = () => {
       repeat: drug.repeat,
       day: day.getDay(),
       date: day.getDate(),
+      frequency: drug.repeatFrequency,
     };
   };
 
@@ -113,8 +115,16 @@ const Add = () => {
     handleChange("start", val);
   };
 
-  const handleFreq = (val: string) => {
-    handleChange("repeat", val);
+  const handleFreq = ({
+    value,
+    frequency,
+  }: {
+    value: string;
+    frequency?: number;
+  }) => {
+    console.log(frequency);
+    handleChange("repeat", value);
+    frequency && handleChange("repeatFrequency", frequency);
   };
 
   const [name, setName] = useState("");
@@ -286,6 +296,14 @@ const Add = () => {
                 <FrequencyPicker handleChange={handleFreq} />
               </View>
             </TouchableOpacity>
+            {drug.repeatFrequency &&
+              drug.repeatFrequency > 1 &&
+              (drug.repeat === "weekly" || drug.repeat === "monthly") && (
+                <Text className="font-semibold text-sm">
+                  Repeat every {drug.repeatFrequency}{" "}
+                  {drug.repeat.replace("ly", "s")}{" "}
+                </Text>
+              )}
           </View>
 
           <View>

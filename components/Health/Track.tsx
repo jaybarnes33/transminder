@@ -22,7 +22,9 @@ import { moodColors } from "@/constants";
 import EmptyIntake from "./Empty/EmptyIntake";
 import EmptyTrack from "./Empty/EmptyTrack";
 import { icons } from "@/constants/icons";
-import { Intake, IntakeStat } from "@/types/global";
+import { IconName, Intake, IntakeStat } from "@/types/global";
+import { Image } from "react-native";
+import Icon from "../Core/Icon";
 
 const Track = ({ noHeading }: { noHeading?: boolean }) => {
   const getLogData = async () => {
@@ -87,7 +89,7 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
                 }
               </Text>
             </View>
-            <View className="flex-row absolute space-x-2 bottom-4 right-4">
+            <View className="flex-row absolute space-x-1 bottom-4 right-4">
               {checkIntakeForDays(intakeData.intakes, days).map((d, index) => (
                 <View
                   className=" items-center space-y-1"
@@ -95,9 +97,11 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
                 >
                   <View>
                     {d.hasIntake ? (
-                      icons[d.status as keyof typeof icons]
+                      <View>
+                        <Icon name={d.status as IconName} />
+                      </View>
                     ) : (
-                      <Entypo name="dot-single" color={"#6b7280"} />
+                      <Icon name={"pending"} />
                     )}
                   </View>
                   <Text className="font-semibold text-neutral-400">

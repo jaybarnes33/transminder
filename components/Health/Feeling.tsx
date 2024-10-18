@@ -4,6 +4,15 @@ import clsx from "clsx";
 import { Feather } from "@expo/vector-icons";
 import Svg, { Path } from "react-native-svg";
 import Emoji from "../Core/Emoji";
+
+export const colors = {
+  terrible: "bg-[#f87171]",
+  awesome: "bg-[#46C17E]",
+  bad: "bg-[#FD8C6C]",
+  okay: "bg-[#F7CD1B]",
+  good: "bg-[#AFEBC4]",
+};
+
 const Feeling = ({
   item,
   onPress,
@@ -15,13 +24,6 @@ const Feeling = ({
   onPress: (type: string, value: string) => void;
   isActive: boolean;
 }) => {
-  const colors = {
-    terrible: "bg-[#f87171]",
-    awesome: "bg-[#46C17E]",
-    bad: "bg-[#FD8C6C]",
-    okay: "bg-[#F7CD1B]",
-    good: "bg-[#AFEBC4]",
-  };
   return (
     <TouchableOpacity
       className={clsx([

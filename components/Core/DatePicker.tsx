@@ -17,6 +17,7 @@ const DatePicker = ({
   useEffect(() => {
     setShow(isEdit);
   }, [isEdit]);
+
   return (
     <View className="flex-row items-center">
       {!show && (

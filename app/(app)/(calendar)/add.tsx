@@ -30,6 +30,7 @@ const Wrapper = () => {
     start: string;
     category: string;
     end: string;
+    repeatFrequency?: number;
   }>({
     name: "",
     location: "",
@@ -89,8 +90,9 @@ const Wrapper = () => {
       (async () => await fetchEvent())();
     }
   }, []);
-  const handleChange = (key: string, val: string) => {
+  const handleChange = (key: string, val: string | number) => {
     setError("");
+
     if (key === "category" && formData.category === val) {
       // Reset category if the same category is selected again
       setFormData((prev) => ({ ...prev, category: "" }));
@@ -99,8 +101,15 @@ const Wrapper = () => {
     }
   };
 
-  const handleFrequency = (val: string) => {
-    handleChange("repeats", val);
+  const handleFrequency = ({
+    value,
+    frequency,
+  }: {
+    value: string;
+    frequency?: number;
+  }) => {
+    handleChange("repeats", value);
+    frequency && handleChange("repeatFrequency", frequency);
   };
 
   const handleDate = (val: string) => {
@@ -182,6 +191,15 @@ const Wrapper = () => {
               />
             </View>
           </TouchableOpacity>
+          {formData.repeatFrequency &&
+            formData.repeatFrequency > 1 &&
+            (formData.repeats === "weekly" ||
+              formData.repeats === "monthly") && (
+              <Text className="font-semibold text-sm">
+                Repeat every {formData.repeatFrequency}{" "}
+                {formData.repeats.replace("ly", "s")}{" "}
+              </Text>
+            )}
           <View className="flex-row justify-between space-x-2">
             <View className="w-[48%]">
               <TimePicker

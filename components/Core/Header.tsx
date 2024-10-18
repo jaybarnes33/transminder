@@ -3,11 +3,18 @@ import React from "react";
 import Icon from "./Icon";
 import { useUser } from "@/context/Auth";
 import { useRouter } from "expo-router";
+import { Feather } from "@expo/vector-icons";
 
 export const Actions = () => {
   const { navigate } = useRouter();
   return (
     <View className="flex-row items-center space-x-2">
+      <TouchableOpacity
+        onPress={() => navigate("/(app)/activitylogs")}
+        className="h-8 w-8 bg-white rounded-full items-center justify-center"
+      >
+        <Feather name="activity" size={20} color={"grey"} />
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigate("/(app)/activitylogs")}
         className="h-8 w-8 bg-white rounded-full items-center justify-center"

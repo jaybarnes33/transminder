@@ -142,9 +142,11 @@ const getDayOfWeek = (dateString?: string) => {
 
 export const formatDrugTimes = (
   times: string[],
-  startDate?: string,
-  frequency?: "weekly" | "everyday" | "monthly" | "once"
+  startDate: string,
+  frequency: "weekly" | "everyday" | "monthly" | "once",
+  interval: number
 ) => {
+  console.log(interval);
   const dayOfWeek = getDayOfWeek(startDate); // Get the day of the week for the startDate
 
   // Format the times
@@ -156,16 +158,24 @@ export const formatDrugTimes = (
     })
     .join(", ");
 
-  // Return the message based on the frequency
+  // Handle the frequency with intervals
   switch (frequency) {
     case "everyday":
-      return `Everyday at ${formattedTimes}`;
+      return `Every day at ${formattedTimes}`;
     case "weekly":
-      return `Every ${dayOfWeek} at ${formattedTimes}`;
+      return interval === 1 || !interval
+        ? `Every ${dayOfWeek} at ${formattedTimes}`
+        : `Every ${interval} weeks on ${dayOfWeek} at ${formattedTimes}`;
     case "monthly":
-      return `Every month on the ${new Date(
-        startDate || Date.now()
-      ).getDate()} at ${formattedTimes}`;
+      const dayOfMonth = new Date(startDate || Date.now()).getDate();
+      return interval === 1 || !interval
+        ? `Every month on the ${dayOfMonth} at ${formattedTimes}`
+        : `Every ${interval} months on the ${dayOfMonth} at ${formattedTimes}`;
+    case "once":
+      return `Once on ${format(
+        new Date(startDate),
+        "MMMM do, yyyy"
+      )} at ${formattedTimes}`;
     default:
       return formattedTimes; // If no frequency, just return the times
   }
@@ -232,22 +242,70 @@ export function checkIntakeForDays(
   const result = [];
 
   for (const day of days) {
-    // Find if any intake matches the current day
-    const intakeForDay =
-      intakes.length &&
-      intakes.find((intake) => {
-        // Extract date from the createdAt field (formatted as YYYY-MM-DD)
-        const intakeDate = new Date(intake.createdAt)
-          .toISOString()
-          .split("T")[0];
-        return intakeDate === day.date.split("T")[0];
-      });
+    // Get all intakes for the current day
+    const intakesForDay = intakes.filter((intake) => {
+      // Extract date from the createdAt field (formatted as YYYY-MM-DD)
+      const intakeDate = new Date(intake.createdAt).toISOString().split("T")[0];
+      return intakeDate === day.date.split("T")[0];
+    });
 
-    // Push result with information about whether an intake exists and its status
+    // If there are no intakes for the day, push default values
+    if (intakesForDay.length === 0) {
+      result.push({
+        ...day,
+        hasIntake: false,
+        status: null,
+      });
+      continue;
+    }
+
+    // Count statuses
+    const statusCount = {
+      taken: 0,
+      missed: 0,
+      skipped: 0,
+      pending: 0, // Add pending status count
+    };
+
+    for (const intake of intakesForDay) {
+      if (intake.status === "taken") {
+        statusCount.taken++;
+      } else if (intake.status === "missed") {
+        statusCount.missed++;
+      } else if (intake.status === "skipped") {
+        statusCount.skipped++;
+      } else if (intake.status === "pending") {
+        statusCount.pending++;
+      }
+    }
+
+    // Determine majority status
+    let majorityStatus = "taken"; // Default status
+    if (
+      statusCount.missed > statusCount.taken &&
+      statusCount.missed > statusCount.skipped &&
+      statusCount.missed > statusCount.pending
+    ) {
+      majorityStatus = "missed";
+    } else if (
+      statusCount.skipped > statusCount.taken &&
+      statusCount.skipped > statusCount.missed &&
+      statusCount.skipped > statusCount.pending
+    ) {
+      majorityStatus = "skipped";
+    } else if (
+      statusCount.pending > statusCount.taken &&
+      statusCount.pending > statusCount.missed &&
+      statusCount.pending > statusCount.skipped
+    ) {
+      majorityStatus = "pending";
+    }
+
+    // Push result with majority status
     result.push({
       ...day,
-      hasIntake: !!intakeForDay, // true if intake exists, false otherwise
-      status: intakeForDay ? intakeForDay.status : null, // Include status if intake exists, otherwise null
+      hasIntake: true,
+      status: majorityStatus,
     });
   }
 
@@ -276,3 +334,7 @@ export function getIntakeStatus(
     ? statusMap[50]
     : statusMap[0];
 }
+
+export const toSentenceCase = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};

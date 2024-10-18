@@ -3,14 +3,12 @@ import { Drug, IconName, Intake } from "@/types/global";
 import Icon from "../Core/Icon";
 import { FlatList } from "react-native-gesture-handler";
 import clsx from "clsx";
-import Heading from "../Core/Heading";
 import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
 import useSWR, { mutate } from "swr";
 import EmptyPlan from "./Empty/EmptyPlan";
-import { differenceInMinutes, format } from "date-fns";
-import { formatDrugTimes, getDrugStatus } from "@/utils";
-import { icons } from "@/constants/icons";
+import { formatRelative } from "date-fns";
+
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import { DrugDetail } from "@/app/(app)/(medications)";
 
@@ -48,13 +46,7 @@ const Item = ({ drug }: { drug: Drug }) => {
         <View>
           <Text className="font-fwbold text-blue-500 text-sm ">
             <Text>
-              {
-                formatDrugTimes(
-                  drug.times,
-                  drug.start,
-                  drug.schedule.repeat
-                ).split("at")[0]
-              }
+              {formatRelative(new Date(drug?.nextIntakeDate!), new Date())}
             </Text>
           </Text>
           {!!drug.notes && (
@@ -82,13 +74,6 @@ const UpcomingDrugs = () => {
   const { data: drugs, isLoading } = useSWR("/drugs/upcoming", fetchDrugs);
   return (
     <View className="space-y-1">
-      <View className="flex-row items-center justify-between space-x-2">
-        <Heading
-          text="Upcoming drugs"
-          more="View meds"
-          moreAction={() => navigate("/(medications)")}
-        />
-      </View>
       <View>
         {isLoading ? (
           <ActivityIndicator />

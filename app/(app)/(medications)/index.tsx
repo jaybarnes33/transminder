@@ -16,7 +16,7 @@ import useSWR, { mutate } from "swr";
 import EmptyPlan from "@/components/Health/Empty/EmptyPlan";
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import { Defs, LinearGradient, Rect, Stop, Svg } from "react-native-svg";
-import { format, formatDate } from "date-fns";
+import { formatDate } from "date-fns";
 import { useState } from "react";
 import { formatDrugTimes } from "@/utils";
 
@@ -77,7 +77,12 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
           </View>
           <Text className="font-fwbold text-xl text-dark">{drug.name}</Text>
           <Text className="text-blue-500 text-base font-semibold">
-            {formatDrugTimes(drug.times, drug.start, drug.schedule.repeat)}
+            {formatDrugTimes(
+              drug.times,
+              drug.start,
+              drug.schedule.repeat,
+              drug.schedule.frequency!
+            )}
           </Text>
         </View>
         <View className="mt-4  bg-white p-4 space-y-3 rounded-[20px] shadow">
@@ -161,10 +166,15 @@ const Item = ({ drug }: { drug: Drug }) => {
             </Text>
           </View>
         </View>
-        <View>
+        <View className="w-2/5">
           <Text className="font-fwbold text-blue-500 text-sm ">
             <Text>
-              {formatDrugTimes([time], drug.start, drug.schedule.repeat)}
+              {formatDrugTimes(
+                [time],
+                drug.start,
+                drug.schedule.repeat,
+                drug.schedule.frequency!
+              )}
             </Text>
           </Text>
           {!!drug.notes && (
@@ -186,6 +196,7 @@ const Medications = () => {
 
   const fetchDrugs = async () => {
     const { data } = await axiosInstance.get("/drugs");
+    console.log({ data: data[0].schedule });
     return data;
   };
 
@@ -216,7 +227,7 @@ const Medications = () => {
             ListEmptyComponent={EmptyPlan}
             data={drugs}
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item, index) => `${item._id}-${index}`}
             renderItem={({ item }) => <Item drug={item} />}
           />
         )}

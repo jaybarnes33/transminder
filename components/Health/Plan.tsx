@@ -7,20 +7,27 @@ import {
   Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Drug, IconName, Intake } from "@/types/global";
+import { Drug, IconName, Intake, PaginatedResponse } from "@/types/global";
 import Icon from "../Core/Icon";
 import { FlatList } from "react-native-gesture-handler";
 import clsx from "clsx";
 import Heading from "../Core/Heading";
 import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
-import useSWR, { mutate } from "swr";
+import useSWR, { KeyedMutator, mutate } from "swr";
 import EmptyPlan from "./Empty/EmptyPlan";
-import { differenceInMinutes, format } from "date-fns";
-import { getDrugStatus } from "@/utils";
+import { differenceInMinutes, format, formatRelative } from "date-fns";
+import { getDrugStatus, toSentenceCase } from "@/utils";
 import { icons } from "@/constants/icons";
+import UpcomingDrugs from "./Upcoming";
 
-const Item = ({ item }: { item: Intake }) => {
+export const Item = ({
+  item,
+  mutate: mute,
+}: {
+  item: Intake;
+  mutate?: KeyedMutator<PaginatedResponse>;
+}) => {
   const [showButtons, setShowButtons] = useState(false);
 
   const [loading, setLoading] = useState({
@@ -31,7 +38,7 @@ const Item = ({ item }: { item: Intake }) => {
   useEffect(() => {
     const checkTime = () => {
       const currentTime = new Date();
-      const targetTime = new Date();
+      const targetTime = new Date(item.createdAt);
 
       const [hours, minutes] = item.time.split(":");
       targetTime.setHours(parseInt(hours), parseInt(minutes), 0);
@@ -56,6 +63,7 @@ const Item = ({ item }: { item: Intake }) => {
     setLoading((prev) => ({ ...prev, [action]: true }));
     await axiosInstance.get(`/drugs/intake/${item._id}?action=${action}`);
     setAllowChange(false);
+    mute && mute();
     mutate("/intake?size");
     mutate("/intake/analytics");
     setLoading((prev) => ({ ...prev, [action]: false }));
@@ -63,7 +71,7 @@ const Item = ({ item }: { item: Intake }) => {
 
   const splitTime = item.time.split(":").map((t) => Number.parseInt(t));
 
-  const time = new Date();
+  const time = new Date(item.createdAt);
   time.setHours(splitTime[0], splitTime[1]);
 
   const status = getDrugStatus(item.status, item.time);
@@ -73,12 +81,12 @@ const Item = ({ item }: { item: Intake }) => {
     <View
       className={clsx([
         " bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center",
-        canEdit || (allowChange && "h-[140px]"),
+        (canEdit || allowChange) && "h-[140px]",
       ])}
     >
       <TouchableOpacity
         disabled={status === "pending"}
-        onPress={() => setAllowChange(true)}
+        onPress={() => setAllowChange((prev) => !prev)}
         className="flex-row justify-between space-x-4 items-center"
       >
         <View
@@ -100,12 +108,20 @@ const Item = ({ item }: { item: Intake }) => {
         <View>
           <Text
             className={clsx([
-              "font-fwbold text-blue-500    text-sm capitalize",
+              "font-fwbold text-blue-500    text-s",
               item.status !== "pending" && "text-neutral-400",
             ])}
           >
-            {item.status !== "pending" ? "Earlier today" : "Today"},
-            <Text className="uppercase"> {format(time, "hh:mm aa")}</Text>
+            {/* {item.status !== "pending" ? "Earlier today" : "Today"}, */}
+            {toSentenceCase(
+              formatRelative(
+                !item.timestamp ? time : item.timestamp,
+                new Date(),
+                {
+                  weekStartsOn: 1, // Assuming the week starts on Monday
+                }
+              )
+            )}
           </Text>
           {!!item.drug?.notes && (
             <View className="flex-row  justify-end items-center">
@@ -131,7 +147,7 @@ const Item = ({ item }: { item: Intake }) => {
               >
                 {status}&nbsp;
               </Text>
-              <Text>{icons[status as keyof typeof icons]}</Text>
+              <Icon name={status as IconName} />
             </View>
           )}
         </View>
@@ -145,7 +161,7 @@ const Item = ({ item }: { item: Intake }) => {
           <TouchableOpacity
             onPress={() => changeState("skipped")}
             className="flex-1 h-[40] bg-gray-200  space-x-2 flex-row rounded-full justify-center items-center"
-            disabled={loading.skipped}
+            disabled={loading.skipped || status === "skipped"}
           >
             <Text className="text-dark text-center font-fwbold  text-sm">
               Skipped
@@ -154,7 +170,7 @@ const Item = ({ item }: { item: Intake }) => {
             {loading.skipped && <ActivityIndicator color={"black"} />}
           </TouchableOpacity>
           <TouchableOpacity
-            disabled={loading.taken}
+            disabled={loading.taken || status === "taken"}
             onPress={() => changeState("taken")}
             className="flex-1 flex-row space-x-2 h-[40] justify-center items-center rounded-full bg-blue-500"
           >
@@ -173,7 +189,7 @@ const Plan = () => {
   const { navigate } = useRouter();
 
   const fetchDrugs = async () => {
-    const { data } = await axiosInstance.get("/drugs/intake/?size=5");
+    const { data } = await axiosInstance.get("/drugs/intake/?size=20");
 
     return data;
   };
@@ -203,6 +219,7 @@ const Plan = () => {
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => <Item item={{ ...item }} />}
         />
+        <UpcomingDrugs />
       </View>
     </View>
   );

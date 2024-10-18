@@ -42,8 +42,8 @@ export const icons = {
   drug: require("@/assets/icons/drug.png"),
   location: require("@/assets/icons/location.png"),
   "health-report": require("@/assets/icons/health-report.png"),
-  taken: <Octicons name="check-circle-fill" size={12} color="#2fb2ff" />,
-  skipped: <Ionicons name="close-circle-sharp" size={12} color={"#020202"} />,
-  missed: <AntDesign name="exclamationcircle" size={12} color={"#ef4444"} />,
-  pending: <AntDesign name="clockcircle" size={12} color={"gray"} />,
+  taken: require("@/assets/icons/taken.png"),
+  skipped: require("@/assets/icons/skipped.png"),
+  missed: require("@/assets/icons/missed.png"),
+  pending: require("@/assets/icons/pending.png"),
 };

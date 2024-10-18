@@ -504,56 +504,56 @@ const Emoji = ({
         <G clipPath="url(#clip0_309_9769)">
           <Path
             d="M9.22664 3.69043C8.13472 4.14242 7.14251 4.80502 6.30664 5.64043"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <Path
             d="M4.35699 8.55957C3.90355 9.64987 3.6691 10.8187 3.66699 11.9996"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <Path
             d="M4.35742 15.4404C4.80941 16.5323 5.47202 17.5246 6.30742 18.3604"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <Path
             d="M9.22656 20.3096C10.3169 20.763 11.4857 20.9975 12.6666 20.9996"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <Path
             d="M16.1074 20.3104C17.1993 19.8584 18.1916 19.1958 19.0274 18.3604"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <Path
             d="M20.9766 15.44C21.43 14.3497 21.6645 13.1808 21.6666 12"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <Path
             d="M20.9773 8.55965C20.5254 7.46773 19.8627 6.47552 19.0273 5.63965"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <Path
             d="M16.107 3.69C15.0167 3.23656 13.8478 3.0021 12.667 3"
-            stroke="gray"
+            stroke="#FD8C6C"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"

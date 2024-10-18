@@ -22,7 +22,6 @@ const Index = () => {
     { key: "Calendar", component: <Calendar day={day} setDay={setDay} /> },
     { key: "Tracker", component: <Tracker date={day.date} /> },
     { key: "Plan", component: <Plan /> },
-    { key: "Upcoming", component: <UpcomingDrugs /> },
     {
       key: "Appointments",
       component: <Appointments date={new Date().toISOString()} />,

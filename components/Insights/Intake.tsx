@@ -83,20 +83,14 @@ const IntakeInsight = () => {
                     );
 
                     const missedIcons = Array(intake.missed).fill(
-                      <Text className="text-red-400">
-                        <AntDesign
-                          name="exclamationcircle"
-                          key={intake.id}
-                          size={24}
-                        />
-                      </Text>
+                      <Emoji name="circle-dashed" />
                     );
 
                     const skippedIcons = Array(intake.skipped).fill(
                       <Ionicons
                         name="close-circle-sharp"
                         size={24}
-                        color={"#020202"}
+                        color={"gray"}
                         key={intake.id}
                       />
                     );
@@ -109,7 +103,7 @@ const IntakeInsight = () => {
                         intake.skipped
                     ).fill(
                       <View>
-                        <Emoji key={intake.id} name="circle-dashed" />
+                        <Emoji key={intake.id} name="circle" />
                       </View>
                     );
 
@@ -122,7 +116,7 @@ const IntakeInsight = () => {
                   })
                 ) : (
                   // If there are no intakes for this day
-                  <Emoji name="circle-dashed" />
+                  <Emoji name="circle" />
                 )}
               </View>
 

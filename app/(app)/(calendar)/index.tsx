@@ -100,10 +100,17 @@ const Wrapper: React.FC = () => {
   const renderCustomHeader = (date: Date) => {
     const currentMonth = new Date(date.toString());
     return (
-      <View className="flex-row h-8">
-        <Text className="font-fwbold text-base">
-          {formatDate(currentMonth, "MMMM yyyy")}
-        </Text>
+      <View className="flex-row  h-8">
+        <View className="absolute -left-[45vw] flex-row items-center">
+          <Text className="font-fwbold text-base">
+            {formatDate(currentMonth, "MMMM yyyy")}
+          </Text>
+          <TouchableOpacity>
+            <Text className="text-ring">
+              <Feather name="chevron-right" size={20} />
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };

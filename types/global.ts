@@ -50,16 +50,19 @@ export type DrugPayload = {
   repeat: string;
   notes: string;
   unit: string;
+  repeatFrequency?: number;
 };
 
 export interface Drug extends DrugPayload {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  nextIntakeDate?: string;
   schedule: {
     day: string;
     repeat: "everyday" | "weekly" | "monthly" | "once";
     date?: number;
+    frequency?: number;
   };
 }
 
@@ -72,6 +75,7 @@ export interface Intake {
   createdAt: string;
   status: string;
   user: string; // Reference to the User model
+  timestamp?: string;
 }
 
 export type IntakeStat = Pick<Intake, "createdAt" | "status">;
@@ -99,4 +103,25 @@ export interface IEvent {
   end: string;
   user: string; // Refers to the user model
   createdAt: string;
+}
+
+export interface ActivityItem {
+  _id: string;
+  action: string;
+  timestamp: string;
+  intake?: Intake;
+  mood?: MoodLog;
+  event?: IEvent;
+  drug?: Drug;
+}
+
+export interface PaginatedResponse {
+  success: boolean;
+  data: ActivityItem[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalActivities: number;
+    pageSize: number;
+  };
 }

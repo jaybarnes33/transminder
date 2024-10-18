@@ -20,9 +20,15 @@ const TimePicker = ({
   useEffect(() => {
     setShow(isEdit);
   }, [isEdit]);
+
+  const [val, setVal] = useState(value);
+
+  useEffect(() => {
+    onChange(val);
+  }, [val]);
   return (
     <View className="space-y-1">
-      {isEdit && <Text className="font-main text-base">{label}</Text>}
+      {isEdit && <Text className="font-semibold">{label}</Text>}
       <View className="w-full flex-row justify-between items-center px-3 bg-neutral-200 rounded-xl h-[50px]">
         {!show && (
           <TouchableOpacity onPress={() => setShow(true)}>
@@ -35,7 +41,7 @@ const TimePicker = ({
             mode="time"
             onChange={(event, date) => {
               if (event.type === "set" && date) {
-                onChange(date.toISOString());
+                setVal(date.toISOString());
               }
             }}
           />
