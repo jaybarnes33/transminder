@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Touchable,
   TouchableOpacity,
   ActivityIndicator,
   Image,
@@ -14,22 +13,21 @@ import clsx from "clsx";
 import Heading from "../Core/Heading";
 import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
-import useSWR, { KeyedMutator, mutate } from "swr";
+import useSWRInfinite from "swr/infinite";
 import EmptyPlan from "./Empty/EmptyPlan";
-import { differenceInMinutes, format, formatRelative } from "date-fns";
+import { differenceInMinutes, formatRelative } from "date-fns";
 import { getDrugStatus, toSentenceCase } from "@/utils";
-import { icons } from "@/constants/icons";
 import UpcomingDrugs from "./Upcoming";
+import useSWR, { mutate } from "swr";
 
 export const Item = ({
   item,
   mutate: mute,
 }: {
   item: Intake;
-  mutate?: KeyedMutator<PaginatedResponse>;
+  mutate?: () => void;
 }) => {
   const [showButtons, setShowButtons] = useState(false);
-
   const [loading, setLoading] = useState({
     taken: false,
     skipped: false,
@@ -39,23 +37,15 @@ export const Item = ({
     const checkTime = () => {
       const currentTime = new Date();
       const targetTime = new Date(item.createdAt);
-
       const [hours, minutes] = item.time.split(":");
       targetTime.setHours(parseInt(hours), parseInt(minutes), 0);
-
       const diff = differenceInMinutes(targetTime, currentTime);
-
-      if (diff <= 60) {
-        setShowButtons(true);
-      } else {
-        setShowButtons(false);
-      }
+      setShowButtons(diff <= 60);
     };
 
     checkTime();
     const interval = setInterval(checkTime, 60000); // Check every minute
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
 
   const canEdit = showButtons && item.status === "pending";
@@ -70,13 +60,11 @@ export const Item = ({
   };
 
   const splitTime = item.time.split(":").map((t) => Number.parseInt(t));
-
   const time = new Date(item.createdAt);
   time.setHours(splitTime[0], splitTime[1]);
-
   const status = getDrugStatus(item.status, item.time);
-
   const [allowChange, setAllowChange] = useState(false);
+
   return (
     <View
       className={clsx([
@@ -108,35 +96,28 @@ export const Item = ({
         <View>
           <Text
             className={clsx([
-              "font-fwbold text-blue-500    text-s",
+              "font-fwbold text-blue-500 text-s",
               item.status !== "pending" && "text-neutral-400",
             ])}
           >
-            {/* {item.status !== "pending" ? "Earlier today" : "Today"}, */}
             {toSentenceCase(
               formatRelative(
                 !item.timestamp ? time : item.timestamp,
                 new Date(),
-                {
-                  weekStartsOn: 1, // Assuming the week starts on Monday
-                }
+                { weekStartsOn: 1 }
               )
             )}
           </Text>
           {!!item.drug?.notes && (
-            <View className="flex-row  justify-end items-center">
-              <Text className=" mr-2 text-neutral-400 font-fwbold text-xs">
+            <View className="flex-row justify-end items-center">
+              <Text className="mr-2 text-neutral-400 font-fwbold text-xs">
                 1 note attached
               </Text>
               <Icon name="push-pin" />
             </View>
           )}
           {status !== "pending" && (
-            <View
-              className={clsx([
-                "ml-auto flex-row mt-1 h-5 items-center justify-center",
-              ])}
-            >
+            <View className="ml-auto flex-row mt-1 h-5 items-center justify-center">
               <Text
                 className={clsx([
                   "font-semibold text-sm capitalize",
@@ -160,13 +141,12 @@ export const Item = ({
           />
           <TouchableOpacity
             onPress={() => changeState("skipped")}
-            className="flex-1 h-[40] bg-gray-200  space-x-2 flex-row rounded-full justify-center items-center"
+            className="flex-1 h-[40] bg-gray-200 space-x-2 flex-row rounded-full justify-center items-center"
             disabled={loading.skipped || status === "skipped"}
           >
-            <Text className="text-dark text-center font-fwbold  text-sm">
+            <Text className="text-dark text-center font-fwbold text-sm">
               Skipped
             </Text>
-
             {loading.skipped && <ActivityIndicator color={"black"} />}
           </TouchableOpacity>
           <TouchableOpacity
@@ -174,10 +154,9 @@ export const Item = ({
             onPress={() => changeState("taken")}
             className="flex-1 flex-row space-x-2 h-[40] justify-center items-center rounded-full bg-blue-500"
           >
-            <Text className="text-white text-center font-fwbold  text-sm">
+            <Text className="text-white text-center font-fwbold text-sm">
               Taken
             </Text>
-
             {loading.taken && <ActivityIndicator color={"white"} />}
           </TouchableOpacity>
         </View>
@@ -185,14 +164,31 @@ export const Item = ({
     </View>
   );
 };
+
 const Plan = () => {
   const { navigate } = useRouter();
 
-  const fetchDrugs = async () => {
-    const { data } = await axiosInstance.get("/drugs/intake/?size=20");
+  const fetchKey = (
+    pageIndex: number,
+    previousPageData: PaginatedResponse<T>
+  ) => {
+    if (previousPageData && !previousPageData.data.today.length) return null;
+    return `/drugs/intake/?size=10&page=${pageIndex + 1}`;
+  };
 
+  const fetchDrugs = async (url: string) => {
+    const { data } = await axiosInstance.get(url);
     return data;
   };
+
+  const {
+    data,
+    error,
+    size,
+    setSize,
+    isValidating,
+    mutate: mutateDrugs,
+  } = useSWRInfinite(fetchKey, fetchDrugs);
 
   const generateIntakes = async () => {
     const { data } = await axiosInstance.get("/drugs/intake/generate");
@@ -202,7 +198,23 @@ const Plan = () => {
   };
 
   useSWR("/intake/generate", generateIntakes, { refreshInterval: 1000 });
-  const { data: drugs, isLoading } = useSWR("/intake?size", fetchDrugs);
+
+  const todayIntakes = data ? data.flatMap((page) => page.data.today) : [];
+  const missedIntakes = data ? data[0].data.missed : [];
+
+  // Check if there are more pages to load
+  const hasMorePages =
+    data && data.length > 0
+      ? data[data.length - 1].pagination.currentPage <
+        data[data.length - 1].pagination.totalPages
+      : false;
+
+  const loadMore = () => {
+    if (hasMorePages) {
+      setSize(size + 1);
+    }
+  };
+
   return (
     <View className="space-y-2">
       <View className="flex-row items-center justify-between space-x-2">
@@ -212,15 +224,40 @@ const Plan = () => {
           moreAction={() => navigate("/(medications)")}
         />
       </View>
-      <View>
+
+      {missedIntakes.length && (
         <FlatList
-          data={drugs}
-          ListEmptyComponent={<EmptyPlan />}
+          data={missedIntakes}
+          ListEmptyComponent={null}
           keyExtractor={(item) => item._id}
-          renderItem={({ item }) => <Item item={{ ...item }} />}
+          renderItem={({ item }) => (
+            <Item item={{ ...item }} mutate={mutateDrugs} />
+          )}
+          ListHeaderComponent={
+            todayIntakes.length === 0 ? (
+              <EmptyPlan />
+            ) : (
+              <Text>Missed Intakes</Text>
+            )
+          }
         />
-        <UpcomingDrugs />
-      </View>
+      )}
+
+      {/* Today's intakes */}
+      <FlatList
+        data={todayIntakes}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <Item item={{ ...item }} mutate={mutateDrugs} />
+        )}
+        onEndReached={hasMorePages ? loadMore : null}
+        onEndReachedThreshold={0.5} // Load more when reaching 50% of the list
+        ListFooterComponent={
+          isValidating && hasMorePages ? <ActivityIndicator /> : null
+        }
+      />
+
+      <UpcomingDrugs />
     </View>
   );
 };

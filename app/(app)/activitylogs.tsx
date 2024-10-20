@@ -16,13 +16,15 @@ const Activity = () => {
 
   // Function to fetch activities for the given page
   const fetchActivities = async (page: number) => {
-    const { data } = await axiosInstance.get<PaginatedResponse>(
+    const { data } = await axiosInstance.get<PaginatedResponse<ActivityItem[]>>(
       `/activities?page=${page}`
     );
     return data;
   };
 
-  const { data, isLoading, error, mutate } = useSWR<PaginatedResponse>(
+  const { data, isLoading, error, mutate } = useSWR<
+    PaginatedResponse<ActivityItem[]>
+  >(
     `/activities?page=${page}`, // SWR key
     () => fetchActivities(page),
     {

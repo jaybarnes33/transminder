@@ -115,13 +115,13 @@ export interface ActivityItem {
   drug?: Drug;
 }
 
-export interface PaginatedResponse {
+export interface PaginatedResponse<T> {
   success: boolean;
-  data: ActivityItem[];
+  data: T;
   pagination: {
     currentPage: number;
     totalPages: number;
-    totalActivities: number;
+    total: number;
     pageSize: number;
   };
 }
