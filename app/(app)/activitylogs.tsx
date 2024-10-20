@@ -1,4 +1,10 @@
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Core/Back";
@@ -8,16 +14,26 @@ import Message from "@/components/Core/Message";
 import { Item } from "@/components/Health/Plan";
 import { ActivityItem, PaginatedResponse } from "@/types/global";
 import Moodlog from "@/components/ActivityLogs/Moodlog";
+import ActivityTypePicker from "@/components/ActivityLogs/ActivityPicker";
+import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import clsx from "clsx";
 
 const Activity = () => {
   const [page, setPage] = useState(1); // Always start with page 1
   const [activityData, setActivityData] = useState<ActivityItem[]>([]);
   const [hasMore, setHasMore] = useState(true); // Indicates if there's more data to load
+  const [filter, setFilter] = useState({
+    type: "",
+    sort: "desc",
+  }); // For filtering by activity type
 
   // Function to fetch activities for the given page
-  const fetchActivities = async (page: number) => {
+  const fetchActivities = async (
+    page: number,
+    filter: { sort: string; type: string }
+  ) => {
     const { data } = await axiosInstance.get<PaginatedResponse<ActivityItem[]>>(
-      `/activities?page=${page}`
+      `/activities?page=${page}&type=${filter.type}&sort=${filter.sort}`
     );
     return data;
   };
@@ -25,8 +41,8 @@ const Activity = () => {
   const { data, isLoading, error, mutate } = useSWR<
     PaginatedResponse<ActivityItem[]>
   >(
-    `/activities?page=${page}`, // SWR key
-    () => fetchActivities(page),
+    `/activities?page=${page}&type=${filter.type}&sort=${filter.sort}`, // SWR key
+    () => fetchActivities(page, filter),
     {
       revalidateOnFocus: false, // Disable re-fetching on focus
       onSuccess: (fetchedData) => {
@@ -49,20 +65,25 @@ const Activity = () => {
     }
   );
 
-  //Clear cache for activities when leaving the component (unmounting)
+  // Clear cache for activities when leaving the component (unmounting)
   useEffect(() => {
     return () => {
-      globalMutate(`/activities?page=${page}`, undefined, {
-        revalidate: false,
-      });
+      globalMutate(
+        `/activities?page=${page}&type=${filter.type}&sort=${filter.sort}`,
+        undefined,
+        {
+          revalidate: false,
+        }
+      );
     };
-  }, [page]);
+  }, [page, filter]);
 
-  // Reset page to 1 when the component mounts (i.e., when the user returns to this page)
+  // Reset page and clear data when the type changes
   useEffect(() => {
-    setPage(1); // Ensure it fetches from page 1 upon mounting
-    setActivityData([]); // Clear previous data when resetting to page 1
-  }, []);
+    setPage(1); // Reset to the first page
+    setActivityData([]); // Clear previous activity data
+    mutate(); // Trigger a re-fetch when the type changes
+  }, [filter, mutate]);
 
   // Fetch more data when the user scrolls to the end
   const handleLoadMore = () => {
@@ -76,11 +97,30 @@ const Activity = () => {
     return <ActivityIndicator />;
   };
 
+  const handleType = ({ value }: { label: string; value: string }) => {
+    handleFilter("type", value);
+  };
+
+  const handleFilter = (key: string, value: string) => {
+    setFilter((prev) => ({ ...prev, [key]: value })); // Set the new type
+  };
+
   return (
     <SafeAreaView className="px-4 bg-neutral-100 flex-1">
       <View className="flex flex-row">
         <Back />
         <Text className="font-semibold text-xl mx-auto">Activity Log</Text>
+      </View>
+      <View className="flex-row justify-between items-center">
+        <ActivityTypePicker handleChange={handleType} />
+        <TouchableOpacity
+          className={clsx([filter.sort === "asc" && " scale-x-[-1]"])}
+          onPress={() =>
+            handleFilter("sort", filter.sort === "desc" ? "asc" : "desc")
+          }
+        >
+          <Ionicons name="swap-vertical-sharp" size={20} color={"gray"} />
+        </TouchableOpacity>
       </View>
       <View className="mt-4 flex-1">
         {error && (
@@ -117,7 +157,6 @@ const Activity = () => {
                   }}
                 />
               )}
-              {/* Add other item renderings here (mood, event, drug) */}
             </View>
           )}
           onEndReached={handleLoadMore} // Triggered when user scrolls to the end
