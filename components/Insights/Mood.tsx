@@ -1,13 +1,15 @@
 import React from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, Image } from "react-native";
 import useSWR from "swr";
 import axiosInstance from "@/lib/axios";
 import EmptyInsight from "./Empty";
 import Emoji from "../Core/Emoji";
-import { getAverageMood, getLastNDaysWithDayInitials } from "@/utils";
-import clsx from "clsx";
-import { Image } from "react-native";
+import { getAverageMood, getDaysOfWeek } from "@/utils";
+import { getDaysInMonth } from "date-fns"; // Importing the function from date-fns
+import MonthlyMoodChart from "./MonthlyMoodChart"; // Import the new MonthlyMoodChart component
+import WeeklyMoodChart from "./WeeklyMoodChart"; // Import the new WeeklyMoodChart component
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import YearlyMoodChart from "./YearlyMoodChart";
 
 // Define mood score mapping
 const moodMapping: Record<string, number> = {
@@ -18,15 +20,14 @@ const moodMapping: Record<string, number> = {
   awesome: 5,
 };
 
-// Screen width for responsive design
-const screenWidth = Dimensions.get("window").width;
 const chartHeight = 120; // Height of the graph
-const daysOfWeek = getLastNDaysWithDayInitials(7);
+const daysOfWeek = getDaysOfWeek();
 
-interface MoodLog {
+export interface MoodLog {
   dayOfWeek: string;
   mood: string;
   feelings: string[];
+  date: Date;
 }
 
 interface MoodAnalytics {
@@ -34,7 +35,15 @@ interface MoodAnalytics {
   averageMoodScore: number;
 }
 
-const MoodInsight = () => {
+const MoodInsight = ({
+  start,
+  end,
+  range,
+}: {
+  start: Date;
+  end: Date;
+  range: "month" | "week" | "year" | "all" | string;
+}) => {
   const colors = {
     terrible: "bg-[#f87171]",
     awesome: "bg-[#46C17E]",
@@ -42,9 +51,12 @@ const MoodInsight = () => {
     okay: "bg-[#F7CD1B]",
     good: "bg-[#AFEBC4]",
   };
+
   // Fetch mood data from the server
   const fetchMoodData = async () => {
-    const { data } = await axiosInstance.get("/insights/mood");
+    const { data } = await axiosInstance.get(
+      `/insights/mood?start=${start}&end=${end}`
+    );
     return data;
   };
 
@@ -52,6 +64,8 @@ const MoodInsight = () => {
     "/mood-insights",
     fetchMoodData
   );
+
+  console.log({ moods: data?.moodLogs });
 
   if (error) {
     return (
@@ -62,6 +76,10 @@ const MoodInsight = () => {
       </View>
     );
   }
+
+  // Get the year and month from the start date
+  const month = start.getMonth(); // Month is 0-indexed (0 = January)
+  const year = start.getFullYear();
 
   return isLoading ? (
     <EmptyInsight
@@ -92,67 +110,31 @@ const MoodInsight = () => {
         />
       </View>
       <View className="h-16" />
-      {/* Graph displaying the mood over the week as bars */}
-      <View
-        style={{
-          height: chartHeight,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "flex-end", // Align bars to the bottom of the graph
-        }}
-      >
-        {daysOfWeek.map((day, index) => {
-          // Adjust the last day matching
-          const log = data?.moodLogs.find((log) => {
-            const logDayOfWeek = log.dayOfWeek;
-            const mappedDayOfWeek = day.dayOfWeek.toLowerCase();
+      {data?.moodLogs && (
+        <>
+          {range === "month" && (
+            <MonthlyMoodChart
+              moodLogs={data.moodLogs}
+              month={month}
+              year={year}
+            />
+          )}
 
-            // Compare days of week and explicitly handle last day, if necessary
+          {range === "week" && (
+            <WeeklyMoodChart
+              moodLogs={data.moodLogs}
+              daysOfWeek={daysOfWeek}
+              colors={colors}
+              moodMapping={moodMapping}
+              chartHeight={chartHeight}
+            />
+          )}
 
-            return logDayOfWeek === mappedDayOfWeek;
-          });
-
-          const moodScore = log ? moodMapping[log.mood] : 0; // Map mood to score (1-5)
-
-          // Calculate the bar height based on mood score
-          const barHeight = (moodScore / 5) * chartHeight;
-
-          return (
-            <View
-              key={day.dayOfWeek}
-              style={{
-                justifyContent: "flex-end",
-                alignItems: "center",
-              }}
-            >
-              <View>
-                <Emoji name={moodScore ? `${log?.mood}-active` : "emoji"} />
-              </View>
-
-              {moodScore ? (
-                <View
-                  className={clsx([
-                    colors[log?.mood as keyof typeof colors],
-                    "mt-2 w-5 rounded-[40px]",
-                  ])}
-                  style={{
-                    height: barHeight,
-                    borderRadius: 6,
-                    marginBottom: 4, // Space between bar and day label
-                  }}
-                />
-              ) : (
-                <Emoji name="circle" />
-              )}
-
-              {/* Day label */}
-              <Text className="font-semibold text-neutral-400 text-xs">
-                {day.dayOfWeek.substring(0, 3)}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
+          {(range === "year" || range === "all") && (
+            <YearlyMoodChart moodLogs={data.moodLogs} />
+          )}
+        </>
+      )}
     </View>
   );
 };

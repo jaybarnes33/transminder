@@ -66,102 +66,111 @@ export const Item = ({
   const [allowChange, setAllowChange] = useState(false);
 
   return (
-    <View
-      className={clsx([
-        " bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center",
-        (canEdit || allowChange) && "h-[140px]",
-      ])}
-    >
-      <TouchableOpacity
-        disabled={status === "pending"}
-        onPress={() => setAllowChange((prev) => !prev)}
-        className="flex-row justify-between space-x-4 items-center"
+    <>
+      <View
+        className={clsx([
+          " bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center",
+          (canEdit || allowChange) && "h-[140px]",
+        ])}
       >
-        <View
-          className={clsx([
-            "h-10 w-10 items-center justify-center rounded-full",
-            "bg-blue-100",
-          ])}
+        <TouchableOpacity
+          disabled={status === "pending"}
+          onPress={() => setAllowChange((prev) => !prev)}
+          className="flex-row justify-between space-x-4 items-center"
         >
-          <Icon name={item.drug?.type as IconName} />
-        </View>
-        <View className="flex-1">
-          <Text className="font-main text-neutral-400 text-sm font-semibold capitalize">
-            {item.drug?.type}
-          </Text>
-          <Text className="font-main text-base font-semibold">
-            {item.drugName}
-          </Text>
-        </View>
-        <View>
-          <Text
+          <View
             className={clsx([
-              "font-fwbold text-blue-500 text-s",
-              item.status !== "pending" && "text-neutral-400",
+              "h-10 w-10 items-center justify-center rounded-full",
+              "bg-blue-100",
             ])}
           >
-            {toSentenceCase(
-              formatRelative(
-                !item.timestamp ? time : item.timestamp,
-                new Date(),
-                { weekStartsOn: 1 }
-              )
+            <Icon name={item.drug?.type as IconName} />
+          </View>
+          <View className="flex-1">
+            <Text className="font-main text-neutral-400 text-sm font-semibold capitalize">
+              {item.drug?.type}
+            </Text>
+            <Text className="font-main text-base font-semibold">
+              {item.drugName}
+            </Text>
+          </View>
+          <View>
+            <Text
+              className={clsx([
+                "font-fwbold text-blue-500 text-sm",
+                item.status !== "pending" && "text-neutral-400",
+              ])}
+            >
+              {toSentenceCase(
+                formatRelative(time, new Date(), { weekStartsOn: 1 })
+              )}
+            </Text>
+            {!!item.drug?.notes && (
+              <View className="flex-row justify-end items-center">
+                <Text className="mr-2 text-neutral-400 font-fwbold text-xs">
+                  1 note attached
+                </Text>
+                <Icon name="push-pin" />
+              </View>
             )}
-          </Text>
-          {!!item.drug?.notes && (
-            <View className="flex-row justify-end items-center">
-              <Text className="mr-2 text-neutral-400 font-fwbold text-xs">
-                1 note attached
+            {status !== "pending" && (
+              <>
+                <View className="ml-auto flex-row mt-1 h-5 items-center justify-center">
+                  <Text
+                    className={clsx([
+                      "font-semibold text-sm capitalize",
+                      status === "skipped" && "text-dark",
+                      status === "taken" && "text-blue-500",
+                      status === "missed" && "text-red-500",
+                    ])}
+                  >
+                    {status}
+                  </Text>
+                  <Icon name={status as IconName} />
+                </View>
+                {item.status !== "pending" && !!item.timestamp && (
+                  <Text className="font-fwbold text-red-400 text-sm">
+                    {toSentenceCase(
+                      formatRelative(item.timestamp, new Date(), {
+                        weekStartsOn: 1,
+                      })
+                    )}
+                  </Text>
+                )}
+              </>
+            )}
+          </View>
+        </TouchableOpacity>
+        {(canEdit || allowChange) && (
+          <View className="flex-row space-x-3 py-3 w-full mt-3 flex-1">
+            <Image
+              className="absolute w-full"
+              source={require("@/assets/images/line.png")}
+            />
+            <TouchableOpacity
+              onPress={() => changeState("skipped")}
+              className="flex-1 h-[40] bg-gray-200 space-x-2 flex-row rounded-full justify-center items-center"
+              disabled={loading.skipped || status === "skipped"}
+            >
+              <Text className="text-dark text-center font-fwbold text-sm">
+                Skipped
               </Text>
-              <Icon name="push-pin" />
-            </View>
-          )}
-          {status !== "pending" && (
-            <View className="ml-auto flex-row mt-1 h-5 items-center justify-center">
-              <Text
-                className={clsx([
-                  "font-semibold text-sm capitalize",
-                  status === "skipped" && "text-dark",
-                  status === "taken" && "text-blue-500",
-                  status === "missed" && "text-red-500",
-                ])}
-              >
-                {status}&nbsp;
+              {loading.skipped && <ActivityIndicator color={"black"} />}
+            </TouchableOpacity>
+            <TouchableOpacity
+              disabled={loading.taken || status === "taken"}
+              onPress={() => changeState("taken")}
+              className="flex-1 flex-row space-x-2 h-[40] justify-center items-center rounded-full bg-blue-500"
+            >
+              <Text className="text-white text-center font-fwbold text-sm">
+                Taken
               </Text>
-              <Icon name={status as IconName} />
-            </View>
-          )}
-        </View>
-      </TouchableOpacity>
-      {(canEdit || allowChange) && (
-        <View className="flex-row space-x-3 py-3 w-full mt-3 flex-1">
-          <Image
-            className="absolute w-full"
-            source={require("@/assets/images/line.png")}
-          />
-          <TouchableOpacity
-            onPress={() => changeState("skipped")}
-            className="flex-1 h-[40] bg-gray-200 space-x-2 flex-row rounded-full justify-center items-center"
-            disabled={loading.skipped || status === "skipped"}
-          >
-            <Text className="text-dark text-center font-fwbold text-sm">
-              Skipped
-            </Text>
-            {loading.skipped && <ActivityIndicator color={"black"} />}
-          </TouchableOpacity>
-          <TouchableOpacity
-            disabled={loading.taken || status === "taken"}
-            onPress={() => changeState("taken")}
-            className="flex-1 flex-row space-x-2 h-[40] justify-center items-center rounded-full bg-blue-500"
-          >
-            <Text className="text-white text-center font-fwbold text-sm">
-              Taken
-            </Text>
-            {loading.taken && <ActivityIndicator color={"white"} />}
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+              {loading.taken && <ActivityIndicator color={"white"} />}
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </>
   );
 };
 
@@ -199,6 +208,7 @@ const Plan = () => {
 
   useSWR("/intake/generate", generateIntakes, { refreshInterval: 1000 });
 
+  console.log({ data });
   const todayIntakes = data ? data.flatMap((page) => page.data.today) : [];
   const missedIntakes = data ? data[0].data.missed : [];
 

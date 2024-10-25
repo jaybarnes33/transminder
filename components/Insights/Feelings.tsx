@@ -23,7 +23,7 @@ interface MoodAnalytics {
   }[];
 }
 
-const FeelingsInsight = () => {
+const FeelingsInsight = ({ start, end }: { start: Date; end: Date }) => {
   const colors = [
     {
       text: "text-purple-500",
@@ -48,7 +48,9 @@ const FeelingsInsight = () => {
   ].reverse();
 
   const fetchMoodData = async () => {
-    const { data } = await axiosInstance.get("/insights/mood");
+    const { data } = await axiosInstance.get(
+      `/insights/mood?start=${start}&end=${end}`
+    );
     return data;
   };
 
@@ -59,7 +61,7 @@ const FeelingsInsight = () => {
 
   if (error) {
     return (
-      <View className="bg-white mb-4 rounded-[20px] p-4 space-y-4 bg-purple-900">
+      <View className="bg-white mb-4 rounded-[20px] p-4 space-y-4 ">
         <Text className="font-semibold text-base text-red-400">
           Failed to load mood insights.
         </Text>

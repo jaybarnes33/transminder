@@ -28,7 +28,7 @@ const Moodlog = ({ mood }: { mood: ActivityItem["mood"] }) => {
           </View>
           <View className="items-end">
             <Text className="font-semibold text-neutral-400 text-sm">
-              {format(new Date(mood!.createdAt), "d MMM yyyy")}
+              {format(new Date(mood!.date), "d MMM yyyy")}
             </Text>
             <View className="flex-row space-x-1 items-center">
               <Icon name="sun" />
@@ -36,6 +36,9 @@ const Moodlog = ({ mood }: { mood: ActivityItem["mood"] }) => {
                 Daily tracker
               </Text>
             </View>
+            <Text className="font-semibold text-red-400 text-sm">
+              Logged on {format(new Date(mood!.createdAt!), "d MMM yyyy")}
+            </Text>
           </View>
         </View>
         <View className="flex-row space-x-3">

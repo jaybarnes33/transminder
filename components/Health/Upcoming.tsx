@@ -78,12 +78,14 @@ const UpcomingDrugs = () => {
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <FlatList
-            data={drugs}
-            ListEmptyComponent={<EmptyPlan />}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => <Item drug={{ ...item }} />}
-          />
+          drugs.length > 0 && (
+            <FlatList
+              data={drugs}
+              ListEmptyComponent={<EmptyPlan />}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => <Item drug={{ ...item }} />}
+            />
+          )
         )}
       </View>
     </View>
