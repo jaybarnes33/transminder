@@ -24,7 +24,7 @@ const Index = () => {
     { key: "Plan", component: <Plan /> },
     {
       key: "Appointments",
-      component: <Appointments date={new Date().toISOString()} />,
+      component: <Appointments date={new Date().toISOString()} limitted />,
     },
     { key: "Track", component: <Track /> },
     { key: "Premium", component: <Premium /> },

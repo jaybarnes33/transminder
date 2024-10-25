@@ -189,7 +189,7 @@ const Wrapper: React.FC = () => {
               <Feather name="plus" size={20} color={"#bb5adf"} />
             </TouchableOpacity>
           </View>
-          <Appointments limitted date={day} />
+          <Appointments date={day} />
         </View>
       </View>
     </SafeAreaView>

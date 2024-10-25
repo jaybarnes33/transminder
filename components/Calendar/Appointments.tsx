@@ -21,7 +21,7 @@ const Appointments = ({
     `/events?date=${date ? date : ""}`,
     async () => {
       const { data: res } = await axiosInstance.get(
-        `/events?date=${date ? date : ""}`
+        `/events?date=${!limitted ? date : ""}&limit=5`
       );
 
       return res.events;
@@ -30,7 +30,7 @@ const Appointments = ({
 
   return (
     <View className="mb-4">
-      {!limitted && (
+      {limitted && (
         <View className="mt-4">
           <Heading
             text="Appointments"
