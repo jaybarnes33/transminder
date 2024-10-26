@@ -23,11 +23,11 @@ import { createLocationListMockData } from "@/utils/createMockData";
 const Explore = () => {
   const { hasMapsAccess } = useUser();
 
-  const { navigate } = useRouter();
+  const { navigate, replace } = useRouter();
 
   const { height: SCREEN_HEIGHT } = Dimensions.get("window");
   if (!hasMapsAccess) {
-    return navigate("/(app)/confirmmaps");
+    return replace("/(app)/confirmmaps");
   }
 
   const mapRef = useRef<MapView>(null);
