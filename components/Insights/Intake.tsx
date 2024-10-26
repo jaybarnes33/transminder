@@ -38,6 +38,7 @@ export interface IntakeAnalytics {
     pending: number;
     skipped: number;
     missed: number;
+    total: number;
   };
 }
 
@@ -87,7 +88,6 @@ const IntakeInsight = ({
           year={year}
           intakes={data.intakes}
           {...data.stats}
-          total={data.intakes.length}
         />
       )}
 
