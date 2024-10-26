@@ -17,20 +17,24 @@ type AuthContextType = {
   loading: boolean;
   error: any;
   loggingOut: boolean;
+  hasMapsAccess: boolean;
   mutate: any;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [mapsAccess, setMapsAccess] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const fetchUser = async () => {
     const { data } = await axiosInstance.get("/auth");
+    setMapsAccess(data.hasMapsAccess);
     return data;
   };
 
   const { navigate } = useRouter();
-  const { data, error, isLoading, mutate } = useSWR("/auth", fetchUser);
-  const [loggingOut, setLoggingOut] = useState(false);
+  const { data, error, isLoading, mutate } = useSWR<User>("/auth", fetchUser);
+
   const logOut = async () => {
     try {
       setLoggingOut(true);
@@ -51,6 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user: data,
         loading: isLoading,
         error,
+        hasMapsAccess: mapsAccess,
         logOut,
         mutate,
         loggingOut,

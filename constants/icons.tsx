@@ -46,4 +46,9 @@ export const icons = {
   skipped: require("@/assets/icons/skipped.png"),
   missed: require("@/assets/icons/missed.png"),
   pending: require("@/assets/icons/pending.png"),
+  marker: require("@/assets/icons/marker.png"),
+  hospital: require("@/assets/icons/hospital.png"),
+  video: require("@/assets/icons/video.png"),
+  article: require("@/assets/icons/article.png"),
+  guide: require("@/assets/icons/guide.png"),
 };

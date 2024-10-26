@@ -10,7 +10,7 @@ import { icons } from "@/constants/icons";
 
 const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   return (
-    <View className="bg-white shadow border-t border-gray-200 py-3 px-4 fixed">
+    <View className="bg-white shadow border-t border-gray-200 py-3 px-4 ">
       <View className="flex-row justify-between px-4 h-16 items-center">
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];

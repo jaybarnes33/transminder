@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "transminder",
+    "name": "Transminder",
     "slug": "transminder",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,7 +15,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.higotechs.transminder",
       "appleId": "ohenesetwumasi@gmail.com",
-      "appleTeamId": "BL24Y8CQ2Z"
+      "appleTeamId": "BL24Y8CQ2Z",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
+        "NSLocationAlwaysUsageDescription": "This app requires access to your location when open."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -37,6 +42,14 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
+
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
+
       [
         "expo-local-authentication",
         {

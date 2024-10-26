@@ -125,3 +125,37 @@ export interface PaginatedResponse<T> {
     pageSize: number;
   };
 }
+
+export interface Location {
+  id: string;
+  description: string;
+  name: string;
+  address: string;
+  photos: string[];
+  type: string;
+  services: string[];
+  contact: {
+    phone: string;
+    email: string;
+    address: string;
+  };
+  workingHours: {
+    day: string;
+    open: string;
+    close: string;
+  }[];
+}
+
+export interface Resource {
+  id: string;
+  title: string;
+  type: "article" | "guide" | "video";
+  category: "health" | "community" | "support" | "legal" | "transition";
+  description: string;
+  content?: string;
+  steps?: string[];
+  url?: string;
+  author: string;
+  datePublished: string;
+  tags: string[];
+}

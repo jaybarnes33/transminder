@@ -25,4 +25,5 @@ export interface User {
   googleId?: string;
   notificationTokens: string[];
   country: string;
+  hasMapsAccess: boolean;
 }
