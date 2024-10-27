@@ -15,12 +15,11 @@ export const colors = {
   article: "text-blue-500",
 };
 const Section = ({ title }: { title: string }) => {
-  const width = Dimensions.get("window").width;
   return (
     <View className="mt-7">
       <Text className="font-fwbold text-xl">{title}</Text>
       <ScrollView
-        className="h-[222px] my-2 space-x-4"
+        className=" my-2 space-x-4"
         horizontal
         showsHorizontalScrollIndicator={false}
       >

@@ -4,8 +4,8 @@ import { LatLng } from "react-native-maps";
 
 export const useLocation = () => {
   const [location, setLocation] = useState<LatLng>({
-    latitude: 5.29822,
-    longitude: -2.0,
+    latitude: 0,
+    longitude: 0,
   });
 
   useEffect(() => {

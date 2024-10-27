@@ -9,7 +9,7 @@ import Section from "@/components/Resources/Section";
 
 const Learn = () => {
   return (
-    <SafeAreaView className="px-4">
+    <SafeAreaView className="px-4 bg-neutral-100">
       <View className="flex-row justify-between items-center">
         <Text className="text-2xl font-fwbold">For you</Text>
         <Actions />

@@ -32,7 +32,7 @@ const Resource = ({
       disabled={heading}
       onPress={handlePress}
       className={clsx([
-        "bg-white shadow p-4 h-[222px] space-y-2 rounded-[20px]  mr-3 ",
+        "bg-white shadow p-4 h-[250px] space-y-2 rounded-[20px]  mr-3 ",
         heading && "h-[420px] space-y-5 p-0 bg-transparent ",
       ])}
       style={{ width: width - 35 }}

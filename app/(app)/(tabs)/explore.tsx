@@ -83,13 +83,13 @@ const Explore = () => {
       </View>
       <MapView
         ref={mapRef}
-        initialCamera={mapInitialCamera}
+        camera={mapInitialCamera}
         style={styles.mapContainer}
         onTouchStart={handleTouchStart}
       >
         {location && (
           <Marker coordinate={location}>
-            <View className="h-5 w-5 rounded-full  border-4 border-white bg-blue-500"></View>
+            <View className="h-5 w-5 rounded-full  border-4 border-white bg-blue-500 shadow"></View>
           </Marker>
         )}
       </MapView>

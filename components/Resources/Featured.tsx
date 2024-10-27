@@ -10,7 +10,6 @@ import { IconName } from "@/types/global";
 import Resource from "./Resource";
 
 const Featured = () => {
-  const width = Dimensions.get("window").width;
   return (
     <View className="mt-7">
       <Text className="font-fwbold text-xl">Featured</Text>
