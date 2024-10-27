@@ -5,7 +5,13 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { useUser } from "@/context/Auth";
 import { useRouter } from "expo-router";
@@ -48,18 +54,9 @@ const Explore = () => {
     poiListModalRef.current?.collapse();
   }, []);
 
-  const mapInitialCamera = useMemo(
-    () => ({
-      center: {
-        ...location,
-      },
-      heading: 0,
-      pitch: 0,
-      zoom: 10,
-      altitude: 1000,
-    }),
-    []
-  );
+  useEffect(() => {
+    console.log({ location });
+  }, [location]);
 
   const data = createLocationListMockData(15);
   const [places, setPlaces] = useState<Location[]>(data);
@@ -83,7 +80,13 @@ const Explore = () => {
       </View>
       <MapView
         ref={mapRef}
-        camera={mapInitialCamera}
+        camera={{
+          heading: 0,
+          pitch: 0,
+          zoom: 10,
+          altitude: 1000,
+          center: location,
+        }}
         style={styles.mapContainer}
         onTouchStart={handleTouchStart}
       >
