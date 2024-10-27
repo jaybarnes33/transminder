@@ -54,10 +54,6 @@ const Explore = () => {
     poiListModalRef.current?.collapse();
   }, []);
 
-  useEffect(() => {
-    console.log({ location });
-  }, [location]);
-
   const data = createLocationListMockData(15);
   const [places, setPlaces] = useState<Location[]>(data);
 
