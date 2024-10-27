@@ -65,6 +65,7 @@ const IntakeInsight = ({
     "/insights/med",
     fetchData
   );
+
   // Get the year and month from the start date
   const month = start.getMonth(); // Month is 0-indexed (0 = January)
   const year = start.getFullYear();

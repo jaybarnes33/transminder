@@ -65,8 +65,6 @@ const MoodInsight = ({
     fetchMoodData
   );
 
-  console.log({ moods: data?.moodLogs });
-
   if (error) {
     return (
       <View className="bg-white mb-4 rounded-[20px] p-4 space-y-4">
@@ -81,7 +79,7 @@ const MoodInsight = ({
   const month = start.getMonth(); // Month is 0-indexed (0 = January)
   const year = start.getFullYear();
 
-  return isLoading ? (
+  return isLoading || !data?.moodLogs.length ? (
     <EmptyInsight
       label="Log your moods"
       heading="Well-being"

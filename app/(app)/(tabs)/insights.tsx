@@ -71,8 +71,9 @@ const Insights = () => {
   };
 
   useEffect(() => {
-    mutate("/mood-insights");
-    mutate("/insights/med");
+    (async () => {
+      await Promise.all([mutate("/mood-insights"), mutate("/insights/med")]);
+    })();
   }, [range]);
   return (
     <SafeAreaView className="p-4">

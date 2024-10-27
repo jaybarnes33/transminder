@@ -75,7 +75,7 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
   );
 
   return (
-    <View className="mx-auto  mt-4">
+    <View className="mx-auto h-[30vh]  mt-4">
       <View className="flex-row w-full flex-wrap flex-1 ">
         {daysToRender.map((item, index) => {
           return (

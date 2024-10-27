@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ViewToken,
 } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -20,9 +21,13 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ photos }) => {
   const flatListRef = useRef<FlatList<string>>(null); // Create a ref for FlatList
 
   const onViewRef = useRef(
-    ({ viewableItems }: { viewableItems: { index: number }[] }) => {
-      if (viewableItems.length > 0) {
-        setCurrentIndex(viewableItems[0].index);
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      const firstVisibleItemIndex = viewableItems[0]?.index;
+      if (
+        firstVisibleItemIndex !== null &&
+        firstVisibleItemIndex !== undefined
+      ) {
+        setCurrentIndex(firstVisibleItemIndex);
       }
     }
   );

@@ -12,7 +12,6 @@ import Track from "@/components/Health/Track";
 import Premium from "@/components/Health/Premium";
 import { DayObj } from "@/types/global";
 import { transformDate } from "@/utils";
-import UpcomingDrugs from "@/components/Health/Upcoming";
 const Index = () => {
   const date = new Date();
   date.setHours(0, 0, 0, 0);

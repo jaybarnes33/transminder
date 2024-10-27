@@ -179,7 +179,7 @@ const Plan = () => {
 
   const fetchKey = (
     pageIndex: number,
-    previousPageData: PaginatedResponse<T>
+    previousPageData: PaginatedResponse<{ today: Intake[] }>
   ) => {
     if (previousPageData && !previousPageData.data.today.length) return null;
     return `/drugs/intake/?size=10&page=${pageIndex + 1}`;
@@ -202,7 +202,7 @@ const Plan = () => {
   const generateIntakes = async () => {
     const { data } = await axiosInstance.get("/drugs/intake/generate");
 
-    mutate("/intake?size");
+    mutateDrugs();
     return data;
   };
 
