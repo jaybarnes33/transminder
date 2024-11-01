@@ -19,6 +19,7 @@ import { differenceInMinutes, formatRelative } from "date-fns";
 import { getDrugStatus, toSentenceCase } from "@/utils";
 import UpcomingDrugs from "./Upcoming";
 import useSWR, { mutate } from "swr";
+import EmptyIntake from "./Empty/EmptyIntake";
 
 export const Item = ({
   item,
@@ -238,24 +239,17 @@ const Plan = () => {
       {missedIntakes.length && (
         <FlatList
           data={missedIntakes}
-          ListEmptyComponent={null}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <Item item={{ ...item }} mutate={mutateDrugs} />
           )}
-          ListHeaderComponent={
-            todayIntakes.length === 0 ? (
-              <EmptyPlan />
-            ) : (
-              <Text>Missed Intakes</Text>
-            )
-          }
         />
       )}
 
       {/* Today's intakes */}
       <FlatList
         data={todayIntakes}
+        ListEmptyComponent={EmptyPlan}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <Item item={{ ...item }} mutate={mutateDrugs} />

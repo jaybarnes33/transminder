@@ -70,7 +70,13 @@ const WeeklyMoodChart: React.FC<WeeklyMoodChartProps> = ({
                 );
               })
             ) : (
-              <Emoji name="circle" />
+              <>
+                <View className="mb-1">
+                  <Emoji name="emoji" />
+                </View>
+
+                <Emoji name="circle" />
+              </>
             )}
             <View>
               <Text className="font-semibold text-neutral-400 text-xs">

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { resources } from "@/utils/createMockData";
@@ -8,6 +8,12 @@ import clsx from "clsx";
 import Icon from "../Core/Icon";
 import { IconName, Resource } from "@/types/global";
 import { useRouter } from "expo-router";
+import axiosInstance from "@/lib/axios";
+import useSWR from "swr";
+import Message from "../Core/Message";
+import { FlashList } from "@shopify/flash-list";
+import { Image } from "expo-image";
+import { getResourceImage } from "@/utils";
 
 export const colors = {
   video: "text-orange-500",
@@ -21,27 +27,46 @@ const Bookmarks = () => {
   const handlePress = (resource: Resource) => {
     navigate({
       pathname: "/(app)/resource",
-      params: { resource: JSON.stringify(resource) },
+      params: { resource: resource._id },
     });
   };
+
+  const fetchResources = async () => {
+    const { data } = await axiosInstance.get(`/resources/bookmarks`);
+    return data;
+  };
+
+  const { data, error, isLoading } = useSWR<Resource[]>(
+    `/resources/bookmarks`,
+    fetchResources
+  );
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Message isError message={error ?? "Failed to load bookmarks"} />;
+  }
   return (
-    <View className="">
+    <View>
       <Text className="font-fwbold text-xl">
-        Your bookmarks <Text className="text-neutral-400">4</Text>
+        Your bookmarks <Text className="text-neutral-400">{data?.length}</Text>
       </Text>
-      <ScrollView
-        className="h-[130px] my-2 space-x-4"
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {resources.slice(0, 4).map((resource) => (
+      <FlashList
+        data={data}
+        estimatedItemSize={5}
+        renderItem={({ item: resource }) => (
           <TouchableOpacity
             onPress={() => handlePress(resource)}
             key={resource.title}
-            className="flex-row bg-white items-center rounded-[20px] shadow space-x-3 p-4 h-full"
+            className="flex-row bg-white items-center rounded-[20px] shadow space-x-3 p-4 h-[120px]"
             style={{ width: width - 35 }}
           >
-            <View className="w-1/4 h-full rounded-xl bg-neutral-200"></View>
+            <Image
+              className="w-1/4 h-full rounded-xl"
+              source={{ uri: getResourceImage(resource.thumbnail) }}
+            />
             <View className="flex-1 space-y-1">
               <View className="flex-row items-center space-x-1">
                 <Icon name={resource.type as IconName} />
@@ -70,8 +95,11 @@ const Bookmarks = () => {
               </View>
             </View>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        )}
+        className="h-[130px] my-2 space-x-4"
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      />
     </View>
   );
 };

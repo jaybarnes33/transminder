@@ -1,16 +1,37 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import Icon from "../Core/Icon";
 import { useRouter } from "expo-router";
+import axiosInstance from "@/lib/axios";
 
-const HealthReport = () => {
+const HealthReport = ({ start, end }: { start: Date; end: Date }) => {
   const { navigate } = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const hasAccess = true;
+
+  const requestReport = async () => {
+    if (!hasAccess) {
+      return navigate("/(app)/report");
+    }
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.get(
+        `/insights/report?start=${start}&end=${end}`
+      );
+      alert(data.message);
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <View className="mt-10 space-y-2">
       <Text className="font-fwbold text-xl">Health report</Text>
       <TouchableOpacity
-        onPress={() => navigate("/(app)/report")}
+        onPress={requestReport}
         className=" bg-white space-x-2  items-start rounded-[20px] justify-between p-4 flex-row"
       >
         <View className="mt-1">
@@ -24,7 +45,11 @@ const HealthReport = () => {
             personal insights.
           </Text>
         </View>
-        <Feather name="chevron-right" size={20} />
+        {!loading ? (
+          <Feather name="chevron-right" size={20} />
+        ) : (
+          <ActivityIndicator />
+        )}
       </TouchableOpacity>
     </View>
   );

@@ -1,8 +1,6 @@
 import { ScrollView, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import EmptyInsight from "@/components/Insights/Empty";
-import { getLastNDaysWithDayInitials } from "@/utils";
 import {
   format,
   startOfWeek,
@@ -80,6 +78,7 @@ const Insights = () => {
       <View className="flex-row justify-between items-center mb-4">
         <View>
           <DropdownPicker
+            width={192}
             range
             placeholder="Select range"
             selectedValue={range}
@@ -116,7 +115,7 @@ const Insights = () => {
 
         <FeelingsInsight start={range.startDate} end={range.endDate} />
         <Track noHeading />
-        <HealthReport />
+        <HealthReport start={range.startDate} end={range.endDate} />
       </ScrollView>
     </SafeAreaView>
   );

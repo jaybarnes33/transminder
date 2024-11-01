@@ -145,17 +145,29 @@ export interface Location {
     close: string;
   }[];
 }
-
 export interface Resource {
-  id: string;
+  _id: string;
   title: string;
   type: "article" | "guide" | "video";
   category: "health" | "community" | "support" | "legal" | "transition";
-  description: string;
+  description?: string;
   content?: string;
   steps?: string[];
   url?: string;
   author: string;
   datePublished: string;
   tags: string[];
+  bookmarks: string[];
+  thumbnail: string;
+}
+
+export interface Collection {
+  _id: string;
+  color: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  author: string;
+  count: number;
+  deleted: boolean;
 }

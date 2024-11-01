@@ -1,5 +1,6 @@
 import { DayObj, Intake, MoodLog } from "@/types/global";
 import { differenceInMinutes, format, parse } from "date-fns";
+import { Platform } from "react-native";
 
 export const transformDate = (date: Date) => {
   return {
@@ -195,7 +196,11 @@ export const getDrugStatus = (
   const timeDifference = differenceInMinutes(currentTime, drugTime);
 
   // If the drug has already been marked as taken or skipped, return the current status
-  if (drugStatus === "taken" || drugStatus === "skipped") {
+  if (
+    drugStatus === "taken" ||
+    drugStatus === "skipped" ||
+    drugStatus === "missed"
+  ) {
     return drugStatus;
   }
 
@@ -337,4 +342,16 @@ export function getIntakeStatus(
 
 export const toSentenceCase = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const getResourceImage = (slug: string) => {
+  return slug.startsWith("http")
+    ? slug
+    : process.env.EXPO_PUBLIC_ENV !== "production"
+    ? `${
+        Platform.OS !== "android"
+          ? process.env.EXPO_PUBLIC_BASE
+          : process.env.EXPO_PUBLIC_ANDROID_BASE
+      }${slug}`
+    : `${process.env.EXPO_PUBLIC_API_BASE}${slug}`;
 };

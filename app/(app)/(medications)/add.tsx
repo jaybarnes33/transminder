@@ -236,6 +236,7 @@ const Add = () => {
           <Input
             name="Strength"
             value={drug.dosage}
+            keyboardType="numeric"
             onChangeText={(text) => handleChange("dosage", text)}
           />
         </View>

@@ -1,20 +1,75 @@
-import { View, Text, TouchableOpacity, Linking } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+  useWindowDimensions,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Resource } from "@/types/global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Core/Back";
-import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import Head from "@/components/Resources/Resource";
-
+import RenderHTML from "react-native-render-html";
+import Constants from "expo-constants";
+import axiosInstance from "@/lib/axios";
+import useSWR from "swr";
+import Message from "@/components/Core/Message";
+import Emoji from "@/components/Core/Emoji";
+import { useUser } from "@/context/Auth";
 const ResourceScreen = () => {
-  const { resource: resourceString } = useLocalSearchParams();
-  const resource: Resource = JSON.parse(resourceString as string);
+  const { user } = useUser();
+  const { resource: id } = useLocalSearchParams();
+  const fetchResource = async () => {
+    const { data } = await axiosInstance.get(`/resources/${id}`);
+    return data;
+  };
 
+  const { width } = useWindowDimensions();
+
+  const {
+    data: resource,
+    isLoading,
+    error,
+    mutate,
+  } = useSWR<Resource>(`/resources/${id}`, fetchResource);
+
+  const [bookmarked, setBookmarked] = useState(
+    resource?.bookmarks.includes(user?._id as string)
+  );
+  if (isLoading || !resource) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Message isError message={error ?? "Failed to load resource"} />;
+  }
   const handleOpenURL = () => {
     if (resource.url) {
       Linking.openURL(resource.url);
+    }
+  };
+
+  const htmlContent = `
+  <html>
+    <body>
+      <div style="font-family: Quicksand">${resource.content}</div>
+    </body>
+  </html>
+`;
+
+  const handleBookmark = async () => {
+    try {
+      setBookmarked((prev) => !prev);
+      await axiosInstance.post(`/resources/${id}/bookmark`, {
+        resourceId: resource._id,
+      });
+      mutate();
+    } catch (error) {
+      setBookmarked(false);
     }
   };
 
@@ -22,14 +77,14 @@ const ResourceScreen = () => {
     <SafeAreaView className="px-4 flex-1 bg-neutral-50">
       <View className="flex-row items-center pb-4 justify-between">
         <Back />
-        <TouchableOpacity>
-          <Ionicons name="bookmark" size={24} color="#777" />
+        <TouchableOpacity onPress={handleBookmark}>
+          <Emoji name={bookmarked ? "bookmark-active" : "bookmark"} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Head resource={resource} heading />
-        <View className="flex-row space-x-2 mb-4">
+        <View className="flex-row space-x-2 ">
           {resource.tags.map((tag, index) => (
             <View key={index} className="bg-neutral-200 px-3 py-1 rounded-lg">
               <Text className="font-semibold capitalize text-neutral-500">
@@ -41,8 +96,14 @@ const ResourceScreen = () => {
 
         {resource.type === "article" && resource.content && (
           <View className="mb-6">
-            <Text className="mt-2 text-neutral-500 text-base font-semibold">
-              {resource.content}
+            <Text className="font-main font-semibold">
+              <RenderHTML
+                systemFonts={[...Constants.systemFonts]}
+                contentWidth={width}
+                source={{
+                  html: htmlContent,
+                }}
+              />
             </Text>
           </View>
         )}

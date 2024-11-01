@@ -46,6 +46,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
         dismissModal();
         mutate("/medications");
         mutate("/medications?size");
+        mutate("/drugs/intake");
         mutate(`/drug/${drug._id}`);
         navigate("/(app)/(medications)");
       } catch (error) {
@@ -141,9 +142,9 @@ const Item = ({ drug }: { drug: Drug }) => {
   const viewDetails = () => {
     showModal(<DrugDetail drug={drug} />);
   };
-  return drug.times.map((time) => (
+  return (
     <TouchableOpacity
-      key={`${drug._id}-${time}`}
+      key={`${drug._id}`}
       onPress={viewDetails}
       className={" bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center  "}
     >
@@ -170,7 +171,7 @@ const Item = ({ drug }: { drug: Drug }) => {
           <Text className="font-fwbold text-blue-500 text-sm ">
             <Text>
               {formatDrugTimes(
-                [time],
+                drug.times,
                 drug.start,
                 drug.schedule.repeat,
                 drug.schedule.frequency!
@@ -188,7 +189,7 @@ const Item = ({ drug }: { drug: Drug }) => {
         </View>
       </View>
     </TouchableOpacity>
-  ));
+  );
 };
 
 const Medications = () => {

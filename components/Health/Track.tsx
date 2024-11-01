@@ -65,8 +65,9 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
               </Text>
             </View>
             <Text className="text-xl font-fwbold">
-              {intakeData?.analytics?.taken} /{" "}
+              {intakeData?.analytics?.taken}/
               {intakeData?.analytics?.totalIntakes}
+              &nbsp;intake
             </Text>
             <View className="flex-row  space-x-2 items-center">
               <Text

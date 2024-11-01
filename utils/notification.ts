@@ -49,8 +49,6 @@ export async function registerForPushNotificationsAsync() {
     } catch (e: unknown) {
       handleRegistrationError(`${e}`);
     }
-  } else {
-    handleRegistrationError("Must use physical device for push notifications");
   }
 }
 

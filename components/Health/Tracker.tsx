@@ -6,8 +6,11 @@ import axiosInstance from "@/lib/axios";
 import useSWR from "swr";
 import Emoji from "../Core/Emoji";
 import Icon from "../Core/Icon";
+import { startOfDay } from "date-fns";
+import clsx from "clsx";
 
 const Tracker = ({ date }: { date: string }) => {
+  const isPast = new Date(date) < startOfDay(new Date());
   const { navigate } = useRouter();
 
   const fetchMoodLog = async () => {
@@ -17,22 +20,45 @@ const Tracker = ({ date }: { date: string }) => {
     return moodLog;
   };
 
+  const copy = isPast
+    ? {
+        title: "Oops! Forgot to log?",
+        text: "How was your mood on that day?",
+        label: "Let's add it",
+      }
+    : {
+        title: "Daily tracker",
+        text: "How are you feeling today?",
+        label: "Log your mood",
+      };
+
   const { data, error, isLoading } = useSWR(`/mood/${date}`, fetchMoodLog);
   return isLoading || !data?.mood ? (
-    <View className="bg-purple-500 relative rounded-[20px] h-[126] items-center space-y-3 pt-4 my-4">
-      <View>
-        <Text className="font-main text-white">Daily Tracker</Text>
+    <View
+      className={clsx([
+        "bg-purple-500 relative rounded-[20px] h-[126] items-center space-y-3 pt-4 my-4",
+        isPast && "bg-[#FFA88F]",
+      ])}
+    >
+      <View className="flex-row items-center justify-center">
+        <Emoji name="sun" />
+        <Text className="font-main text-white">{copy.title}</Text>
       </View>
-      <Text className=" font-base font-fwbold text-white">
-        How are you feeling today?
-      </Text>
+      <Text className=" font-base font-fwbold text-white">{copy.text}</Text>
       <TouchableOpacity
         onPress={() =>
           navigate({ pathname: "/(app)/(mood)", params: { date } })
         }
         className="bg-white p-2 w-[144] items-center rounded-[70px] relative z-[99]"
       >
-        <Text className="font-fwbold text-purple-500">Log your mood</Text>
+        <Text
+          className={clsx([
+            "font-fwbold text-purple-500",
+            isPast && "text-[#FD8C6C]",
+          ])}
+        >
+          {copy.label}
+        </Text>
       </TouchableOpacity>
       <Image
         className="absolute w-full bottom-0"
