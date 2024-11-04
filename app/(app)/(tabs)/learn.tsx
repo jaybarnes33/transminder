@@ -36,7 +36,7 @@ const Learn = () => {
       <Message isError message={error.message ?? "Failed to fetch posts"} />
     );
   }
-  if (isLoading) {
+  if (isLoading && !data) {
     return <Text>Loading</Text>;
   }
 
@@ -49,23 +49,25 @@ const Learn = () => {
 
       <Search search={setSearch} />
 
-      <FlashList
-        estimatedItemSize={5}
-        data={[{ id: "bookmarks", name: "bookmark" }, ...data!]}
-        renderItem={({ item }) =>
-          item.name === "bookmark" ? (
-            <Bookmarks />
-          ) : (
-            <Section
-              collection={item as Collection}
-              search={search}
-              key={(item as Collection)._id}
-            />
-          )
-        }
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 200 }}
-      />
+      {data && (
+        <FlashList
+          estimatedItemSize={5}
+          data={[{ name: "bookmark", _id: "bookmark" }, ...data]}
+          renderItem={({ item }) =>
+            item.name === "bookmark" ? (
+              <Bookmarks search={search} />
+            ) : (
+              <Section
+                collection={item as Collection}
+                search={search}
+                key={(item as Collection)._id}
+              />
+            )
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 200 }}
+        />
+      )}
     </SafeAreaView>
   );
 };

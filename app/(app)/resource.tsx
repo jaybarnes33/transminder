@@ -16,7 +16,7 @@ import Head from "@/components/Resources/Resource";
 import RenderHTML from "react-native-render-html";
 import Constants from "expo-constants";
 import axiosInstance from "@/lib/axios";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import Message from "@/components/Core/Message";
 import Emoji from "@/components/Core/Emoji";
 import { useUser } from "@/context/Auth";
@@ -34,7 +34,7 @@ const ResourceScreen = () => {
     data: resource,
     isLoading,
     error,
-    mutate,
+    mutate: mutateResource,
   } = useSWR<Resource>(`/resources/${id}`, fetchResource);
 
   const [bookmarked, setBookmarked] = useState(
@@ -67,14 +67,15 @@ const ResourceScreen = () => {
       await axiosInstance.post(`/resources/${id}/bookmark`, {
         resourceId: resource._id,
       });
-      mutate();
+      mutateResource();
+      mutate(`/resources/bookmarks`);
     } catch (error) {
       setBookmarked(false);
     }
   };
 
   return (
-    <SafeAreaView className="px-4 flex-1 bg-neutral-50">
+    <SafeAreaView className="px-4 flex-1 bg-white">
       <View className="flex-row items-center pb-4 justify-between">
         <Back />
         <TouchableOpacity onPress={handleBookmark}>

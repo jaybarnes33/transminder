@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import clsx from "clsx";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import SignatureScreen, {
   SignatureViewRef,
@@ -19,7 +19,6 @@ const Sign = ({
 
   // Called after ref.current.readSignature() reads a non-empty base64 string
   const handleOK = (signature: string) => {
-    console.log(signature);
     onOK(signature); // Callback from Component props
   };
   // Called after ref.current.readSignature() reads an empty string

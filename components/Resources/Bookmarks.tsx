@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { resources } from "@/utils/createMockData";
 import { Dimensions } from "react-native";
@@ -9,7 +9,7 @@ import Icon from "../Core/Icon";
 import { IconName, Resource } from "@/types/global";
 import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import Message from "../Core/Message";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
@@ -20,7 +20,7 @@ export const colors = {
   guide: "text-rose-400",
   article: "text-blue-500",
 };
-const Bookmarks = () => {
+const Bookmarks = ({ search }: { search: string }) => {
   const width = Dimensions.get("window").width;
 
   const { navigate } = useRouter();
@@ -36,17 +36,27 @@ const Bookmarks = () => {
     return data;
   };
 
-  const { data, error, isLoading } = useSWR<Resource[]>(
+  const { data, error, isLoading, mutate } = useSWR<Resource[]>(
     `/resources/bookmarks`,
     fetchResources
   );
+
+  useEffect(() => {
+    (async () => {
+      await mutate();
+    })();
+  }, [search]);
 
   if (isLoading) {
     return <ActivityIndicator />;
   }
 
   if (error) {
-    return <Message isError message={error ?? "Failed to load bookmarks"} />;
+    return <Message isError message={"Failed to load bookmarks"} />;
+  }
+
+  if (!data?.length) {
+    return;
   }
   return (
     <View>
@@ -60,8 +70,8 @@ const Bookmarks = () => {
           <TouchableOpacity
             onPress={() => handlePress(resource)}
             key={resource.title}
-            className="flex-row bg-white items-center rounded-[20px] shadow space-x-3 p-4 h-[120px]"
             style={{ width: width - 35 }}
+            className="flex-row bg-white items-center mr-5 rounded-[20px] shadow space-x-3 p-4 h-[120px]"
           >
             <Image
               className="w-1/4 h-full rounded-xl"

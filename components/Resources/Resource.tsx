@@ -35,14 +35,16 @@ const Resource = ({
       disabled={heading}
       onPress={handlePress}
       className={clsx([
-        "bg-white shadow p-4 h-[250px] space-y-2 rounded-[20px]  mr-3 ",
-        heading && " min-h-[450px] space-y-5 p-0 bg-transparent ",
+        "bg-white shadow p-4  space-y-2 rounded-[20px]  mr-3 ",
+        heading && "space-y-5 p-0 bg-transparent ",
+        !heading && "h-[250px]",
       ])}
       style={{ width: width - 35 }}
     >
       <Image
         source={{ uri: getResourceImage(resource.thumbnail) }}
-        className="h-5/6  object-left-top  "
+        className={clsx(["h-4/6 bg-neutral-300", heading && "h-[250px]"])}
+        contentFit={"contain"}
       />
       <View className={clsx([heading && " space-y-2"])}>
         <View className="flex-row items-center space-x-1">
