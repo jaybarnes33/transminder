@@ -85,7 +85,8 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
                 {
                   getIntakeStatus(
                     intakeData.analytics.taken,
-                    intakeData.analytics.totalIntakes
+                    intakeData.analytics.totalIntakes -
+                      intakeData.analytics.pending
                   )[0]
                 }
               </Text>

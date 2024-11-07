@@ -1,8 +1,11 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import Icon from "../Core/Icon";
+import Emoji from "../Core/Emoji";
+import { useRouter } from "expo-router";
 
 const Premium = () => {
+  const { navigate } = useRouter();
   return (
     <View className="mt-4 mb-14 p-4 h-[305px] bg-white rounded-[20px]">
       <View className="flex-row items-center space-x-2">
@@ -21,7 +24,10 @@ const Premium = () => {
         </View>
       </View>
 
-      <TouchableOpacity className="flex-row items-center justify-center bg-ring mx-auto px-7    h-12 rounded-full mt-4">
+      <TouchableOpacity
+        onPress={() => navigate("/premium")}
+        className="flex-row items-center justify-center bg-ring mx-auto px-7    h-12 rounded-full mt-4"
+      >
         <Text className="font-main font-semibold text-base text-white">
           Let's gooo Premium
         </Text>
@@ -30,6 +36,7 @@ const Premium = () => {
         Transminder Premium is not a diagnostic tool
       </Text>
       <TouchableOpacity className="flex-row items-center justify-center mx-auto px-7 rounded-full  mt-4">
+        <Emoji name="premium" />
         <Text className="font-main font-semibold text-sm text-yellow-500">
           Unlock 50% off. Limited.
         </Text>

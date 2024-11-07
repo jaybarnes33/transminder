@@ -5,7 +5,7 @@ import Icon from "../Core/Icon";
 import clsx from "clsx";
 import { useRouter } from "expo-router";
 
-import { getResourceImage } from "@/utils";
+import { getReadingTime, getResourceImage } from "@/utils";
 import { Image } from "expo-image";
 
 const Resource = ({
@@ -35,18 +35,18 @@ const Resource = ({
       disabled={heading}
       onPress={handlePress}
       className={clsx([
-        "bg-white shadow p-4  space-y-2 rounded-[20px]  mr-3 ",
-        heading && "space-y-5 p-0 bg-transparent ",
-        !heading && "h-[250px]",
+        "bg-white shadow p-4  rounded-[20px]  mr-3 ",
+        heading && " p-0 bg-transparent w-full ",
+        !heading && "h-[250px] w-[] ",
       ])}
-      style={{ width: width - 35 }}
+      style={!heading && { width: width / 1.3 }}
     >
       <Image
         source={{ uri: getResourceImage(resource.thumbnail) }}
         className={clsx(["h-4/6 bg-neutral-300", heading && "h-[250px]"])}
         contentFit={"contain"}
       />
-      <View className={clsx([heading && " space-y-2"])}>
+      <View className="my-2">
         <View className="flex-row items-center space-x-1">
           <Icon name={resource.type as IconName} />
           <Text
@@ -75,7 +75,15 @@ const Resource = ({
               <View className="h-1 w-1 rounded-full bg-neutral-400" />
             </>
           )}
-          <Text className="text-sm text-neutral-400 font-semibold"> 3 min</Text>
+          {(resource.type === "article" || resource.type === "guide") && (
+            <Text className="text-sm text-neutral-400 font-semibold">
+              {getReadingTime(
+                resource.type === "article"
+                  ? resource.content!
+                  : resource.steps?.join(" ")!
+              )}
+            </Text>
+          )}
         </View>
       </View>
     </TouchableOpacity>

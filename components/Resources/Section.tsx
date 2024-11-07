@@ -11,6 +11,7 @@ import axiosInstance from "@/lib/axios";
 import useSWR from "swr";
 import { FlashList } from "@shopify/flash-list";
 import Message from "../Core/Message";
+import { ResourceLoader } from "./Loaders/Resource";
 
 export const colors = {
   video: "text-orange-500",
@@ -44,7 +45,7 @@ const Section = ({
     );
   }
   if (isLoading) {
-    return <Text>Loading</Text>;
+    return <ResourceLoader />;
   }
 
   if (!data?.pagination.total) {

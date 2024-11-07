@@ -16,13 +16,17 @@ import useSWR, { mutate } from "swr";
 import EmptyPlan from "@/components/Health/Empty/EmptyPlan";
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import { Defs, LinearGradient, Rect, Stop, Svg } from "react-native-svg";
-import { formatDate } from "date-fns";
+import { format, formatDate } from "date-fns";
 import { useState } from "react";
 import { formatDrugTimes } from "@/utils";
+import DatePicker from "@/components/Core/DatePicker";
 
 export const DrugDetail = ({ drug }: { drug: Drug }) => {
   const { navigate } = useRouter();
   const { dismissModal } = useBottomSheetModal();
+  const [date, setDate] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
   const editDrug = () => {
     navigate({
       pathname: "/(app)/(medications)/add",
@@ -36,6 +40,8 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
 
   const [confirm, setConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [ending, setEnding] = useState(false);
+
   const deleteDrug = async () => {
     if (!confirm) {
       setConfirm(true);
@@ -58,6 +64,30 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
       }
     }
   };
+
+  const endDrug = async () => {
+    if (!date) {
+      setShowDatePicker(true);
+      return;
+    }
+    try {
+      setEnding(true);
+      await axiosInstance.put(`/drugs/${drug._id}`, { endDate: date });
+      dismissModal();
+      mutate("/medications");
+      mutate("/medications?size");
+      mutate("/drugs/intake");
+      mutate(`/drug/${drug._id}`);
+      navigate("/(app)/(medications)");
+    } catch (error) {
+      //@ts-ignore
+      alert(error.response.data.error ?? `Failed to end ${drug.name}`);
+    } finally {
+      setEnding(false);
+      setConfirm(false);
+    }
+  };
+
   return (
     <View className="h-full">
       <View className="relative z-0  h-[20vh]">
@@ -107,9 +137,31 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
               <Text className="font-semibold text-dark ">{drug.notes}</Text>
             </View>
           )}
+          <View className="flex-row items-center justify-between  border-gray-300  space-y-1 pb-2">
+            <Text className="font-semibold text-gray-400">End Date</Text>
+            {showDatePicker ? (
+              <DatePicker
+                value={new Date(date.length ? date : new Date()).toISOString()}
+                isEdit
+                handleChange={setDate}
+              />
+            ) : (
+              <Text className=" font-semibold">
+                {drug.endDate ? format(drug.endDate, "PPP") : "N/A"}
+              </Text>
+            )}
+          </View>
         </View>
+
+        <TouchableOpacity
+          onPress={endDrug}
+          className="items-center px-5 py-1 w-1/4 my-2 justify-center ml-auto bg-blue-500 flex-row rounded-full"
+        >
+          <Text className="text-base font-semibold text-white">End</Text>
+          {ending && <ActivityIndicator color={"white"} />}
+        </TouchableOpacity>
       </View>
-      <View className="absolute items-center w-full space-y-2 bottom-10">
+      <View className="absolute items-center w-full space-y-2 bottom-20">
         <TouchableOpacity
           onPress={editDrug}
           className="items-center px-5 rounded-full py-1 bg-gray-200 "
@@ -123,9 +175,10 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
           <Text className="text-base font-semibold text-red-500">Delete</Text>
           {deleting && <ActivityIndicator color={"white"} />}
         </TouchableOpacity>
+
         {confirm && (
           <Text className="text-red-500 font-semibold text-base">
-            Press the delete button again to confirm
+            Deleting is irreversible, Press the delete button again to confirm
           </Text>
         )}
 

@@ -12,13 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Back from "@/components/Core/Back";
 import { Calendar, DateData } from "react-native-calendars";
 import Appointments from "@/components/Calendar/Appointments";
-import {
-  format as formatDate,
-  getMonth,
-  getYear,
-  addMonths,
-  subMonths,
-} from "date-fns";
+import { format as formatDate, getMonth, getYear } from "date-fns";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import clsx from "clsx";

@@ -57,6 +57,7 @@ export interface Drug extends DrugPayload {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  endDate: string;
   nextIntakeDate?: string;
   schedule: {
     day: string;

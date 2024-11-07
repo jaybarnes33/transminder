@@ -86,13 +86,18 @@ const ResourceScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Head resource={resource} heading />
         <View className="flex-row space-x-2 ">
-          {resource.tags.map((tag, index) => (
-            <View key={index} className="bg-neutral-200 px-3 py-1 rounded-lg">
-              <Text className="font-semibold capitalize text-neutral-500">
-                {tag}
-              </Text>
-            </View>
-          ))}
+          {resource.tags.map((tag) =>
+            tag.split(",").map((tag) => (
+              <View
+                key={tag}
+                className="bg-neutral-200 mx-2 px-3 py-1 rounded-lg"
+              >
+                <Text className="font-semibold capitalize text-neutral-500">
+                  {tag}
+                </Text>
+              </View>
+            ))
+          )}
         </View>
 
         {resource.type === "article" && resource.content && (

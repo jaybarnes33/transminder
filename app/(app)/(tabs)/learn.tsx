@@ -44,7 +44,7 @@ const Learn = () => {
     <SafeAreaView className="px-4 flex-1 bg-neutral-100">
       <View className="flex-row justify-between items-center">
         <Text className="text-2xl font-fwbold">For you</Text>
-        <Actions />
+        <Actions activity={false} />
       </View>
 
       <Search search={setSearch} />

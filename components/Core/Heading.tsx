@@ -19,7 +19,7 @@ const Heading = ({
         <Text className="font-fwbold text-lg">{text}</Text>
         {more && (
           <TouchableOpacity onPress={moreAction}>
-            <Text className="text-sm text-neutral-500 font-semibold">
+            <Text className="text-base text-neutral-500 font-semibold">
               {more}
             </Text>
           </TouchableOpacity>

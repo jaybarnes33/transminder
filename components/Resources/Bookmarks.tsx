@@ -14,6 +14,7 @@ import Message from "../Core/Message";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { getResourceImage } from "@/utils";
+import { BookmarkLoader } from "./Loaders/Bookmark";
 
 export const colors = {
   video: "text-orange-500",
@@ -32,7 +33,9 @@ const Bookmarks = ({ search }: { search: string }) => {
   };
 
   const fetchResources = async () => {
-    const { data } = await axiosInstance.get(`/resources/bookmarks`);
+    const { data } = await axiosInstance.get(
+      `/resources/bookmarks?search=${search}`
+    );
     return data;
   };
 
@@ -48,7 +51,7 @@ const Bookmarks = ({ search }: { search: string }) => {
   }, [search]);
 
   if (isLoading) {
-    return <ActivityIndicator />;
+    return <BookmarkLoader />;
   }
 
   if (error) {
