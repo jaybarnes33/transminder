@@ -51,7 +51,7 @@ const Explore = () => {
     PaginatedResponse<Place[]>
   >(getKey, fetcher);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("asdfas");
 
   const places = useMemo(() => {
     const allPlaces = data ? data.flatMap((page) => page.data) : [];
@@ -97,7 +97,7 @@ const Explore = () => {
   return (
     <View className="h-full">
       <View className="absolute px-4 top-20 left-0  z-[9999] w-full ">
-        <Search search={setSearch} />
+        <Search search={setSearch} term={search} />
       </View>
       <MapView
         ref={mapRef}
@@ -116,16 +116,17 @@ const Explore = () => {
             <View className="h-5 w-5 rounded-full  border-4 border-white bg-blue-500 shadow"></View>
           </Marker>
         )}
-        {places.map((place) => (
-          <Marker
-            key={place._id}
-            coordinate={{
-              latitude: place.location.latitude,
-              longitude: place.location.longitude,
-            }}
-            title={place.name}
-          />
-        ))}
+        {places?.length > 0 &&
+          places.map((place) => (
+            <Marker
+              key={place._id}
+              coordinate={{
+                latitude: place.location.latitude,
+                longitude: place.location.longitude,
+              }}
+              title={place.name}
+            />
+          ))}
       </MapView>
 
       <LocationListBottomSheet

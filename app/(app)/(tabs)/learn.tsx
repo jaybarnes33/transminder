@@ -47,7 +47,7 @@ const Learn = () => {
         <Actions activity={false} />
       </View>
 
-      <Search search={setSearch} />
+      <Search search={setSearch} term={search} />
 
       {data && (
         <FlashList
