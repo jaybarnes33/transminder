@@ -8,7 +8,9 @@ import { TextInput } from "react-native-gesture-handler";
 const FrequencyPicker = ({
   handleChange,
   val,
+  label = "Repeat",
 }: {
+  label?: string;
   handleChange: (val: { value: string; frequency?: number }) => void;
   val?: string;
 }) => {
@@ -38,6 +40,7 @@ const FrequencyPicker = ({
   };
   return (
     <View className="flex-row justify-between space-x-4 items-center ">
+      <Text className="font-semibold">{label}</Text>
       <Dropdown
         style={styles.dropdown}
         placeholderStyle={styles.placeholderStyle}

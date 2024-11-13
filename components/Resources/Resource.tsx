@@ -5,7 +5,7 @@ import Icon from "../Core/Icon";
 import clsx from "clsx";
 import { useRouter } from "expo-router";
 
-import { getReadingTime, getResourceImage } from "@/utils";
+import { getReadingTime, getImage } from "@/utils";
 import { Image } from "expo-image";
 
 const Resource = ({
@@ -42,7 +42,7 @@ const Resource = ({
       style={!heading && { width: width / 1.3 }}
     >
       <Image
-        source={{ uri: getResourceImage(resource.thumbnail) }}
+        source={{ uri: getImage(resource.thumbnail) }}
         className={clsx(["h-4/6 bg-neutral-300", heading && "h-[250px]"])}
         contentFit={"contain"}
       />

@@ -280,10 +280,10 @@ const Add = () => {
         <View className="space-y-5">
           <View className="space-y-2">
             <Text className="font-main font-semibold">Frequency</Text>
-            <TouchableOpacity className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
-              <Text className="font-semibold text-base">Start Date</Text>
+            <TouchableOpacity className=" rounded-lg flex-row items-center justify-between bg-gray-200">
               <View className="flex-row space-x-2 items-center">
                 <DatePicker
+                  label="Start Date"
                   isEdit={isEdit}
                   value={drug.start}
                   handleChange={handleStart}

@@ -116,17 +116,6 @@ export interface ActivityItem {
   drug?: Drug;
 }
 
-export interface PaginatedResponse<T> {
-  success: boolean;
-  data: T;
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    total: number;
-    pageSize: number;
-  };
-}
-
 export interface Location {
   id: string;
   description: string;
@@ -171,4 +160,47 @@ export interface Collection {
   author: string;
   count: number;
   deleted: boolean;
+}
+
+interface WorkingHours {
+  day: string;
+  open: string;
+  close: string;
+}
+
+export interface PaginatedResponse<T> {
+  success: boolean;
+  data: T;
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    total: number;
+    pageSize: number;
+  };
+}
+
+export interface Place {
+  _id: string;
+  photos: string[];
+  name: string;
+  type: string;
+  description: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  services: string[];
+  workingHours: WorkingHours[];
+  address: {
+    city: string;
+    state: string;
+    street: string;
+  };
+  contact: {
+    email: string;
+    phone: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  bookmarks: string[];
 }

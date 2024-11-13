@@ -797,7 +797,7 @@ const Emoji = ({
             gradientUnits="userSpaceOnUse"
             gradientTransform="translate(13.9998 2.00073) rotate(90) scale(22.5 29.7186)"
           >
-            <Stop stop-color="#F7CD1B" />
+            <Stop stopColor="#F7CD1B" />
             <Stop offset="0.36" stopColor="#FFA88F" />
             <Stop offset="0.58" stopColor="#FFB7F1" stopOpacity="0.945098" />
             <Stop offset="0.79" stopColor="#B85ADF" />

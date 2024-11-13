@@ -344,7 +344,7 @@ export const toSentenceCase = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const getResourceImage = (slug: string) => {
+export const getImage = (slug: string) => {
   return slug?.startsWith("http")
     ? slug
     : process.env.EXPO_PUBLIC_ENV !== "production"

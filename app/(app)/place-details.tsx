@@ -1,7 +1,13 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { IconName, Location } from "@/types/global";
+import { IconName, Location, Place } from "@/types/global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Core/Back";
 import { Ionicons, Octicons } from "@expo/vector-icons";
@@ -9,17 +15,58 @@ import PhotoCarousel from "@/components/Explore/maps/PhotosCarousel";
 import Icon from "@/components/Core/Icon";
 import clsx from "clsx";
 import { toSentenceCase } from "@/utils";
+import Emoji from "@/components/Core/Emoji";
+import axiosInstance from "@/lib/axios";
+import { useUser } from "@/context/Auth";
+import Message from "@/components/Core/Message";
+import useSWR, { mutate } from "swr";
 
 const PlaceDetail = () => {
-  const { place: data } = useLocalSearchParams();
-  const [place, setPlace] = useState<Location>(JSON.parse(data as string));
+  const { id } = useLocalSearchParams();
 
+  const { user } = useUser();
+
+  const fetchPlace = async () => {
+    const { data } = await axiosInstance.get(`/places/${id}`);
+    return data;
+  };
+
+  const {
+    data: place,
+    isLoading,
+    error,
+    mutate: mutatePlace,
+  } = useSWR<Place>(`/places/${id}`, fetchPlace);
+
+  const [bookmarked, setBookmarked] = useState(
+    place?.bookmarks.includes(user?._id as string)
+  );
+  if (isLoading || !place) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Message isError message={error ?? "Failed to load place"} />;
+  }
+
+  const handleBookmark = async () => {
+    try {
+      setBookmarked((prev) => !prev);
+      await axiosInstance.post(`/places/${id}/bookmark`, {
+        placeId: place._id,
+      });
+      mutatePlace();
+      mutate(`/places/bookmarks`);
+    } catch (error) {
+      setBookmarked(false);
+    }
+  };
   return (
     <SafeAreaView className="px-4">
       <View className="flex-row items-center pb-4 justify-between">
         <Back />
-        <TouchableOpacity>
-          <Ionicons name="bookmark" size={24} color="#777" />
+        <TouchableOpacity onPress={handleBookmark}>
+          <Emoji name={bookmarked ? "bookmark-active" : "bookmark"} />
         </TouchableOpacity>
       </View>
 
@@ -58,14 +105,14 @@ const PlaceDetail = () => {
             <Text className="text-neutral-400">({place.services.length})</Text>
           </Text>
           <ScrollView
-            className="py-2"
+            className="py-2 w-screen"
             horizontal
             showsHorizontalScrollIndicator={false}
           >
             {place.services.map((service, index) => (
               <View
                 key={index}
-                className="w-1/4 mr-3 p-4 shadow rounded-lg h-32 bg-white items-center justify-center"
+                className="min-w-[120px] mr-3 p-4 shadow rounded-lg h-32 bg-white items-center justify-center"
               >
                 <Text className="capitalize font-semibold text-lg text-center">
                   {service}
@@ -88,7 +135,7 @@ const PlaceDetail = () => {
             <View className=" py-2 justify-between flex-row">
               <Text className="text-neutral-400 font-semibold">Email:</Text>
               <Text className=" font-semibold lowercase text-blue-700">
-                {place.contact.email}
+                {place.contact?.email}
               </Text>
             </View>
           </View>
@@ -105,7 +152,7 @@ const PlaceDetail = () => {
                 <Octicons name="check-circle-fill" size={13} />
               </Text>
             </View>
-            {place.workingHours.map((hour, index) => (
+            {place.workingHours.slice(0, 7).map((hour, index) => (
               <View
                 key={index}
                 className={clsx([
@@ -117,7 +164,8 @@ const PlaceDetail = () => {
                   {hour.day}:
                 </Text>
                 <Text className="text-gray-700 font-semibold">
-                  {hour.open} - {hour.close}
+                  {!!hour.open ? hour.open : "8:00 am"} -{" "}
+                  {!!hour.close ? hour.close : "5:00 pm"}
                 </Text>
               </View>
             ))}

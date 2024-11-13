@@ -1,9 +1,7 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { ScrollView } from "react-native-gesture-handler";
-import { resources } from "@/utils/createMockData";
 import { Dimensions } from "react-native";
-import { Feather } from "@expo/vector-icons";
+
 import clsx from "clsx";
 import Icon from "../Core/Icon";
 import { IconName, Resource } from "@/types/global";
@@ -13,7 +11,7 @@ import useSWR, { mutate } from "swr";
 import Message from "../Core/Message";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
-import { getResourceImage } from "@/utils";
+import { getImage } from "@/utils";
 import { BookmarkLoader } from "./Loaders/Bookmark";
 
 export const colors = {
@@ -78,7 +76,7 @@ const Bookmarks = ({ search }: { search: string }) => {
           >
             <Image
               className="w-1/4 h-full rounded-xl"
-              source={{ uri: getResourceImage(resource.thumbnail) }}
+              source={{ uri: getImage(resource.thumbnail) }}
             />
             <View className="flex-1 space-y-1">
               <View className="flex-row items-center space-x-1">

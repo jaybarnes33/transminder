@@ -4,10 +4,12 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Feather } from "@expo/vector-icons";
 
 const DatePicker = ({
+  label = "Date",
   value,
   isEdit = false,
   handleChange,
 }: {
+  label: string;
   handleChange: (val: string) => void;
   value: string;
   isEdit: boolean;
@@ -19,17 +21,18 @@ const DatePicker = ({
   }, [isEdit]);
 
   return (
-    <View className="flex-row items-center">
+    <TouchableOpacity
+      onPress={() => {
+        setShow((show) => !show);
+      }}
+      className="flex-row h-[50] px-3 justify-between flex-1 items-center"
+    >
+      <Text className="text-base text-[#333] font-semibold">{label}</Text>
       {!show && (
-        <TouchableOpacity
-          onPress={() => {
-            setShow(true);
-          }}
-          className="flex-row space-x-1 items-center"
-        >
+        <View className="flex-row space-x-1 items-center">
           <Feather name="calendar" color="#0D96FF" />
           <Text className="text-[#0d96ff] font-semibold text-base">Today</Text>
-        </TouchableOpacity>
+        </View>
       )}
       {show && (
         <RNDateTimePicker
@@ -41,7 +44,7 @@ const DatePicker = ({
           value={new Date(value)}
         />
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 

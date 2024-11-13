@@ -1,8 +1,9 @@
 import Back from "@/components/Core/Back";
 import { Actions } from "@/components/Core/Header";
+import { pricingData } from "@/constants";
 
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions } from "react-native";
 import { Image } from "react-native";
 import {
@@ -15,6 +16,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PremiumScreen() {
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const handleSelect = (id: number) => {
+    setSelectedId(id);
+  };
+
   return (
     <SafeAreaView className="relative h-screen">
       <LinearGradient
@@ -58,39 +65,27 @@ export default function PremiumScreen() {
         </View>
 
         <View className="space-y-3 mb-6">
-          <TouchableOpacity className="flex-row items-center p-4 bg-gray-100 rounded-xl">
-            <View className="w-5 h-5 rounded-full border-2 border-gray-400 mr-3" />
-            <View className="flex-1">
-              <Text className="text-base font-semibold">$00.00 Monthly</Text>
-              <Text className="text-sm font-main text-gray-600">
-                Starting today
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="flex-row items-center p-4 bg-purple-100 rounded-xl">
-            <View className="w-5 h-5 rounded-full bg-purple-600 mr-3" />
-            <View className="flex-1">
-              <Text className="text-base font-semibold">
-                $00.00 Yearly ($0/month)
-              </Text>
-              <Text className="text-sm font-main text-gray-600">
-                First 7 days free
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="flex-row items-center p-4 bg-gray-100 rounded-xl">
-            <View className="w-5 h-5 rounded-full border-2 border-gray-400 mr-3" />
-            <View className="flex-1">
-              <Text className="text-base font-semibold">
-                $00.00 for 6 Months ($0/month)
-              </Text>
-              <Text className="text-sm font-main text-gray-600">
-                First 7 days free
-              </Text>
-            </View>
-          </TouchableOpacity>
+          {pricingData.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              className={`flex-row items-center p-4 bg-white rounded-xl`}
+              onPress={() => handleSelect(item.id)}
+            >
+              <View
+                className={`w-5 h-5 border-2 rounded-full mr-3 ${
+                  selectedId === item.id
+                    ? "border-purple-500 bg-purple-600"
+                    : " border-gray-400"
+                }`}
+              />
+              <View className="flex-1">
+                <Text className="text-base font-semibold">{item.price}</Text>
+                <Text className="text-sm font-main text-gray-600">
+                  {item.description}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
 
         <TouchableOpacity className="items-center mb-4">
@@ -111,7 +106,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-
     height: Dimensions.get("window").height,
   },
 });

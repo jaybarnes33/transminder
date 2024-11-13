@@ -1,30 +1,33 @@
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal,
-  BottomSheetScrollView,
-  TouchableOpacity,
+  BottomSheetFlatList,
 } from "@gorhom/bottom-sheet";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { StyleSheet, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SharedValue, useAnimatedStyle } from "react-native-reanimated";
 import Handle from "@/components/Core/Handle";
 import { LocationItem } from "./LocationItem";
-import { Location } from "@/types/global";
-import { createLocationListMockData } from "@/utils/createMockData";
+import { Place } from "@/types/global";
 import { View } from "@/components/Themed";
-import { Feather } from "@expo/vector-icons";
-import { TextInput } from "react-native-gesture-handler";
-import Search from "./Search";
 import clsx from "clsx";
+import { FlashList } from "@shopify/flash-list";
 
 interface LocationListBottomSheetProps {
   index: SharedValue<number>;
   position: SharedValue<number>;
-  data: Location[];
-  onItemPress: (location: Location) => void;
+  data: Place[];
+  onItemPress: (location: Place) => void;
+  onEndReached: () => void;
+  isLoadingMore?: boolean;
 }
 
 export const MIDDLE_SNAP_POINT = 300;
@@ -32,118 +35,124 @@ export const MIDDLE_SNAP_POINT = 300;
 export const LocationListBottomSheet = forwardRef<
   BottomSheetModal,
   LocationListBottomSheetProps
->(({ index, position, onItemPress, data }, ref) => {
-  //#region hooks
-  const headerHeight = useHeaderHeight();
-  const { bottom: bottomSafeArea } = useSafeAreaInsets();
-  const TAB_BAR_HEIGHT = 40; // Set this to your tab bar’s actual height
-  const [showSearch, setShowSearch] = useState(false);
-  const SNAP_POINTS = [
-    TAB_BAR_HEIGHT + bottomSafeArea, // This ensures the bottom sheet starts just above the tab bar
-    MIDDLE_SNAP_POINT,
-    "100%",
-  ];
+>(
+  (
+    { index, position, onItemPress, data, onEndReached, isLoadingMore },
+    ref
+  ) => {
+    const headerHeight = useHeaderHeight();
+    const { bottom: bottomSafeArea } = useSafeAreaInsets();
+    const TAB_BAR_HEIGHT = 40; // Set this to your tab bar's actual height
+    const [showSearch, setShowSearch] = useState(false);
+    const SNAP_POINTS = [
+      TAB_BAR_HEIGHT + bottomSafeArea,
+      MIDDLE_SNAP_POINT,
+      "100%",
+    ];
 
-  //#endregion
+    const scrollViewAnimatedStyle = useAnimatedStyle(
+      () => ({
+        opacity: index.value,
+      }),
+      [index]
+    );
 
-  //#region styles
-  const scrollViewAnimatedStyle = useAnimatedStyle(
-    () => ({
-      opacity: index.value,
-    }),
-    [index.value]
-  );
-  const scrollViewStyle = useMemo(
-    () => [styles.scrollView, scrollViewAnimatedStyle],
-    [scrollViewAnimatedStyle]
-  );
-  const scrollViewContentContainer = useMemo(
-    () => [
-      styles.scrollViewContentContainer, // Adjust padding to match tab bar height
-      ,
-    ],
-    []
-  );
-  //#endregion
+    const scrollViewStyle = useMemo(
+      () => [styles.scrollView, scrollViewAnimatedStyle],
+      [scrollViewAnimatedStyle]
+    );
 
-  //#region render
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        enableTouchThrough={true}
-        pressBehavior="none"
-        appearsOnIndex={2}
-        disappearsOnIndex={1}
-      />
-    ),
-    []
-  );
+    const renderBackdrop = useCallback(
+      (props: BottomSheetBackdropProps) => (
+        <BottomSheetBackdrop
+          {...props}
+          enableTouchThrough={true}
+          pressBehavior="none"
+          appearsOnIndex={2}
+          disappearsOnIndex={1}
+        />
+      ),
+      []
+    );
 
-  const renderItem = useCallback(
-    (item: Location, index: number) => (
-      <TouchableOpacity
-        key={`${item.name}.${index}`}
-        onPress={() => onItemPress(item)}
+    const renderItem = useCallback(
+      ({ item }: { item: Place }) => (
+        <TouchableOpacity onPress={() => onItemPress(item)}>
+          <LocationItem location={item} />
+        </TouchableOpacity>
+      ),
+      [onItemPress]
+    );
+
+    const renderFooter = useCallback(() => {
+      if (!isLoadingMore) return null;
+      return (
+        <View style={styles.loadingFooter}>
+          <ActivityIndicator size="small" color="#0000ff" />
+        </View>
+      );
+    }, [isLoadingMore]);
+
+    return (
+      <BottomSheet
+        ref={ref}
+        index={1}
+        snapPoints={SNAP_POINTS}
+        topInset={headerHeight}
+        animatedPosition={position}
+        animatedIndex={index}
+        onChange={(index) => {
+          setShowSearch(index === 2);
+        }}
+        backdropComponent={renderBackdrop}
+        handleComponent={Handle}
       >
-        <LocationItem location={item} />
-      </TouchableOpacity>
-    ),
-    [onItemPress]
-  );
-
-  return (
-    <BottomSheet
-      ref={ref}
-      index={1}
-      snapPoints={SNAP_POINTS}
-      topInset={headerHeight}
-      animatedPosition={position}
-      animatedIndex={index}
-      onChange={(index) => {
-        index === 2 ? setShowSearch(true) : setShowSearch(false);
-      }}
-      backdropComponent={renderBackdrop}
-      handleComponent={Handle}
-    >
-      {data.length > 0 ? (
-        <>
-          <View className="mt-10 mb-4 ">
-            <Text
-              className={clsx([
-                "text-center font-fwbold text-xl hidden",
-                !showSearch && "flex",
-              ])}
-            >
-              {data?.length} Places
+        {data.length > 0 ? (
+          <>
+            <View className="mt-10 mb-4">
+              <Text
+                className={clsx([
+                  "text-center font-fwbold text-xl hidden",
+                  !showSearch && "flex",
+                ])}
+              >
+                {data.length} Places
+              </Text>
+            </View>
+            <FlashList
+              data={data}
+              estimatedItemSize={10}
+              renderItem={renderItem}
+              keyExtractor={(item) => item._id}
+              contentContainerStyle={{
+                paddingHorizontal: 16,
+                paddingTop: showSearch ? 100 : 10,
+              }}
+              onEndReached={onEndReached}
+              onEndReachedThreshold={0.1}
+              ListFooterComponent={renderFooter}
+            />
+          </>
+        ) : (
+          <View className="my-5">
+            <Text className="font-main text-xl text-center">
+              No places found
             </Text>
           </View>
-          <BottomSheetScrollView
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="never"
-            style={scrollViewStyle}
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              paddingTop: showSearch ? 100 : 10,
-            }}
-          >
-            {data?.map(renderItem)}
-          </BottomSheetScrollView>
-        </>
-      ) : (
-        <View className="my-5">
-          <Text className="font-main text-xl text-center">No places found</Text>
-        </View>
-      )}
-    </BottomSheet>
-  );
-});
+        )}
+      </BottomSheet>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  scrollViewContentContainer: {
-    paddingHorizontal: 16,
+  loadingFooter: {
+    paddingVertical: 20,
+    alignItems: "center",
   },
 });
+
+export default LocationListBottomSheet;

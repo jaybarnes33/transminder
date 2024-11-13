@@ -1,3 +1,4 @@
+import { getImage } from "@/utils";
 import clsx from "clsx";
 import { Image } from "expo-image";
 import React, { useState, useRef } from "react";
@@ -36,13 +37,16 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ photos }) => {
     itemVisiblePercentThreshold: 100,
   };
 
-  const renderItem = ({ item }: { item: string }) => (
-    <Image
-      source={{ uri: item }}
-      className="h-full"
-      style={{ width: width - 32 }}
-    />
-  );
+  const renderItem = ({ item }: { item: string }) => {
+    console.log(`${process.env.EXPO_PUBLIC_URL}${item}`);
+    return (
+      <Image
+        source={{ uri: getImage(item) }}
+        className="h-full"
+        style={{ width: width - 32 }}
+      />
+    );
+  };
 
   const handleIndicatorPress = (index: number) => {
     setCurrentIndex(index); // Update current index state
@@ -63,7 +67,7 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ photos }) => {
         showsHorizontalScrollIndicator={false}
       />
       <View className="flex-row absolute bottom-4 w-full justify-center space-x-1">
-        {photos.map((_, index) => (
+        {photos?.map((_, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => handleIndicatorPress(index)} // Handle indicator click

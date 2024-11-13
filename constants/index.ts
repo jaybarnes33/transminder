@@ -232,6 +232,28 @@ export const moodColors = {
   null: "bg-gray-400",
 };
 
+export const pricingData = [
+  {
+    id: 1,
+    price: "$00.00 Monthly",
+    description: "Starting today",
+    bgColor: "bg-gray-100",
+    circleColor: "border-2 border-gray-400",
+  },
+  {
+    id: 2,
+    price: "$00.00 Yearly ($0/month)",
+    description: "First 7 days free",
+    bgColor: "bg-purple-100",
+  },
+  {
+    id: 3,
+    price: "$00.00 for 6 Months ($0/month)",
+    description: "First 7 days free",
+    bgColor: "bg-gray-100",
+    circleColor: "border-2 border-gray-400",
+  },
+];
 export const eventColors = {
   event: {
     color: "#B85ADF",
