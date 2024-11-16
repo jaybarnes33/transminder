@@ -1,6 +1,12 @@
 import { FontAwesome6, Octicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Touchable,
+  TouchableOpacity,
+} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import Input from "./Input";
 import { TextInput } from "react-native-gesture-handler";
@@ -39,7 +45,7 @@ const FrequencyPicker = ({
     );
   };
   return (
-    <View className="flex-row justify-between space-x-4 items-center ">
+    <View className="flex-row w-full justify-between space-x-4 items-center ">
       <Text className="font-semibold">{label}</Text>
       <Dropdown
         style={styles.dropdown}

@@ -138,9 +138,9 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
             </View>
           )}
           <View className="flex-row items-center justify-between  border-gray-300  space-y-1 pb-2">
-            <Text className="font-semibold text-gray-400">End Date</Text>
             {showDatePicker ? (
               <DatePicker
+                label="End Date"
                 value={new Date(date.length ? date : new Date()).toISOString()}
                 isEdit
                 handleChange={setDate}

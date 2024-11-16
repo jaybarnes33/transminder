@@ -1,10 +1,13 @@
 import { Feather } from "@expo/vector-icons";
 import clsx from "clsx";
+import { ReactNode } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 // Generic DropdownPicker component
-const DropdownPicker = <T extends { label: string; value: string }>({
+const DropdownPicker = <
+  T extends { label: string; value: string; icon?: ReactNode }
+>({
   data,
   selectedValue,
   handleChange,
@@ -14,7 +17,7 @@ const DropdownPicker = <T extends { label: string; value: string }>({
   width,
 }: {
   data: T[];
-  selectedValue: T;
+  selectedValue?: T;
   handleChange: (item: T) => void;
   placeholder: string;
   renderLeftIcon?: () => JSX.Element;
@@ -27,7 +30,8 @@ const DropdownPicker = <T extends { label: string; value: string }>({
         <Text className={clsx(["font-main font-semibold text-neutral-600"])}>
           {item.label}
         </Text>
-        {selectedValue.value === item.value && (
+        {item.icon && item.icon}
+        {selectedValue && selectedValue.value === item.value && (
           <Feather name="check" size={20} color="#b85daf" />
         )}
         {!item.label.includes("time") && (
@@ -52,7 +56,7 @@ const DropdownPicker = <T extends { label: string; value: string }>({
         elevation: 5,
         borderRadius: 16,
       }}
-      placeholderStyle={styles.placeholderStyle}
+      placeholderStyle={{ display: "none" }}
       data={data}
       maxHeight={300}
       labelField="label"

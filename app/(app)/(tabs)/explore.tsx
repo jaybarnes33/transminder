@@ -51,7 +51,7 @@ const Explore = () => {
     PaginatedResponse<Place[]>
   >(getKey, fetcher);
 
-  const [search, setSearch] = useState("asdfas");
+  const [search, setSearch] = useState("");
 
   const places = useMemo(() => {
     const allPlaces = data ? data.flatMap((page) => page.data) : [];

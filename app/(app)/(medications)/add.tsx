@@ -25,11 +25,11 @@ import useSWR, { mutate } from "swr";
 import DatePicker from "@/components/Core/DatePicker";
 import FrequencyPicker from "@/components/Core/FrequencyPicker";
 import KeyboardAvoidingScrollView from "@/components/Core/AvoidKeyboard";
-
+import { DatePicker as Picker } from "@/components/nativewindui/DatePicker";
 const Add = () => {
   const [drug, setDrug] = useState<DrugPayload>({
     name: "",
-    times: [new Date().toTimeString().split(" ")[0]],
+    times: [new Date().toISOString()],
     start: new Date().toISOString(),
     repeat: "everyday",
     repeatFrequency: 0,
@@ -62,24 +62,17 @@ const Add = () => {
     };
   };
 
-  const handleDateChange = (
-    event: any,
-    selectedDate: Date | undefined,
-    index: number
-  ) => {
-    if (event.type === "set" && selectedDate) {
+  const handleDateChange = (selectedDate: Date | undefined, index: number) => {
+    if (selectedDate) {
       const currentDate = selectedDate;
-      console.log({ string: currentDate.toTimeString() });
+
       setDrug((prev) => ({
         ...prev,
         times: prev.times.map((t, i) =>
-          i === index
-            ? currentDate.toTimeString().split(" ")[0].slice(0, 5)
-            : t.slice(0, 5)
+          i === index ? currentDate.toISOString() : t
         ),
       }));
     }
-    setShow(false);
     setActiveReminderIndex(null);
   };
 
@@ -150,14 +143,19 @@ const Add = () => {
   }, [isEdit, data, fetchError]);
   const addDrug = async () => {
     try {
-      console.log({ isEdit });
       !isEdit
         ? await axiosInstance.post("/drugs", {
             ...drug,
+            times: drug.times.map((time) =>
+              new Date(time).toTimeString().slice(0, 5)
+            ),
             schedule: getSchedule(),
           })
         : await axiosInstance.put(`/drugs/${id}`, {
             ...drug,
+            times: drug.times.map((time) =>
+              new Date(time).toTimeString().slice(0, 5)
+            ),
             schedule: getSchedule(),
           });
 
@@ -292,10 +290,7 @@ const Add = () => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity className="h-[50]  rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
-              <Text className="font-semibold text-base">Repeat</Text>
-              <View className="flex-row space-x-2 items-center">
-                <FrequencyPicker handleChange={handleFreq} />
-              </View>
+              <FrequencyPicker handleChange={handleFreq} />
             </TouchableOpacity>
             {drug.repeatFrequency &&
               drug.repeatFrequency > 1 &&
@@ -310,49 +305,43 @@ const Add = () => {
           <View>
             <Text className="font-main font-semibold">Time</Text>
             <ScrollView className="space-y-2">
-              {drug.times.map((time, index) => (
-                <View
-                  className="flex-row h-50 bg-gray-200 py-3 px-3 rounded-xl justify-between my-3 items-center"
-                  key={index}
-                >
-                  {show && activeReminderIndex === index && (
-                    <RNDateTimePicker
-                      value={new Date()}
-                      mode="time"
-                      onChange={(event, selectedDate) =>
-                        handleDateChange(event, selectedDate, index)
-                      }
-                    />
-                  )}
-                  <TouchableOpacity
-                    onPress={() => {
-                      setShow(true);
-                      setActiveReminderIndex(index);
-                    }}
+              {drug.times.map((time, index) => {
+                return (
+                  <View
+                    className="flex-row h-50 bg-gray-200 py-3 px-3 rounded-xl justify-between my-3 items-center"
+                    key={index}
                   >
-                    <Text className="text-base">{time}</Text>
-                  </TouchableOpacity>
-                  {drug.times.length > 1 && (
-                    <TouchableOpacity
-                      onPress={() =>
-                        setDrug((prev) => ({
-                          ...prev,
-                          times: prev.times.filter((_, i) => i !== index),
-                        }))
-                      }
-                    >
-                      <Octicons name="trash" size={24} color="red" />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              ))}
+                    {
+                      <Picker
+                        mode="time"
+                        value={time ? new Date(time) : new Date()}
+                        onChange={(event, date) => {
+                          if (event.type === "set" && date) {
+                            handleDateChange(date, index);
+                          }
+                        }}
+                      />
+                    }
+
+                    {drug.times.length > 1 && (
+                      <TouchableOpacity
+                        onPress={() =>
+                          setDrug((prev) => ({
+                            ...prev,
+                            times: prev.times.filter((_, i) => i !== index),
+                          }))
+                        }
+                      >
+                        <Octicons name="trash" size={24} color="red" />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                );
+              })}
               {drug.times.length > 0 && drug.times.length <= 6 && (
                 <TouchableOpacity
                   onPress={() =>
-                    handleChange("times", [
-                      ...drug.times,
-                      new Date().toTimeString().split(" ")[0].slice(0, 5),
-                    ])
+                    handleChange("times", [...drug.times, new Date()])
                   }
                   className="bg-blue-100 my-2 rounded-lg py-3 px-3 flex-row space-x-3 items-center"
                 >

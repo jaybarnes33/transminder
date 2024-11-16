@@ -5,7 +5,7 @@ import clsx from "clsx";
 import Input from "@/components/Core/Input";
 
 import { Feather } from "@expo/vector-icons";
-import TimePicker from "@/components/Core/TImePicker";
+import TimePicker from "@/components/Core/TimePicker";
 import DatePicker from "@/components/Core/DatePicker";
 import FrequencyPicker from "@/components/Core/FrequencyPicker";
 import axiosInstance from "@/lib/axios";
@@ -172,6 +172,7 @@ const Wrapper = () => {
             <Text className="font-main text-base">Date</Text>
             <View className="flex-row space-x-2 items-center">
               <DatePicker
+                label="Date"
                 isEdit={isEdit}
                 value={formData.date}
                 handleChange={handleDate}
@@ -183,13 +184,10 @@ const Wrapper = () => {
             onPress={hideKeyboard}
             className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-neutral-200"
           >
-            <Text className="font-main text-base">Repeat</Text>
-            <View className="flex-row space-x-2 items-center">
-              <FrequencyPicker
-                val={formData.repeats}
-                handleChange={handleFrequency}
-              />
-            </View>
+            <FrequencyPicker
+              val={formData.repeats}
+              handleChange={handleFrequency}
+            />
           </TouchableOpacity>
           {formData.repeatFrequency &&
             formData.repeatFrequency > 1 &&

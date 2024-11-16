@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Feather } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { DatePicker } from "../nativewindui/DatePicker";
 
 const TimePicker = ({
   label,
@@ -10,9 +11,9 @@ const TimePicker = ({
   onChange,
   isEdit = false,
 }: {
-  label: string;
+  label?: string;
   value: string;
-  isEdit: boolean;
+  isEdit?: boolean;
   onChange: (val: string) => void;
 }) => {
   const [show, setShow] = useState(false);
@@ -36,7 +37,7 @@ const TimePicker = ({
           </TouchableOpacity>
         )}
         {show && (
-          <RNDateTimePicker
+          <DatePicker
             value={new Date(value)}
             mode="time"
             onChange={(event, date) => {

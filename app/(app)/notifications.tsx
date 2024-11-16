@@ -1,13 +1,14 @@
 import { View, Text, ActivityIndicator } from "react-native";
 import React from "react";
-
 import { useRouter } from "expo-router";
 import useSWR from "swr";
 import axiosInstance from "@/lib/axios";
-import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Core/Back";
 import Icon from "@/components/Core/Icon";
+import { FlashList } from "@shopify/flash-list";
+import { formatRelative } from "date-fns";
+import { capitalize } from "@/utils";
 
 // Helper function to group notifications
 const groupNotificationsByDate = (
@@ -68,29 +69,36 @@ const Notifications = () => {
 
   const groupedNotifications = groupNotificationsByDate(data);
 
-  const renderNotifications = (title: string, items: any[]) =>
-    items.length > 0 && (
-      <View className="space-y-1">
-        <Text className="font-semibold">{title}</Text>
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <View className="bg-white flex-row items-center space-x-2 rounded-xl my-2 p-2">
-              <View className="bg-blue-200 w-12 h-12 items-center justify-center rounded-full border border-blue-500">
-                <Icon name={item.itemType} />
-              </View>
-              <View className="flex-1 space-y-1">
-                <Text className="font-fwbold text-base">{item.message}</Text>
-                <Text className="font-main text-sm text-neutral-500">
-                  {comments[item.itemType as keyof typeof comments]}
-                </Text>
-              </View>
+  const renderNotifications = (title: string, items: any[]) => (
+    <View className="space-y-1">
+      <Text className="font-semibold">{title}</Text>
+      <FlashList
+        data={items}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View className="bg-white flex-row items-center space-x-2 rounded-xl my-2 p-2">
+            <View className="bg-blue-200 w-12 h-12 items-center justify-center rounded-full border border-blue-500">
+              <Icon name={item.itemType} />
             </View>
-          )}
-        />
-      </View>
-    );
+            <View className="flex-1  space-y-1">
+              {title === "Other Days" && (
+                <Text className="font-semibold text-neutral-500">
+                  {capitalize(
+                    formatRelative(new Date(item.createdAt), new Date())
+                  )}
+                </Text>
+              )}
+              <Text className="font-fwbold text-base">{item.message}</Text>
+              <Text className="font-main text-sm text-neutral-500">
+                {comments[item.itemType as keyof typeof comments]}
+              </Text>
+            </View>
+          </View>
+        )}
+        estimatedItemSize={100}
+      />
+    </View>
+  );
 
   return (
     <SafeAreaView className="px-4 space-y-4 flex-1 bg-neutral-200">
@@ -102,11 +110,16 @@ const Notifications = () => {
       </View>
 
       {data?.length > 0 ? (
-        <View className="mt-2">
-          {renderNotifications("Today", groupedNotifications.today)}
-          {renderNotifications("Yesterday", groupedNotifications.yesterday)}
-          {renderNotifications("Other Days", groupedNotifications.others)}
-        </View>
+        <FlashList
+          data={[
+            { title: "Today", items: groupedNotifications.today },
+            { title: "Yesterday", items: groupedNotifications.yesterday },
+            { title: "Other Days", items: groupedNotifications.others },
+          ]}
+          renderItem={({ item }) => renderNotifications(item.title, item.items)}
+          keyExtractor={(item) => item.title}
+          estimatedItemSize={200}
+        />
       ) : (
         <Text>No notifications found</Text>
       )}

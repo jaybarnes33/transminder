@@ -204,3 +204,11 @@ export interface Place {
   updatedAt: string;
   bookmarks: string[];
 }
+
+export interface Album {
+  _id: string;
+  name: string;
+  media: string[];
+  createdAt: string;
+  updatedAt: string;
+}

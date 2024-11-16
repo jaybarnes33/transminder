@@ -1,6 +1,6 @@
 import { View, Text, Platform, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { DatePicker as Picker } from "@/components/nativewindui/DatePicker";
 import { Feather } from "@expo/vector-icons";
 
 const DatePicker = ({
@@ -35,7 +35,8 @@ const DatePicker = ({
         </View>
       )}
       {show && (
-        <RNDateTimePicker
+        <Picker
+          mode="date"
           onChange={(event, date) => {
             if (event.type === "set" && !!date) {
               handleChange(date.toISOString());
