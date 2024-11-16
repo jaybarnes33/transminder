@@ -1,13 +1,15 @@
-import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import DateTimePicker, {
+  DateTimePickerAndroid,
+} from "@react-native-community/datetimepicker";
+import clsx from "clsx";
+import * as React from "react";
+import { Pressable, View } from "react-native";
 
-import { Text } from '~/components/nativewindui/Text';
-import { cn } from '~/lib/cn';
+import { Text } from "@/components/nativewindui/Text";
 
 export function DatePicker(
   props: React.ComponentProps<typeof DateTimePicker> & {
-    mode: 'date' | 'time' | 'datetime';
+    mode: "date" | "time" | "datetime";
   } & {
     materialDateClassName?: string;
     materialDateLabel?: string;
@@ -17,7 +19,7 @@ export function DatePicker(
     materialTimeLabelClassName?: string;
   }
 ) {
-  const show = (currentMode: 'time' | 'date') => () => {
+  const show = (currentMode: "time" | "date") => () => {
     DateTimePickerAndroid.open({
       value: props.value,
       onChange: props.onChange,
@@ -29,40 +31,50 @@ export function DatePicker(
 
   return (
     <View className="flex-row gap-2.5">
-      {props.mode.includes('date') && (
-        <View className={cn('relative pt-1.5', props.materialDateClassName)}>
+      {props.mode.includes("date") && (
+        <View className={clsx("relative pt-1.5", props.materialDateClassName)}>
           <Pressable
-            onPress={show('date')}
-            className="border-foreground/30 rounded border py-3 pl-2.5 active:opacity-80">
+            onPress={show("date")}
+            className="border-foreground/30 rounded border py-3 pl-2.5 active:opacity-80"
+          >
             <Text className="py-px">
-              {new Intl.DateTimeFormat('en-US', {
-                dateStyle: 'medium',
+              {new Intl.DateTimeFormat("en-US", {
+                dateStyle: "medium",
               }).format(props.value)}
             </Text>
           </Pressable>
           <View
-            className={cn('bg-card absolute left-2 top-0 px-1', props.materialDateLabelClassName)}>
+            className={clsx(
+              "bg-card absolute left-2 top-0 px-1",
+              props.materialDateLabelClassName
+            )}
+          >
             <Text variant="caption2" className="text-[10px] opacity-60">
-              {props.materialDateLabel ?? 'Date'}
+              {props.materialDateLabel ?? "Date"}
             </Text>
           </View>
         </View>
       )}
-      {props.mode.includes('time') && (
-        <View className={cn('relative pt-1.5', props.materialTimeClassName)}>
+      {props.mode.includes("time") && (
+        <View className={clsx("relative pt-1.5", props.materialTimeClassName)}>
           <Pressable
-            onPress={show('time')}
-            className="border-foreground/30 rounded border py-3 pl-2.5 active:opacity-80">
+            onPress={show("time")}
+            className="border-foreground/30 rounded border py-3 pl-2.5 active:opacity-80"
+          >
             <Text className="py-px">
-              {new Intl.DateTimeFormat('en-US', {
-                timeStyle: 'short',
+              {new Intl.DateTimeFormat("en-US", {
+                timeStyle: "short",
               }).format(props.value)}
             </Text>
           </Pressable>
           <View
-            className={cn('bg-card absolute left-2 top-0 px-1', props.materialTimeLabelClassName)}>
+            className={clsx(
+              "bg-card absolute left-2 top-0 px-1",
+              props.materialTimeLabelClassName
+            )}
+          >
             <Text variant="caption2" className="text-[10px] opacity-60">
-              {props.materialTimeLabel ?? 'Time'}
+              {props.materialTimeLabel ?? "Time"}
             </Text>
           </View>
         </View>
