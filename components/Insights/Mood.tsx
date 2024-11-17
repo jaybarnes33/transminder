@@ -67,7 +67,7 @@ const MoodInsight = ({
 
   if (error) {
     return (
-      <View className="bg-white mb-4 rounded-[20px] p-4 space-y-4">
+      <View className="bg-white mb-4 rounded-[20px] p-4 gap-y-4">
         <Text className="font-semibold text-base text-red-400">
           Failed to load mood insights.
         </Text>
@@ -87,7 +87,7 @@ const MoodInsight = ({
       description="Loading your mood insights..."
     />
   ) : (
-    <View className="bg-white shadow mb-4 rounded-[20px] p-4 space-y-1">
+    <View className="bg-white shadow mb-4 rounded-[20px] p-4 gap-y-1">
       <Text className="font-semibold text-base">Well-being</Text>
       <View className="flex-row relative justify-between items-center mb-2">
         <Text className="font-semibold text-base">

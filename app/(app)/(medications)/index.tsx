@@ -102,7 +102,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
         </Svg>
       </View>
       <View className="absolute p-4 mt-[3vh] w-full">
-        <View className="items-center space-y-2">
+        <View className="items-center gap-y-2">
           <View className="bg-blue-500 w-12 h-12 rounded-full items-center justify-center">
             <Icon name={`${drug.type}-active` as IconName} />
           </View>
@@ -116,7 +116,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
             )}
           </Text>
         </View>
-        <View className="mt-4  bg-white p-4 space-y-3 rounded-[20px] shadow">
+        <View className="mt-4  bg-white p-4 gap-y-3 rounded-[20px] shadow">
           <View className="flex-row justify-between border-b border-gray-300 pb-2">
             <Text className="font-semibold text-gray-400">Form</Text>
             <Text className="font-semibold text-dark capitalize">
@@ -130,14 +130,14 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
             </Text>
           </View>
           {!!drug.notes && (
-            <View className="flex-col justify-between  border-gray-300  space-y-1 pb-2">
+            <View className="flex-col justify-between  border-gray-300  gap-y-1 pb-2">
               <Text className="font-semibold text-gray-400">
                 <Icon name="push-pin" /> Note Added
               </Text>
               <Text className="font-semibold text-dark ">{drug.notes}</Text>
             </View>
           )}
-          <View className="flex-row items-center justify-between  border-gray-300  space-y-1 pb-2">
+          <View className="flex-row items-center justify-between  border-gray-300  gap-y-1 pb-2">
             {showDatePicker ? (
               <DatePicker
                 label="End Date"
@@ -161,7 +161,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
           {ending && <ActivityIndicator color={"white"} />}
         </TouchableOpacity>
       </View>
-      <View className="absolute items-center w-full space-y-2 bottom-20">
+      <View className="absolute items-center w-full gap-y-2 bottom-20">
         <TouchableOpacity
           onPress={editDrug}
           className="items-center px-5 rounded-full py-1 bg-gray-200 "
@@ -201,8 +201,8 @@ const Item = ({ drug }: { drug: Drug }) => {
       onPress={viewDetails}
       className={" bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center  "}
     >
-      <View className="flex-row justify-between space-x-4 items-center">
-        <View className="flex-row flex-1 space-x-2">
+      <View className="flex-row justify-between gap-x-4 items-center">
+        <View className="flex-row flex-1 gap-x-2">
           <View
             className={clsx([
               "h-10 w-10 items-center justify-center rounded-full",
@@ -257,8 +257,8 @@ const Medications = () => {
   const { data: drugs, isLoading } = useSWR("/medications", fetchDrugs);
   return (
     <SafeAreaView className="px-4 bg-gray-200  flex-1">
-      <View className="space-y-4">
-        <View className="flex-row items-center justify-between space-x-4">
+      <View className="gap-y-4">
+        <View className="flex-row items-center justify-between gap-x-4">
           <Back action={() => navigate("/(tabs)/")} />
           <TouchableOpacity onPress={() => replace("/(app)/(medications)/add")}>
             <Text className="font-main text-base text-blue-500 font-semibold">

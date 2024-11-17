@@ -82,8 +82,8 @@ const Forgot = () => {
 
   const components = {
     change: (
-      <View className="space-y-4">
-        <View className="space-y-2">
+      <View className="gap-y-4">
+        <View className="gap-y-2">
           <Text className="font-fwbold text-2xl text-center">
             Change your password
           </Text>
@@ -99,12 +99,12 @@ const Forgot = () => {
       </View>
     ),
     email: (
-      <View className=" space-y-4">
+      <View className=" gap-y-4">
         <Image
           className="mx-auto"
           source={require("@/assets/images/forgot.png")}
         />
-        <View className="space-y-2">
+        <View className="gap-y-2">
           <Text className="font-semibold text-base text-neutral-500">
             Please enter your email to reset the password
           </Text>
@@ -121,8 +121,8 @@ const Forgot = () => {
       </View>
     ),
     otp: (
-      <View className="space-y-14">
-        <View className="space-y-2">
+      <View className="gap-y-14">
+        <View className="gap-y-2">
           <Text className="font-fwbold text-2xl text-center">Enter code</Text>
           <View>
             <Text className="font-main text-base  text-center text-neutral-500">
@@ -146,7 +146,7 @@ const Forgot = () => {
             <TouchableOpacity
               onPress={requestOtp}
               className={clsx([
-                " h-10 flex-row space-x-2 my-2 items-center justify-center rounded-[40px]",
+                " h-10 flex-row gap-x-2 my-2 items-center justify-center rounded-[40px]",
               ])}
             >
               <Text className="font-fwbold text-base  text-red-500">
@@ -159,8 +159,8 @@ const Forgot = () => {
       </View>
     ),
     reset: (
-      <View className="space-y-14">
-        <View className="space-y-2">
+      <View className="gap-y-14">
+        <View className="gap-y-2">
           <Text className="font-fwbold text-2xl text-center">
             Create a new password
           </Text>
@@ -181,7 +181,7 @@ const Forgot = () => {
           />
 
           {formData?.password?.length > 0 && (
-            <View className="space-y-2 mt-2">
+            <View className="gap-y-2 mt-2">
               <Validation
                 valid={formData.password?.length >= 8}
                 text="Minimum 8 characters"
@@ -201,8 +201,8 @@ const Forgot = () => {
     ),
 
     success: (
-      <View className="space-y-16 mt-16">
-        <View className="space-y-2">
+      <View className="gap-y-16 mt-16">
+        <View className="gap-y-2">
           <Text className="font-fwbold text-xl text-dark text-center">
             Successful
           </Text>
@@ -297,7 +297,7 @@ const Forgot = () => {
   return (
     <SafeAreaView className="bg-purple-50 flex-1 px-4">
       <KeyboardAvoidingView
-        className="flex-1 space-y-16"
+        className="flex-1 gap-y-16"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {step !== "success" && (
@@ -321,7 +321,7 @@ const Forgot = () => {
           disabled={!isValid}
           onPress={handleNext}
           className={clsx([
-            "bg-dark h-[50] flex-row space-x-2 mt-4 items-center justify-center rounded-[40px]",
+            "bg-dark h-[50] flex-row gap-x-2 mt-4 items-center justify-center rounded-[40px]",
             !isValid && "bg-gray-500",
           ])}
         >

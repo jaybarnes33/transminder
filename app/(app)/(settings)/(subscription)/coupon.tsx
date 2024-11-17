@@ -9,7 +9,7 @@ const Coupon = () => {
         <Image source={require("@/assets/images/coupon.png")} />
       </View>
 
-      <View className="mt-5 space-y-2 ">
+      <View className="mt-5 gap-y-2 ">
         <Text className="font-fwbold text-center text-base text-neutral-500">
           Have a coupon code?
         </Text>

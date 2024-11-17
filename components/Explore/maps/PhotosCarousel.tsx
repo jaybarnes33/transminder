@@ -66,7 +66,7 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ photos }) => {
         viewabilityConfig={viewabilityConfig}
         showsHorizontalScrollIndicator={false}
       />
-      <View className="flex-row absolute bottom-4 w-full justify-center space-x-1">
+      <View className="flex-row absolute bottom-4 w-full justify-center gap-x-1">
         {photos?.map((_, index) => (
           <TouchableOpacity
             key={index}

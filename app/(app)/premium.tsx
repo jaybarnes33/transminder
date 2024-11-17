@@ -64,7 +64,7 @@ export default function PremiumScreen() {
           </View>
         </View>
 
-        <View className="space-y-3 mb-6">
+        <View className="gap-y-3 mb-6">
           {pricingData.map((item) => (
             <TouchableOpacity
               key={item.id}

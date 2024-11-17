@@ -1,12 +1,9 @@
 import React from "react";
-import { useRouter } from "expo-router";
 
 import { ImageSourcePropType } from "react-native";
 import EmptyState from ".";
 
 const EmptyIntake = () => {
-  const { navigate } = useRouter();
-
   return (
     <EmptyState
       image={require("@/assets/images/track.png") as ImageSourcePropType}

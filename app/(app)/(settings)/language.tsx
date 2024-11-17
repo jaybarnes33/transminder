@@ -16,7 +16,7 @@ const Language = () => {
 
   return (
     <Wrapper>
-      <View className="space-y-2 mt-4">
+      <View className="gap-y-2 mt-4">
         <Text className="font-main text-base text-neutral-500 font-semibold">
           Select your language
         </Text>
@@ -26,7 +26,7 @@ const Language = () => {
             <TouchableOpacity
               key={i}
               onPress={() => setSelectedLanguage(lang.name)}
-              className={`flex-row items-center space-x-3 h-[50] px-4 rounded-xl mb-1 ${
+              className={`flex-row items-center gap-x-3 h-[50] px-4 rounded-xl mb-1 ${
                 selectedLanguage === lang.name ? "bg-purple-300" : "bg-gray-200"
               }`}
             >

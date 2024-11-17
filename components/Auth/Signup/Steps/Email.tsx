@@ -7,8 +7,8 @@ import Input from "@/components/Core/Input";
 const One = () => {
   const { details, handleChange } = useSignUp();
   return (
-    <View className="py-5 space-y-5">
-      <View className="space-y-1">
+    <View className="py-5 gap-y-5">
+      <View className="gap-y-1">
         <Text className=" font-fwbold text-center text-2xl">
           Add your email
         </Text>

@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import React from "react";
 import {
   checkLogsForDays,
@@ -8,7 +8,6 @@ import {
 } from "@/utils";
 import clsx from "clsx";
 import { DayObj } from "@/types/global";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import axiosInstance from "@/lib/axios";
 import useSWR, { mutate } from "swr";
 import { moodColors } from "@/constants";
@@ -32,7 +31,7 @@ const Item = ({
         selectDay(day);
       }}
       className={clsx([
-        "items-center justify-center  w-[45px] h-[76px] rounded-3xl space-y-1",
+        "items-center justify-center  w-[45px] h-[76px] rounded-3xl gap-y-1",
         active && "bg-white",
       ])}
     >

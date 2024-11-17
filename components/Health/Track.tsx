@@ -1,15 +1,9 @@
 import { View, Text, ActivityIndicator } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import Heading from "../Core/Heading";
-import {
-  Entypo,
-  Ionicons,
-  MaterialCommunityIcons,
-  Octicons,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import axiosInstance from "@/lib/axios";
 import useSWR from "swr";
-import { Skeleton } from "@rneui/themed";
 import {
   checkIntakeForDays,
   checkLogsForDays,
@@ -21,12 +15,10 @@ import clsx from "clsx";
 import { moodColors } from "@/constants";
 import EmptyIntake from "./Empty/EmptyIntake";
 import EmptyTrack from "./Empty/EmptyTrack";
-import { icons } from "@/constants/icons";
-import { IconName, Intake, IntakeStat } from "@/types/global";
-import { Image } from "react-native";
+import { IconName, IntakeStat } from "@/types/global";
 import Icon from "../Core/Icon";
 
-const Track = ({ noHeading }: { noHeading?: boolean }) => {
+const Track = ({ noHeading = false }: { noHeading?: boolean }) => {
   const getLogData = async () => {
     const { data } = await axiosInstance.get("/mood");
     return data;
@@ -55,9 +47,9 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
     <View>
       {!noHeading && <Heading text="Keep Track" description="Last 7 days" />}
 
-      {!loadingIntake ? (
+      {/* {!loadingIntake ? (
         intakeData?.analytics.totalIntakes ? (
-          <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm space-y-1">
+          <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
             <View className="flex-row  justify-between items-center">
               <Text className="font-main text-base">Medication Plan</Text>
               <Text className="font-semibold text-neutral-400 text-base">
@@ -69,7 +61,7 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
               {intakeData?.analytics?.totalIntakes}
               &nbsp;intake
             </Text>
-            <View className="flex-row  space-x-2 items-center">
+            <View className="flex-row  gap-x-2 items-center">
               <Text
                 className={clsx([
                   "font-fwbold text-sm capitalize",
@@ -91,10 +83,10 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
                 }
               </Text>
             </View>
-            <View className="flex-row absolute space-x-1 bottom-4 right-4">
+            <View className="flex-row absolute gap-x-1 bottom-4 right-4">
               {checkIntakeForDays(intakeData.intakes, days).map((d, index) => (
                 <View
-                  className=" items-center space-y-1"
+                  className=" items-center gap-y-1"
                   key={`${d.dayOfWeek}-${index}`}
                 >
                   <View>
@@ -123,8 +115,8 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
       )}
 
       {!loadingMood && data ? (
-        data.logs?.length ? (
-          <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm space-y-1">
+        data.logs?.length > 0 ? (
+          <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
             <View className="flex-row  justify-between items-center">
               <Text className="font-main text-base">Well-being</Text>
               <Text className="font-semibold text-base text-neutral-400">
@@ -146,10 +138,10 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
               {getAverageMood(data.averageMoodScore)[0]}
             </Text>
 
-            <View className="flex-row absolute space-x-2 bottom-4 right-4">
+            <View className="flex-row absolute gap-x-2 bottom-4 right-4">
               {checkLogsForDays(data.logs, days).map((d, index) => (
                 <View
-                  className="items-center space-y-1"
+                  className="items-center gap-y-1"
                   key={`${d.dayOfWeek}-${index}`}
                 >
                   <View
@@ -172,7 +164,7 @@ const Track = ({ noHeading }: { noHeading?: boolean }) => {
         <View className="my-4">
           <ActivityIndicator />
         </View>
-      )}
+      )} */}
     </View>
   );
 };

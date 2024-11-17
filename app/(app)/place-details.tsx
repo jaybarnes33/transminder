@@ -71,7 +71,7 @@ const PlaceDetail = () => {
       </View>
 
       <ScrollView
-        className="space-y-5 pt-4"
+        className="gap-y-5 pt-4"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: 100,
@@ -81,15 +81,15 @@ const PlaceDetail = () => {
         <View className="h-[200] rounded-xl overflow-hidden">
           <PhotoCarousel photos={place.photos} />
         </View>
-        <View className="space-y-2">
+        <View className="gap-y-2">
           <Text className="font-fwbold text-2xl">{place.name}</Text>
           {/* Type and Services */}
-          <View className="flex-row mb-2 space-x-2">
-            <View className="flex-row items-center bg-blue-200 p-2 rounded-lg space-x-1">
+          <View className="flex-row mb-2 gap-x-2">
+            <View className="flex-row items-center bg-blue-200 p-2 rounded-lg gap-x-1">
               <Icon name={place.type as IconName} />
               <Text className="font-semibold capitalize">{place.type}</Text>
             </View>
-            <View className="flex-row items-center border border-neutral-400 p-2 rounded-lg space-x-1">
+            <View className="flex-row items-center border border-neutral-400 p-2 rounded-lg gap-x-1">
               <Text className="font-semibold text-neutral-500 capitalize">
                 {place.services.length} services
               </Text>
@@ -124,7 +124,7 @@ const PlaceDetail = () => {
 
         <View className="">
           <Text className="text-xl font-fwbold mt-4 mb-2">Information</Text>
-          <View className="space-y-2 bg-white h-[130] justify-center p-4 rounded-[20px] shadow">
+          <View className="gap-y-2 bg-white h-[130] justify-center p-4 rounded-[20px] shadow">
             <Text className="text-base font-semibold">Contact</Text>
             <View className="flex-row py-2 border-b border-neutral-300 justify-between">
               <Text className="font-semibold text-neutral-400">Phone:</Text>
@@ -173,7 +173,7 @@ const PlaceDetail = () => {
         </View>
         <TouchableOpacity
           className={clsx([
-            "bg-dark flex-row h-[50] space-x-2 items-center justify-center w-full rounded-full mt-auto mb-5",
+            "bg-dark flex-row h-[50] gap-x-2 items-center justify-center w-full rounded-full mt-auto mb-5",
           ])}
         >
           <Text className="font-fwbold text-white">Save this place</Text>

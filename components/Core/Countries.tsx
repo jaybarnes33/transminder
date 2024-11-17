@@ -42,10 +42,10 @@ const Countries = ({
 
   return (
     <View className="h-[60vh]">
-      <View className="space-y-1">
+      <View className="gap-y-1">
         {selected?.length > 0 && (
           <TouchableOpacity
-            className="flex-row items-center space-x-2 my-1 mx-2"
+            className="flex-row items-center gap-x-2 my-1 mx-2"
             onPress={() => searchCountry("")}
           >
             <Text className="font-semibold text-base">Clear</Text>

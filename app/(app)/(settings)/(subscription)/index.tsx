@@ -24,12 +24,12 @@ const Subscription = () => {
 
   return (
     <Wrapper>
-      <View className="mt-4 space-y-3 ">
-        <View className="space-y-2">
+      <View className="mt-4 gap-y-3 ">
+        <View className="gap-y-2">
           <Text className="font-main text-base font-semibold text-neutral-500">
             Current Plan
           </Text>
-          <View className="items-center border rounded-[30px] space-y-2 justify-center h-[116]">
+          <View className="items-center border rounded-[30px] gap-y-2 justify-center h-[116]">
             <Text className="text-xl text-dark font-semibold font-main">
               Free Plan
             </Text>
@@ -41,13 +41,13 @@ const Subscription = () => {
           </View>
         </View>
       </View>
-      <View className="mt-10 space-y-5 flex-1">
+      <View className="mt-10 gap-y-5 flex-1">
         {items.map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => navigate(item.path as Href)}
             className={clsx([
-              "flex-row space-x-3 items-center justify-between px-4 rounded-xl mb-1 ",
+              "flex-row gap-x-3 items-center justify-between px-4 rounded-xl mb-1 ",
               index === items.length - 1 && "border-t pt-5",
             ])}
           >

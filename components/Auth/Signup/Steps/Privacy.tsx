@@ -5,7 +5,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 const Privacy = () => {
   return (
-    <View className="py-5 space-y-14 items-center">
+    <View className="py-5 gap-y-14 items-center">
       <View>
         <Text className="font-fwbold text-center text-2xl">
           Your data, Your rules!
@@ -23,7 +23,7 @@ const Privacy = () => {
 
       <Image source={require("@/assets/images/data.png")} />
 
-      <View className="top-28 py-2 flex-row space-x-3 ">
+      <View className="top-28 py-2 flex-row gap-x-3 ">
         <View className="mt-2">
           <AntDesign name="checkcircle" size={15} color="#b85adf" />
         </View>
@@ -31,7 +31,7 @@ const Privacy = () => {
           <Text className="font-main font-semibold text-base text-center text-dark">
             By continuing, you agree to our
           </Text>
-          <View className="flex-row items-center space-x-1">
+          <View className="flex-row items-center gap-x-1">
             <TouchableOpacity>
               <Text className="font-main font-semibold text-base text-center text-purple-500">
                 Privacy Policy

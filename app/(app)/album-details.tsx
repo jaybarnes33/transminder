@@ -307,7 +307,7 @@ export default function AlbumDetail() {
           <View className="px-4 py-2 flex-row items-center justify-between">
             <Back />
             <Text className="text-2xl font-fwbold">{name}</Text>
-            <View className="flex-row items-center space-x-4">
+            <View className="flex-row items-center gap-x-4">
               <TouchableOpacity>
                 <Text className="text-gray-600 font-main">Select</Text>
               </TouchableOpacity>

@@ -211,7 +211,7 @@ const ReminderSetup = ({
             Start Date
           </Text>
 
-          <View className="flex-1 flex-row items-center justify-end space-x-2">
+          <View className="flex-1 flex-row items-center justify-end gap-x-2">
             <Calendar1 className="text-purple-500 " size={17} />
             <Text className="capitalize text-base font-semibold ">
               {formatRelative(new Date(selectedDate), new Date()).split(" ")[0]}
@@ -262,14 +262,14 @@ const ReminderSetup = ({
         />
       </View>
 
-      <View className="space-y-2 mb-4">
+      <View className="gap-y-2 mb-4">
         <View className="bg-neutral-200 flex-row items-center h-[50px] rounded-lg justify-between py-2 px-2">
           <FrequencyPicker handleChange={handleFreq} />
         </View>
         <View className="bg-neutral-200 flex-row items-center h-[50px] rounded-xl justify-between py-2 px-2">
           <Text className="  font-semibold">Time</Text>
 
-          <View className="ml-auto flex-row items-center space-x-1">
+          <View className="ml-auto flex-row items-center gap-x-1">
             <Clock size={16} className="text-purple-500" />
             <DatePicker
               mode="time"

@@ -20,7 +20,7 @@ const EmptyInsight = ({
   showEmojis,
 }: EmptyProps) => {
   return (
-    <View className="min-h-[248] bg-white mb-4 rounded-[20px] p-4 space-y-4">
+    <View className="min-h-[248] bg-white mb-4 rounded-[20px] p-4 gap-y-4">
       <Text className="font-semibold text-base">{heading}</Text>
       <View className="flex-row  items-center justify-end">
         {!!label && <Text className="font-fwbold text-lg flex-1">{label}</Text>}
@@ -36,7 +36,7 @@ const EmptyInsight = ({
       <View className="flex-row justify-between relative py-2">
         {heading !== "Mental health" ? (
           getLastNDaysWithDayInitials(7).map((item) => (
-            <View key={item.date} className="items-center space-y-1">
+            <View key={item.date} className="items-center gap-y-1">
               <View className="mb-1">
                 {showEmojis && <Emoji name="emoji" />}
               </View>

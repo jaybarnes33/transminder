@@ -104,7 +104,7 @@ export default function AlbumsScreen() {
     <SafeAreaView className="flex-1 bg-neutral-100">
       <View className="px-4 pt-2">
         <View className="flex-row items-center justify-between mb-4">
-          <View className="flex-row space-x-2 items-baseline">
+          <View className="flex-row gap-x-2 items-baseline">
             <Text className="text-2xl font-semibold">Albums</Text>
             <Text className="text-2xl font-semibold text-gray-400 ml-1">3</Text>
           </View>

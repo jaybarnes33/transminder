@@ -76,7 +76,7 @@ const Profile = () => {
   return (
     <Wrapper>
       {user && (
-        <View className="items-center space-y-1">
+        <View className="items-center gap-y-1">
           <Avatar
             size="lg"
             name={user?.name as string}
@@ -97,7 +97,7 @@ const Profile = () => {
         scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View className="space-y-1 my-1" key={item}>
+          <View className="gap-y-1 my-1" key={item}>
             <Text className="font-main text-base mt-2 text-neutral-500 font-semibold capitalize">
               {item}
             </Text>
@@ -113,7 +113,7 @@ const Profile = () => {
                     : (await Linking.canOpenURL(section.url)) &&
                       Linking.openURL(section.url)
                 }
-                className="flex-row items-center space-x-3 bg-gray-200 h-[50] px-4 rounded-xl "
+                className="flex-row items-center gap-x-3 bg-gray-200 h-[50] px-4 rounded-xl "
                 key={section.name}
               >
                 <Icon name={section.icon as keyof typeof icons} />

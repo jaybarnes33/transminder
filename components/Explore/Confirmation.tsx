@@ -35,8 +35,8 @@ const Confirmation = () => {
     }
   };
   return (
-    <SafeAreaView className="px-4 items-center flex-1 space-y-9">
-      <View className="space-y-3 w-full">
+    <SafeAreaView className="px-4 items-center flex-1 gap-y-9">
+      <View className="gap-y-3 w-full">
         <Text className="text-base text-neutral-500 font-semibold text-center">
           Welcome to the Map!
         </Text>
@@ -65,7 +65,7 @@ const Confirmation = () => {
       <TouchableOpacity
         onPress={handleAgree}
         className={clsx([
-          "bg-neutral-600 flex-row h-[50] space-x-2 items-center justify-center w-full rounded-full mt-auto mb-5",
+          "bg-neutral-600 flex-row h-[50] gap-x-2 items-center justify-center w-full rounded-full mt-auto mb-5",
           sign.length > 0 && " bg-dark",
         ])}
       >

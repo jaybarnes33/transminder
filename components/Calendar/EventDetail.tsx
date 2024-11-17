@@ -78,7 +78,7 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
         </Svg>
       </View>
       <View className="absolute p-4 mt-[3vh] w-full">
-        <View className="items-center space-y-2">
+        <View className="items-center gap-y-2">
           <View
             className={clsx([
               "rounded-xl min-w-[70px] px-3 h-[30px] items-center justify-center",
@@ -97,7 +97,7 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
             )}
           </Text>
         </View>
-        <View className="mt-8 bg-white p-4 space-y-3 rounded-[20px] shadow">
+        <View className="mt-8 bg-white p-4 gap-y-3 rounded-[20px] shadow">
           <View className="flex-row justify-between border-b border-gray-300 pb-2">
             <Text className="font-semibold text-gray-400">Time</Text>
             <Text className="font-semibold text-dark">
@@ -119,7 +119,7 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
           </View>
 
           {!!event.note && (
-            <View className="flex-col justify-between space-y-1 pb-2">
+            <View className="flex-col justify-between gap-y-1 pb-2">
               <Text className="font-semibold text-gray-400">
                 {" "}
                 <Icon name="push-pin" /> Note attached
@@ -129,7 +129,7 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
           )}
         </View>
       </View>
-      <View className="absolute items-center w-full space-y-2 bottom-0 py-10">
+      <View className="absolute items-center w-full gap-y-2 bottom-0 py-10">
         <TouchableOpacity
           onPress={editEvent}
           className="items-center px-5 rounded-full py-1 bg-gray-100 "

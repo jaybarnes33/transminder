@@ -10,7 +10,7 @@ const Search = ({
   term: string;
 }) => {
   return (
-    <View className="my-4 bg-white shadow flex-row p-3 space-x-2 items-center rounded-lg h-12 justify-between">
+    <View className="my-4 bg-white shadow flex-row p-3 gap-x-2 items-center rounded-lg h-12 justify-between">
       <Ionicons name="search" size={16} color="#aaa" />
       <TextInput
         className="flex-1 font-semibold text-base"

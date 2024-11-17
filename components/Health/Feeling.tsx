@@ -24,10 +24,11 @@ const Feeling = ({
   onPress: (type: string, value: string) => void;
   isActive: boolean;
 }) => {
+  console.log({ type });
   return (
     <TouchableOpacity
       className={clsx([
-        " items-center space-y-1  rounded-full",
+        "items-center gap-y-1  rounded-full",
         type === "feeling" && "w-1/4",
       ])}
       key={item}
@@ -41,9 +42,11 @@ const Feeling = ({
       >
         <View
           className={clsx([
-            "w-11 h-11 relative items-center justify-center rounded-full bg-gray-100",
+            "w-11 h-11 relative  items-center justify-center rounded-full ",
             type === "feeling" && isActive && "bg-blue-100",
-            type === "mood" && colors[item as keyof typeof colors],
+            type === "mood"
+              ? colors[item as keyof typeof colors]
+              : "bg-gray-100",
           ])}
         >
           <Emoji name={item} active={isActive} />

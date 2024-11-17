@@ -36,7 +36,7 @@ const Tracker = ({ date }: { date: string }) => {
   return isLoading || !data?.mood ? (
     <View
       className={clsx([
-        "bg-purple-500 relative rounded-[20px] h-[126] items-center space-y-3 pt-4 my-4",
+        "bg-purple-500 relative rounded-[20px] h-[126] items-center gap-y-3 pt-4 my-4",
         isPast && "bg-[#FFA88F]",
       ])}
     >
@@ -82,18 +82,18 @@ const Tracker = ({ date }: { date: string }) => {
       >
         <Text>Update</Text>
       </TouchableOpacity>
-      <View className="space-y-2">
-        <View className="flex-row space-x-1 items-center">
+      <View className="gap-y-2">
+        <View className="flex-row gap-x-1 items-center">
           <Icon name="sun" />
           <Text className="text-ring font-fwbold capitalize text-sm ">
             Daily tracker
           </Text>
         </View>
         <Text className="font-fwbold text-base">Feeling {data.mood}</Text>
-        <View className="flex-row space-x-3">
+        <View className="flex-row gap-x-3">
           {data.feelings.map((item: string) => (
             <View
-              className="flex-row space-x-1 bg-[#EEFBF3] py-1 px-3 rounded-full items-center"
+              className="flex-row gap-x-1 bg-[#EEFBF3] py-1 px-3 rounded-full items-center"
               key={item}
             >
               <Emoji name={item} size="sm" />

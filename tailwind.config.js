@@ -51,6 +51,7 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./constants/**/*.{js,jsx,ts,tsx}",
   ],
+  presets: [require("nativewind/preset")],
   safelist: [...colorSafeList, ...borderSafeList], // Safelist all color-related classes
   theme: {
     extend: {

@@ -58,7 +58,7 @@ const YearlyMoodChart: React.FC<YearlyMoodChartProps> = ({ moodLogs }) => {
       description="No emotions logged yet. Start tracking to see insights and view your monthly moods here."
     />
   ) : (
-    <View className="space-y-3 -mt-10">
+    <View className="gap-y-3 -mt-10">
       <View className="flex-row items-center">
         {/* Donut chart */}
         <View className="mx-5 ">{renderDonutChart()}</View>
@@ -66,7 +66,7 @@ const YearlyMoodChart: React.FC<YearlyMoodChartProps> = ({ moodLogs }) => {
           {Object.entries(moodCounts).map(([mood, count], index) => (
             <View
               key={mood}
-              className="flex-row space-x-2 items-center justify-between flex-1"
+              className="flex-row gap-x-2 items-center justify-between flex-1"
             >
               <Emoji name={`${mood}-active`} />
               <Text className="font-semibold flex-1 text-dark capitalize">

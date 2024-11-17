@@ -11,9 +11,9 @@ import clsx from "clsx";
 const Moodlog = ({ mood }: { mood: ActivityItem["mood"] }) => {
   return (
     <View className="h-[116px] relative bg-white p-4 rounded-[20px] mb-2">
-      <View className="space-y-2">
+      <View className="gap-y-2">
         <View className="flex-row justify-between items-center">
-          <View className="flex-row items-center space-x-1">
+          <View className="flex-row items-center gap-x-1">
             <View
               className={clsx([
                 "h-10 w-10 items-center justify-center rounded-full",
@@ -30,7 +30,7 @@ const Moodlog = ({ mood }: { mood: ActivityItem["mood"] }) => {
             <Text className="font-semibold text-neutral-400 text-sm">
               {format(new Date(mood!.date), "d MMM yyyy")}
             </Text>
-            <View className="flex-row space-x-1 items-center">
+            <View className="flex-row gap-x-1 items-center">
               <Icon name="sun" />
               <Text className="text-ring font-fwbold capitalize text-sm ">
                 Daily tracker
@@ -41,10 +41,10 @@ const Moodlog = ({ mood }: { mood: ActivityItem["mood"] }) => {
             </Text>
           </View>
         </View>
-        <View className="flex-row space-x-3">
+        <View className="flex-row gap-x-3">
           {mood?.feelings.map((item: string) => (
             <View
-              className="flex-row space-x-1 bg-[#EEFBF3] py-1 px-3 rounded-full items-center"
+              className="flex-row gap-x-1 bg-[#EEFBF3] py-1 px-3 rounded-full items-center"
               key={item}
             >
               <Emoji name={item} size="sm" />

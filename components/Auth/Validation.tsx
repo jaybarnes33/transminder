@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 const Validation = ({ valid, text }: { valid: boolean; text: string }) => {
   return (
-    <View className="flex-row space-x-3 items-center ">
+    <View className="flex-row gap-x-3 items-center ">
       {valid ? (
         <AntDesign name="checkcircle" color={"#3b82f6"} />
       ) : (

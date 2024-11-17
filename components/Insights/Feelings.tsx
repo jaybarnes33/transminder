@@ -61,7 +61,7 @@ const FeelingsInsight = ({ start, end }: { start: Date; end: Date }) => {
 
   if (error) {
     return (
-      <View className="bg-white mb-4 rounded-[20px] p-4 space-y-4 ">
+      <View className="bg-white mb-4 rounded-[20px] p-4 gap-y-4 ">
         <Text className="font-semibold text-base text-red-400">
           Failed to load mood insights.
         </Text>
@@ -98,11 +98,11 @@ const FeelingsInsight = ({ start, end }: { start: Date; end: Date }) => {
       description="No emotions logged yet. Start tracking to see insights and view your top five emotions here"
     />
   ) : (
-    <View className="bg-white shadow mb-4 rounded-[20px] p-4 space-y-1">
+    <View className="bg-white shadow mb-4 rounded-[20px] p-4 gap-y-1">
       <Text className="font-semibold text-base">Mental health</Text>
       <View className="flex-row relative justify-between items-center mb-2"></View>
 
-      <View className="space-y-3">
+      <View className="gap-y-3">
         <View className="flex-row">
           {/* Donut chart */}
           <View className="w-[150px] h-[150px] mx-5">{renderDonutChart()}</View>

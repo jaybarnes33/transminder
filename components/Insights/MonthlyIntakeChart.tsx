@@ -150,7 +150,7 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
           <Text className="font-fwbold text-sm">
             {missed}/{total}
           </Text>
-          <View className="flex-row items-center space-x-1">
+          <View className="flex-row items-center gap-x-1">
             <Text className="font-fwbold text-xs text-red-400">Missed</Text>
             <Ionicons
               name="alert-circle"

@@ -66,7 +66,7 @@ const Form = ({ email }: { email?: string }) => {
               disabled={disabled}
               onPress={next}
               className={clsx([
-                "bg-dark flex-row  w-full  mt-auto mb-4    items-center h-12 justify-center rounded-full space-x-2",
+                "bg-dark flex-row  w-full  mt-auto mb-4    items-center h-12 justify-center rounded-full gap-x-2",
                 disabled && "bg-gray-500",
                 step == 8 && "bg-ring",
               ])}

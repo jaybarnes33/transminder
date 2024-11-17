@@ -8,13 +8,13 @@ const Premium = () => {
   const { navigate } = useRouter();
   return (
     <View className="mt-4 mb-14 p-4 h-[305px] bg-white rounded-[20px]">
-      <View className="flex-row items-center space-x-2">
+      <View className="flex-row items-center gap-x-2">
         <Text className="text-lg font-fwbold">Transminder</Text>
         <Image source={require("@/assets/images/premium.png")} />
       </View>
-      <View className="mt-5 flex-row items-center flex-1 space-x-3 ">
+      <View className="mt-5 flex-row items-center flex-1 gap-x-3 ">
         <Icon name="stars-fill" />
-        <View className="bg-neutral-100 flex-1 p-3 space-y-1 rounded-t-3xl rounded-br-3xl">
+        <View className="bg-neutral-100 flex-1 p-3 gap-y-1 rounded-t-3xl rounded-br-3xl">
           <Text className="font-main font-semibold text-sm ">
             Unlock everything, no limits
           </Text>

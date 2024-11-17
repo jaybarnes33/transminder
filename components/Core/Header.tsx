@@ -16,7 +16,7 @@ export const Actions = ({
 }) => {
   const { navigate } = useRouter();
   return (
-    <View className="flex-row items-center space-x-2">
+    <View className="flex-row items-center gap-x-2">
       {activity && (
         <TouchableOpacity
           onPress={() => navigate("/(app)/activitylogs")}
@@ -32,7 +32,7 @@ export const Actions = ({
       )}
       {profile && (
         <TouchableOpacity
-          onPress={() => navigate("/(settings)")}
+          onPress={() => navigate("/(app)/(settings)")}
           className="h-8 w-8 bg-white rounded-full items-center justify-center"
         >
           <Icon name="user" />

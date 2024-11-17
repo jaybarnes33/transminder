@@ -15,7 +15,7 @@ import "react-native-reanimated";
 
 import { AuthProvider } from "@/context/Auth";
 import { BottomSheetModalProvider } from "@/context/BottomSheet";
-
+import "../global.css";
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,

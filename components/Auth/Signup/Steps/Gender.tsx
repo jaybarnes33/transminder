@@ -49,8 +49,8 @@ const Gender = () => {
 
   const list = Array.from(new Set([gender, ...genders]));
   return (
-    <View className="py-5 space-y-5">
-      <View className="space-y-1">
+    <View className="py-5 gap-y-5">
+      <View className="gap-y-1">
         <Text className="font-fwbold text-center text-2xl">
           How do you identify?
         </Text>
@@ -58,7 +58,7 @@ const Gender = () => {
           Tell us more about yourself
         </Text>
       </View>
-      <View className="flex space-y-3 h-[50vh]">
+      <View className="flex gap-y-3 h-[50vh]">
         {list.map((item, index) => (
           <Item
             key={index}

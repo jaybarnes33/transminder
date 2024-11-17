@@ -127,7 +127,7 @@ const EditItem = ({
 
   return (
     <View className={clsx(["   mt-5  px-4"])}>
-      <View className="flex-row items-center space-x-2">
+      <View className="flex-row items-center gap-x-2">
         {step === 2 && <Back action={() => setStep(1)} />}
         <Text className=" text-xl flex-1  font-fwbold text-center capitalize ">
           {step === 1
@@ -144,7 +144,7 @@ const EditItem = ({
             name !== "country" ? (
               <View
                 className={clsx([
-                  "space-y-1 mt-0",
+                  "gap-y-1 mt-0",
                   error.length > 0 ? "mb-3" : "my-3",
                 ])}
               >
@@ -183,7 +183,7 @@ const EditItem = ({
         ) : (
           <View
             className={clsx([
-              "space-y-1 mt-0",
+              "gap-y-1 mt-0",
               error.length > 0 ? "mb-3" : "my-3",
             ])}
           >
@@ -208,7 +208,7 @@ const EditItem = ({
       <TouchableOpacity
         onPress={() => handleSubmit()}
         className={clsx([
-          "flex-row space-x-2  w-full items-center h-12 justify-center rounded-full bg-purple-300",
+          "flex-row gap-x-2  w-full items-center h-12 justify-center rounded-full bg-purple-300",
           active && "bg-purple-500",
           isAgeEror && "bg-purple-300",
           isGender && "mb-14",

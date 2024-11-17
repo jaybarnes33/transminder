@@ -53,7 +53,7 @@ const Profile = () => {
 
   return (
     <Wrapper>
-      <View className="space-y-1 mt-4 flex-1 ">
+      <View className="gap-y-1 mt-4 flex-1 ">
         {message && <Text className="text-red-500 text-center">{message}</Text>}
         <Text className="text-base font-fwbold text-neutral-500">
           Login and security
@@ -81,7 +81,7 @@ const Profile = () => {
           <TouchableOpacity
             disabled={!!confirmation}
             onPress={() => handleAction("logout")}
-            className="flex-row items-center space-x-3 bg-gray-200 h-[50] px-4 rounded-xl mt-12 "
+            className="flex-row items-center gap-x-3 bg-gray-200 h-[50] px-4 rounded-xl mt-12 "
           >
             <Icon name="logout" />
             <Text className="font-main text-base flex-1 font-semibold text-neutral-700 capitalize">
@@ -91,14 +91,14 @@ const Profile = () => {
             <Feather name="chevron-right" size={20} color={"gray"} />
           </TouchableOpacity>
 
-          <View className="mt-16 space-y-2">
+          <View className="mt-16 gap-y-2">
             <Text className="font-main text-base  font-semibold text-neutral-500">
               Account and data{" "}
             </Text>
             <TouchableOpacity
               disabled={!!confirmation}
               onPress={() => handleAction("delete")}
-              className="flex-row items-center justify-center space-x-3 bg-[#f871712d]  h-[50] px-4 rounded-full  "
+              className="flex-row items-center justify-center gap-x-3 bg-[#f871712d]  h-[50] px-4 rounded-full  "
             >
               <Text className="text-sm text-center flex-1 font-fwbold text-[#f87171] ">
                 Delete my account
@@ -114,9 +114,9 @@ const Profile = () => {
 
       {confirmation && (
         <View className=" absolute  h-screen flex-1 bg-[#1a1a1a1e] w-screen px-3">
-          <View className="mt-auto mb-20 space-y-2">
+          <View className="mt-auto mb-20 gap-y-2">
             <TouchableOpacity
-              className="bg-white h-[50] items-center justify-center rounded-full flex-row space-x-2 "
+              className="bg-white h-[50] items-center justify-center rounded-full flex-row gap-x-2 "
               onPress={confirmation === "logout" ? logOut : deleteAccount}
             >
               <Text className="text-sm text-center font-fwbold text-[#f87171] ">

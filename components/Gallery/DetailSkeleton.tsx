@@ -63,7 +63,7 @@ export default function AlbumDetailSkeleton() {
             animatedStyle,
           ]}
         />
-        <View className="flex-row items-center space-x-4">
+        <View className="flex-row items-center gap-x-4">
           <Animated.View
             style={[
               {

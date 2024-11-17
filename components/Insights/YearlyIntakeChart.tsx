@@ -64,7 +64,7 @@ const YearlyIntakeChart: React.FC<YearlyIntakeChartProps> = ({ intakes }) => {
       description="No intakes logged yet. Start tracking to see insights and view your yearly intake here."
     />
   ) : (
-    <View className="space-y-3  my-3">
+    <View className="gap-y-3  my-3">
       <View className="flex-row items-center">
         {/* Donut chart */}
         <View className="mx-5">{renderDonutChart()}</View>
@@ -72,7 +72,7 @@ const YearlyIntakeChart: React.FC<YearlyIntakeChartProps> = ({ intakes }) => {
           {Object.entries(intakeCounts).map(([status, count], index) => (
             <View
               key={status}
-              className="flex-row space-x-2 items-center justify-between flex-1"
+              className="flex-row gap-x-2 items-center justify-between flex-1"
             >
               <Emoji name={`${status}-active`} />
               <Text className="font-semibold flex-1 text-dark capitalize">

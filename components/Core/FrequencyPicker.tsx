@@ -45,7 +45,7 @@ const FrequencyPicker = ({
     );
   };
   return (
-    <View className="flex-row w-full justify-between space-x-4 items-center ">
+    <View className="flex-row w-full justify-between gap-x-4 items-center ">
       <Text className="font-semibold">{label}</Text>
       <Dropdown
         style={styles.dropdown}

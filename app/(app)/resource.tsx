@@ -85,7 +85,7 @@ const ResourceScreen = () => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <Head resource={resource} heading />
-        <View className="flex-row space-x-2 ">
+        <View className="flex-row gap-x-2 ">
           {resource.tags.map((tag) =>
             tag.split(",").map((tag) => (
               <View

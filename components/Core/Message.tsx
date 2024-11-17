@@ -13,7 +13,7 @@ const Message = ({
   return (
     <View
       className={clsx([
-        "items-center p-3  my-3 space-x-2 rounded border flex-row",
+        "items-center p-3  my-3 gap-x-2 rounded border flex-row",
         isError ? " border-red-400" : "bg-green-100 border-green-400",
       ])}
     >

@@ -173,7 +173,7 @@ const Add = () => {
 
   const components: Record<number, ReactNode> = {
     0: (
-      <View className="space-y-10">
+      <View className="gap-y-10">
         <Text className="font-fwbold text-xl text-center capitalize">
           {isEdit ? `Edit ${name}` : "Add medication name"}
         </Text>
@@ -188,18 +188,18 @@ const Add = () => {
     ),
 
     1: (
-      <View className="space-y-10">
+      <View className="gap-y-10">
         <Text className="font-fwbold text-xl text-center">
           Select Medication Type
         </Text>
 
-        <View className="space-y-2">
+        <View className="gap-y-2">
           {drugTypes.map((type) => (
             <TouchableOpacity
               key={type}
               onPress={() => handleChange("type", type)}
               className={clsx([
-                "p-2 px-3 flex-row justify-between rounded-xl h-[50] items-center space-x-2 bg-gray-200",
+                "p-2 px-3 flex-row justify-between rounded-xl h-[50] items-center gap-x-2 bg-gray-200",
                 drug.type === type && "bg-blue-500",
               ])}
             >
@@ -226,7 +226,7 @@ const Add = () => {
     ),
 
     2: (
-      <View className="space-y-10">
+      <View className="gap-y-10">
         <Text className="font-fwbold text-xl text-center">
           Add medication dosage
         </Text>
@@ -238,9 +238,9 @@ const Add = () => {
             onChangeText={(text) => handleChange("dosage", text)}
           />
         </View>
-        <View className="space-y-1">
+        <View className="gap-y-1">
           <Text className="font-semibold text-gray-600">Choose unit</Text>
-          <View className="space-y-1">
+          <View className="gap-y-1">
             {doses.map((unit) => (
               <TouchableOpacity
                 key={unit}
@@ -272,14 +272,14 @@ const Add = () => {
       </View>
     ),
     3: (
-      <View className="space-y-10">
+      <View className="gap-y-10">
         <Text className="font-fwbold text-xl text-center">Add a reminder</Text>
 
-        <View className="space-y-5">
-          <View className="space-y-2">
+        <View className="gap-y-5">
+          <View className="gap-y-2">
             <Text className="font-main font-semibold">Frequency</Text>
             <TouchableOpacity className=" rounded-lg flex-row items-center justify-between bg-gray-200">
-              <View className="flex-row space-x-2 items-center">
+              <View className="flex-row gap-x-2 items-center">
                 <DatePicker
                   label="Start Date"
                   isEdit={isEdit}
@@ -304,7 +304,7 @@ const Add = () => {
 
           <View>
             <Text className="font-main font-semibold">Time</Text>
-            <ScrollView className="space-y-2">
+            <ScrollView className="gap-y-2">
               {drug.times.map((time, index) => {
                 return (
                   <View
@@ -343,7 +343,7 @@ const Add = () => {
                   onPress={() =>
                     handleChange("times", [...drug.times, new Date()])
                   }
-                  className="bg-blue-100 my-2 rounded-lg py-3 px-3 flex-row space-x-3 items-center"
+                  className="bg-blue-100 my-2 rounded-lg py-3 px-3 flex-row gap-x-3 items-center"
                 >
                   <Feather name="plus" color="#0d96ff" size={18} />
                   <Text className="font-semibold text-[#0d96ff]">Add Time</Text>
@@ -358,14 +358,14 @@ const Add = () => {
       </View>
     ),
     4: (
-      <View className="space-y-10 items-center">
-        <View className="items-center space-y-3">
+      <View className="gap-y-10 items-center">
+        <View className="items-center gap-y-3">
           <View className="h-12 w-12 bg-blue-500 items-center justify-center rounded-full">
             <Icon name={`${drug.type}-active` as IconName} />
           </View>
           <Text className="font-fwbold text-xl text-center">{drug.name}</Text>
         </View>
-        <View className="h-[110px] space-y-3 w-full p-4 bg-white rounded-[20px]  shadow ">
+        <View className="h-[110px] gap-y-3 w-full p-4 bg-white rounded-[20px]  shadow ">
           <View className="flex-row  justify-between items-center pb-2 border-b border-neutral-300 ">
             <Text className="text-neutral-500 font-semibold text-base">
               Schedule
@@ -383,7 +383,7 @@ const Add = () => {
             </Text>
           </View>
         </View>
-        <View className="w-full space-y-2 mb-3">
+        <View className="w-full gap-y-2 mb-3">
           <Text className="font-main font-semibold">Notes</Text>
           <TextInput
             className="bg-neutral-100 h-[100px] p-3 rounded-lg"
@@ -400,7 +400,7 @@ const Add = () => {
 
   return (
     <KeyboardAvoidingScrollView className=" flex-1 bg-white">
-      <View className="space-y-2 my-2">
+      <View className="gap-y-2 my-2">
         <View className="flex-row justify-between items-center mb-2">
           <Back action={handleBack} />
           <View>
@@ -426,7 +426,7 @@ const Add = () => {
         </View>
         <View
           className={clsx([
-            "w-screen -left-4 px-4 mt-5 flex-row space-x-1  justify-between",
+            "w-screen -left-4 px-4 mt-5 flex-row gap-x-1  justify-between",
           ])}
         >
           {Object.keys(components).map((_, index) => (

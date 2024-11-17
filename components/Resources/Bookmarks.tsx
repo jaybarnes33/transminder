@@ -72,14 +72,14 @@ const Bookmarks = ({ search }: { search: string }) => {
             onPress={() => handlePress(resource)}
             key={resource.title}
             style={{ width: width - 35 }}
-            className="flex-row bg-white items-center mr-5 rounded-[20px] shadow space-x-3 p-4 h-[120px]"
+            className="flex-row bg-white items-center mr-5 rounded-[20px] shadow gap-x-3 p-4 h-[120px]"
           >
             <Image
               className="w-1/4 h-full rounded-xl"
               source={{ uri: getImage(resource.thumbnail) }}
             />
-            <View className="flex-1 space-y-1">
-              <View className="flex-row items-center space-x-1">
+            <View className="flex-1 gap-y-1">
+              <View className="flex-row items-center gap-x-1">
                 <Icon name={resource.type as IconName} />
                 <Text
                   className={clsx([
@@ -93,7 +93,7 @@ const Bookmarks = ({ search }: { search: string }) => {
               <Text className="text-base font-semibold wrap">
                 {resource.title}
               </Text>
-              <View className="flex-row space-x-1 items-center">
+              <View className="flex-row gap-x-1 items-center">
                 {resource.type === "guide" && (
                   <Text className="text-sm text-neutral-400 font-semibold">
                     {resource.steps?.length} Steps
@@ -107,7 +107,7 @@ const Bookmarks = ({ search }: { search: string }) => {
             </View>
           </TouchableOpacity>
         )}
-        className="h-[130px] my-2 space-x-4"
+        className="h-[130px] my-2 gap-x-4"
         horizontal
         showsHorizontalScrollIndicator={false}
       />

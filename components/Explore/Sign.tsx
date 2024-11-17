@@ -45,7 +45,7 @@ const Sign = ({
               width: ${imgWidth}px; height: ${imgHeight}px;}`;
 
   return (
-    <View className="mt-auto space-y-2">
+    <View className="mt-auto gap-y-2">
       <Text className="font-semibold text-xs ml-4">{text}</Text>
       <View
         className="shadow-xl relative mt-auto flex-row items-center rounded-3xl overflow-hidden  bg-white"

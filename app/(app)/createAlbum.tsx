@@ -147,7 +147,7 @@ export default function NewAlbum() {
           </View>
 
           {/* Reminder Section */}
-          <View className="flex-row space-x-1   mb-8">
+          <View className="flex-row gap-x-1   mb-8">
             <View className="flex-row justify-between">
               <View className="mt-2">
                 <Emoji name="bell" />

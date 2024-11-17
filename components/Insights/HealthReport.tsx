@@ -28,11 +28,11 @@ const HealthReport = ({ start, end }: { start: Date; end: Date }) => {
     }
   };
   return (
-    <View className="mt-10 space-y-2">
+    <View className="mt-10 gap-y-2">
       <Text className="font-fwbold text-xl">Health report</Text>
       <TouchableOpacity
         onPress={requestReport}
-        className=" bg-white space-x-2  items-start rounded-[20px] justify-between p-4 flex-row"
+        className=" bg-white gap-x-2  items-start rounded-[20px] justify-between p-4 flex-row"
       >
         <View className="mt-1">
           <Icon name="health-report" />

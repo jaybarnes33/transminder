@@ -16,7 +16,7 @@ const ActivityTypePicker = ({
   const [selectedValue, setSelectedValue] = useState(data[0]);
 
   return (
-    <View className="flex-row justify-between space-x-4 items-center">
+    <View className="flex-row justify-between gap-x-4 items-center">
       <DropdownPicker
         data={data}
         selectedValue={selectedValue}

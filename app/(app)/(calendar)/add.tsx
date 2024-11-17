@@ -164,13 +164,13 @@ const Wrapper = () => {
             onChangeText={(text) => handleChange("note", text)}
           />
         </View>
-        <View className="my-4 space-y-2">
+        <View className="my-4 gap-y-2">
           <TouchableOpacity
             onPress={hideKeyboard}
             className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-neutral-200"
           >
             <Text className="font-main text-base">Date</Text>
-            <View className="flex-row space-x-2 items-center">
+            <View className="flex-row gap-x-2 items-center">
               <DatePicker
                 label="Date"
                 isEdit={isEdit}
@@ -198,7 +198,7 @@ const Wrapper = () => {
                 {formData.repeats.replace("ly", "s")}{" "}
               </Text>
             )}
-          <View className="flex-row justify-between space-x-2">
+          <View className="flex-row justify-between gap-x-2">
             <View className="w-[48%]">
               <TimePicker
                 isEdit={isEdit}
@@ -221,7 +221,7 @@ const Wrapper = () => {
         </View>
       </View>
 
-      <View className="space-y-2 mb-4">
+      <View className="gap-y-2 mb-4">
         <Text className="font-main text0base">
           Select Category (optional tag)
         </Text>
@@ -248,7 +248,7 @@ const Wrapper = () => {
         disabled={!isValid || loading}
         onPress={createAppointment}
         className={clsx([
-          "h-[50px] items-center flex-row space-x-2  justify-center bg-ring rounded-full w-full mt-auto",
+          "h-[50px] items-center flex-row gap-x-2  justify-center bg-ring rounded-full w-full mt-auto",
           !isValid && "opacity-50",
         ])}
       >

@@ -9,7 +9,7 @@ const Password = () => {
   const { details, handleChange } = useSignUp();
 
   return (
-    <View className="py-5 space-y-5">
+    <View className="py-5 gap-y-5">
       <View className="">
         <Text className="font-fwbold text-center text-2xl mb-1">
           Create your password
@@ -30,7 +30,7 @@ const Password = () => {
       />
 
       {details?.password?.length && (
-        <View className="space-y-2">
+        <View className="gap-y-2">
           <Validation
             valid={details?.password?.length >= 8}
             text="Minimum 8 characters"

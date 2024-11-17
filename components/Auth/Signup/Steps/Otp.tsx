@@ -45,7 +45,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
   };
 
   return (
-    <View className="py-5 space-y-5">
+    <View className="py-5 gap-y-5">
       <View className="">
         <Text className=" font-fwbold text-center text-2xl mb-1">
           Enter code
@@ -74,7 +74,7 @@ const Two = ({ isResend }: { isResend: boolean }) => {
           className="flex-row items-center justify-center"
           onPress={resendOTP}
         >
-          <Text className=" space-x-2 text-sm font-fwbold text-dark text-center">
+          <Text className=" gap-x-2 text-sm font-fwbold text-dark text-center">
             Resend code
           </Text>
           {sending && <ActivityIndicator size="small" color={"#bb5adf"} />}

@@ -54,7 +54,7 @@ const Google = () => {
   return (
     <TouchableOpacity
       onPress={signInWithGoogle}
-      className="bg-purple-100 w-full space-x-2 flex-row items-center h-12 justify-center rounded-full"
+      className="bg-purple-100 w-full gap-x-2 flex-row items-center h-12 justify-center rounded-full"
     >
       <Image
         className="w-6 h-6"

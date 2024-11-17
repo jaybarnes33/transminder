@@ -12,7 +12,7 @@ const EmptyEvents = () => {
       heading="No upcoming events"
       description="Keep track of your milestones, health check-ins, and events all in one place. Add them here, and we’ll remind you when it’s time."
       buttonLabel="Add event"
-      buttonAction={() => navigate("/(calendar)/add")}
+      buttonAction={() => navigate("/(app)/(calendar)/add")}
     />
   );
 };

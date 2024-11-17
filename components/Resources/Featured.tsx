@@ -14,7 +14,7 @@ const Featured = () => {
     <View className="mt-7">
       <Text className="font-fwbold text-xl">Featured</Text>
       <ScrollView
-        className=" my-2 space-x-4"
+        className=" my-2 gap-x-4"
         horizontal
         showsHorizontalScrollIndicator={false}
       >

@@ -87,7 +87,7 @@ const Avatar = ({
     }
   }, []);
   return (
-    <View className="space-y-4">
+    <View className="gap-y-4">
       <View
         className={clsx([
           "h-14 w-14 rounded-full items-center justify-center",
@@ -124,10 +124,10 @@ const Avatar = ({
       </View>
 
       {isEdit && (
-        <View className="flex-row items-center justify-center space-x-2">
+        <View className="flex-row items-center justify-center gap-x-2">
           {selected && (
             <TouchableOpacity
-              className="items-center justify-center flex-row space-x-2"
+              className="items-center justify-center flex-row gap-x-2"
               onPress={() => setSelected(undefined)}
             >
               <Text className="text-base font-fwbold text-red-500">Cancel</Text>
@@ -135,7 +135,7 @@ const Avatar = ({
           )}
           {(!selected || (selected && uploads)) && (
             <TouchableOpacity
-              className="items-center justify-center flex-row space-x-2"
+              className="items-center justify-center flex-row gap-x-2"
               onPress={pickImage}
             >
               {loading && <ActivityIndicator size="small" color="#a855f7" />}

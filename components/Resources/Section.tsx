@@ -56,7 +56,7 @@ const Section = ({
       <Text className="font-fwbold text-xl">{collection.name}</Text>
       <FlashList
         data={data?.data}
-        className=" my-2 space-x-4"
+        className=" my-2 gap-x-4"
         horizontal
         estimatedItemSize={100}
         renderItem={({ item }) => <Resource key={item._id} resource={item} />}

@@ -9,7 +9,7 @@ const Name = () => {
   const { details, handleChange } = useSignUp();
 
   return (
-    <View className="py-5 space-y-5">
+    <View className="py-5 gap-y-5">
       <View>
         <Text className="font-fwbold text-center text-2xl mb-1">
           Enter your name

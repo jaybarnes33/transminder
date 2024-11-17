@@ -15,7 +15,7 @@ const Heading = ({
 }) => {
   return (
     <View>
-      <View className="flex-row items-center justify-between w-full space-x-2">
+      <View className="flex-row items-center justify-between w-full gap-x-2">
         <Text className="font-fwbold text-lg">{text}</Text>
         {more && (
           <TouchableOpacity onPress={moreAction}>
@@ -26,7 +26,7 @@ const Heading = ({
         )}
       </View>
       {description && (
-        <View className="flex-row space-x-1 items-center">
+        <View className="flex-row gap-x-1 items-center">
           <Text className="font-main font-semibold text-neutral-500">
             {description}
           </Text>

@@ -77,7 +77,7 @@ export const Item = ({
         <TouchableOpacity
           disabled={status === "pending"}
           onPress={() => setAllowChange((prev) => !prev)}
-          className="flex-row justify-between space-x-4 items-center"
+          className="flex-row justify-between gap-x-4 items-center"
         >
           <View
             className={clsx([
@@ -143,14 +143,14 @@ export const Item = ({
           </View>
         </TouchableOpacity>
         {(canEdit || allowChange) && (
-          <View className="flex-row space-x-3 py-3 w-full mt-3 flex-1">
+          <View className="flex-row gap-x-3 py-3 w-full mt-3 flex-1">
             <Image
               className="absolute w-full"
               source={require("@/assets/images/line.png")}
             />
             <TouchableOpacity
               onPress={() => changeState("skipped")}
-              className="flex-1 h-[40] bg-gray-200 space-x-2 flex-row rounded-full justify-center items-center"
+              className="flex-1 h-[40] bg-gray-200 gap-x-2 flex-row rounded-full justify-center items-center"
               disabled={loading.skipped || status === "skipped"}
             >
               <Text className="text-dark text-center font-fwbold text-sm">
@@ -161,7 +161,7 @@ export const Item = ({
             <TouchableOpacity
               disabled={loading.taken || status === "taken"}
               onPress={() => changeState("taken")}
-              className="flex-1 flex-row space-x-2 h-[40] justify-center items-center rounded-full bg-blue-500"
+              className="flex-1 flex-row gap-x-2 h-[40] justify-center items-center rounded-full bg-blue-500"
             >
               <Text className="text-white text-center font-fwbold text-sm">
                 Taken
@@ -227,16 +227,16 @@ const Plan = () => {
   };
 
   return (
-    <View className="space-y-2">
-      <View className="flex-row items-center justify-between space-x-2">
+    <View className="gap-y-2">
+      <View className="flex-row items-center justify-between gap-x-2">
         <Heading
           text="Your plan"
           more="View meds"
-          moreAction={() => navigate("/(medications)")}
+          moreAction={() => navigate("/(app)/(medications)")}
         />
       </View>
 
-      {missedIntakes.length && (
+      {missedIntakes.length > 0 && (
         <FlatList
           data={missedIntakes}
           keyExtractor={(item) => item._id}
@@ -246,7 +246,6 @@ const Plan = () => {
         />
       )}
 
-      {/* Today's intakes */}
       <FlatList
         data={todayIntakes}
         ListEmptyComponent={EmptyPlan}

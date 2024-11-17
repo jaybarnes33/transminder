@@ -36,7 +36,7 @@ const Change = () => {
           ready yet? Enjoy our free features anytime.
         </Text>
       </View>
-      <View className="mt-10 space-y-3">
+      <View className="mt-10 gap-y-3">
         {paymentPlans.map((plan, index) => (
           <TouchableOpacity
             key={index}
@@ -54,7 +54,7 @@ const Change = () => {
                 {plan.description}
               </Text>
             </View>
-            <View className="flex-row items-center space-x-2">
+            <View className="flex-row items-center gap-x-2">
               <Text className="text-base text-dark font-fwbold">
                 {plan.price}
               </Text>
@@ -62,7 +62,7 @@ const Change = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <View className="mt-auto space-y-3">
+      <View className="mt-auto gap-y-3">
         <TouchableOpacity
           onPress={() => {}}
           className="flex-row items-center justify-center bg-purple-500 h-12 rounded-full "

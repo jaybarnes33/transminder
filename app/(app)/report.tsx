@@ -11,12 +11,12 @@ const Report = () => {
   const week = getLastNDaysWithDayInitials(7);
   const { navigate } = useRouter();
   return (
-    <SafeAreaView className="p-4 space-y-10 bg-gray-100 flex-1">
+    <SafeAreaView className="p-4 gap-y-10 bg-gray-100 flex-1">
       <View className="flex-row justify-between items-center">
         <TouchableOpacity onPress={() => navigate("/(app)/(tabs)/insights")}>
           <Feather name="x" size={17} color="gray" />
         </TouchableOpacity>
-        <View className="flex-row items-center space-x-5">
+        <View className="flex-row items-center gap-x-5">
           <Text className="font-semibold    text-neutral-500 text-center text-base">
             Health report preview
           </Text>

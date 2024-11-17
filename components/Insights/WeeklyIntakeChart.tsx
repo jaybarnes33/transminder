@@ -30,9 +30,9 @@ const WeeklyIntakeChart = ({
           return (
             <View
               key={item.date}
-              className="items-center space-y-2 flex-grow justify-end"
+              className="items-center gap-y-2 flex-grow justify-end"
             >
-              <View className="justify-center items-end space-y-2">
+              <View className="justify-center items-end gap-y-2">
                 {dayIntakes.length > 0 ? (
                   dayIntakes.map((intake) => {
                     // Create an array with 'taken', 'missed', and 'skipped' representations
@@ -95,7 +95,7 @@ const WeeklyIntakeChart = ({
       </View>
 
       {/* Drug intake summary */}
-      <View className="my-3 space-y-2">
+      <View className="my-3 gap-y-2">
         {drugs.map((drug) => (
           <View key={drug.id} className="flex-row justify-between items-center">
             <View>

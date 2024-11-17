@@ -14,7 +14,7 @@ const EmptyPlan = () => {
       description="Stay on top of your health by adding your medications and reminders. We'll help you keep everything in check."
       buttonLabel="Add meds"
       color="bg-blue-500"
-      buttonAction={() => navigate("/(medications)/add")}
+      buttonAction={() => navigate("/(app)/(medications)/add")}
     />
   );
 };

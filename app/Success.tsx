@@ -8,8 +8,8 @@ const Success = () => {
   const { message } = useLocalSearchParams();
   const { navigate } = useRouter();
   return (
-    <SafeAreaView className="flex-1 bg-white h-full px-4 items-center justify-center space-y-14">
-      <View className="space-y-1">
+    <SafeAreaView className="flex-1 bg-white h-full px-4 items-center justify-center gap-y-14">
+      <View className="gap-y-1">
         <Text className="font-fwbold  text-center text-xl">Successful</Text>
         <Text className="font-main text-center text-neutral-500 font-semibold">
           {message}
@@ -19,7 +19,7 @@ const Success = () => {
       <TouchableOpacity
         onPress={() => navigate("/Login")}
         className={clsx([
-          "bg-dark h-[50] w-full flex-row space-x-2 mt-4 items-center justify-center rounded-[40px]",
+          "bg-dark h-[50] w-full flex-row gap-x-2 mt-4 items-center justify-center rounded-[40px]",
         ])}
       >
         <Text className="font-fwbold text-base text-white">Login</Text>

@@ -106,7 +106,7 @@ const Mood = () => {
     }
   };
   return (
-    <SafeAreaView className="px-4 space-y-4">
+    <SafeAreaView className="px-4 gap-y-4">
       {error && <Message message={error} isError />}
       <View className="flex-row items-center justify-between">
         <Back />
@@ -115,15 +115,15 @@ const Mood = () => {
         </Text>
       </View>
       <ScrollView
-        className="space-y-10 h-[75vh]"
+        className="gap-y-10 h-[75vh]"
         showsVerticalScrollIndicator={false}
       >
         <Text className="text-xl font-fwbold text-center">
           How are you feeling?
         </Text>
-        <View className="space-y-2 ">
+        <View className="gap-y-2 ">
           <Text className="font-semibold text-base">Mood</Text>
-          <View className="flex-row justify-between space-x-4 px-4 py-5 bg-white  items-center rounded-[20px]">
+          <View className="flex-row justify-between gap-x-4 px-4 py-5 bg-white  items-center rounded-[20px]">
             {moods.map((mood) => (
               <Feeling
                 item={mood}
@@ -135,9 +135,9 @@ const Mood = () => {
             ))}
           </View>
         </View>
-        <View className="space-y-2">
+        <View className="gap-y-2">
           <Text className="font-semibold text-base">Feeling</Text>
-          <View className="flex-row  justify-between  flex-wrap px-4x py-5 bg-white  items-center rounded-[20px] space-y-3">
+          <View className="flex-row  justify-between  flex-wrap px-4x py-5 bg-white  items-center rounded-[20px] gap-y-3">
             {feelings.map((feeling) => (
               <Feeling
                 key={feeling}
@@ -149,7 +149,7 @@ const Mood = () => {
             ))}
           </View>
         </View>
-        <View className="space-y-4  pb-40">
+        <View className="gap-y-4  pb-40">
           <Text className="font-semibold text-base">Add note</Text>
           <View className="relative">
             <View className="flex-row h-[100px] items-start rounded-xl bg-gray-200">
@@ -171,7 +171,7 @@ const Mood = () => {
       <View className=" relative -left-4 p-4 bg-white h-[200px]  w-screen">
         <TouchableOpacity
           onPress={handleSubmit}
-          className="h-[50px] w-full flex-row space-x-2 items-center justify-center rounded-[50px] bg-ring"
+          className="h-[50px] w-full flex-row gap-x-2 items-center justify-center rounded-[50px] bg-ring"
         >
           <Text className="font-semibold text-base text-white">Apply</Text>
 

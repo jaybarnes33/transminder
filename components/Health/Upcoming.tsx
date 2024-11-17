@@ -24,8 +24,8 @@ const Item = ({ drug }: { drug: Drug }) => {
       onPress={viewDetails}
       className={" bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center  "}
     >
-      <View className="flex-row justify-between space-x-4 items-center">
-        <View className="flex-row flex-1 space-x-2">
+      <View className="flex-row justify-between gap-x-4 items-center">
+        <View className="flex-row flex-1 gap-x-2">
           <View
             className={clsx([
               "h-10 w-10 items-center justify-center rounded-full",
@@ -73,7 +73,7 @@ const UpcomingDrugs = () => {
 
   const { data: drugs, isLoading } = useSWR("/drugs/upcoming", fetchDrugs);
   return (
-    <View className="space-y-1">
+    <View className="gap-y-1">
       <View>
         {isLoading ? (
           <ActivityIndicator />

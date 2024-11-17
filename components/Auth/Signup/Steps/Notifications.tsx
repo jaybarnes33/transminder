@@ -3,8 +3,8 @@ import React from "react";
 
 const Notifications = () => {
   return (
-    <View className="py-5 space-y-5 items-center">
-      <View className="space-y-1">
+    <View className="py-5 gap-y-5 items-center">
+      <View className="gap-y-1">
         <Text className="text-dark font-fwbold text-center text-2xl">
           Get notified
         </Text>

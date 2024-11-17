@@ -33,7 +33,7 @@ const LocationItemComponent = ({ location }: LocationItemProps) => {
   };
 
   return (
-    <View className="shadow space-y-2 p-3 mb-1 bg-white rounded-2xl h-80">
+    <View className="shadow gap-y-2 p-3 mb-1 bg-white rounded-2xl h-80">
       <View className="h-3/4 rounded-2xl overflow-hidden">
         <PhotoCarousel photos={location.photos} />
       </View>

@@ -21,8 +21,8 @@ const EmptyState = ({
   color = "bg-purple-500",
 }: EmptyStateProps) => {
   return (
-    <View className="bg-white px-4 py-2 shadow rounded-[20px] space-y-w mt-2">
-      <View className="flex-row space-x-4 items-center">
+    <View className="bg-white px-4 py-2 shadow rounded-[20px] gap-y-w mt-2">
+      <View className="flex-row gap-x-4 items-center">
         <Image source={image} />
         <View className="w-[70%] pr-8">
           <Text className="font-semibold text-base text-gray-400">

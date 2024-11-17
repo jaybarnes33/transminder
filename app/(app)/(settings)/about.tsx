@@ -10,7 +10,7 @@ const About = () => {
 
   return (
     <Wrapper>
-      <View className="mt-5 space-y-4">
+      <View className="mt-5 gap-y-4">
         <Text className="font-main text-base text-dark">
           Transminder was created with one goal in mind: to make health
           management easier and more inclusive for trans folx.

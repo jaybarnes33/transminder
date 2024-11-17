@@ -14,7 +14,7 @@ const Input = (props: TextInputProps & { name?: string }) => {
   const [secure, setSecure] = React.useState(props.secureTextEntry || false);
   const inputRef = React.useRef<TextInput>(null);
   return (
-    <View className="space-y-1 my-2">
+    <View className="gap-y-1 my-2">
       {props.name && (
         <Text className="font-main font-semibold text-neutral-600  text-sm">
           {props.name}

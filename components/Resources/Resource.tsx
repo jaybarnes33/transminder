@@ -47,7 +47,7 @@ const Resource = ({
         contentFit={"contain"}
       />
       <View className="my-2">
-        <View className="flex-row items-center space-x-1">
+        <View className="flex-row items-center gap-x-1">
           <Icon name={resource.type as IconName} />
           <Text
             className={clsx([
@@ -66,7 +66,7 @@ const Resource = ({
         >
           {resource.title}
         </Text>
-        <View className="flex-row space-x-1 items-center">
+        <View className="flex-row gap-x-1 items-center">
           {resource.type === "guide" && (
             <>
               <Text className="text-sm text-neutral-400 font-semibold">
