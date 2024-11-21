@@ -6,6 +6,7 @@ import {
   Platform,
   TouchableOpacity,
   ScrollView,
+  Pressable,
 } from "react-native";
 import React, { ReactNode, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -199,8 +200,8 @@ const Add = () => {
               key={type}
               onPress={() => handleChange("type", type)}
               className={clsx([
-                "p-2 px-3 flex-row justify-between rounded-xl h-[50] items-center gap-x-2 bg-gray-200",
-                drug.type === type && "bg-blue-500",
+                "p-2 px-3 flex-row justify-between rounded-xl h-[50] items-center gap-x-2 ",
+                drug.type === type ? "bg-blue-500" : "bg-gray-200",
               ])}
             >
               <Icon
@@ -248,8 +249,8 @@ const Add = () => {
                   handleChange("unit", unit !== drug.unit ? unit : "")
                 }
                 className={clsx([
-                  "p-2 px-3 rounded-xl h-[50] flex-row items-center bg-gray-200",
-                  drug.unit === unit && "bg-blue-500",
+                  "p-2 px-3 rounded-xl h-[50] flex-row items-center ",
+                  drug.unit === unit ? "bg-blue-500" : "bg-gray-200",
                 ])}
               >
                 <Text
@@ -278,7 +279,7 @@ const Add = () => {
         <View className="gap-y-5">
           <View className="gap-y-2">
             <Text className="font-main font-semibold">Frequency</Text>
-            <TouchableOpacity className=" rounded-lg flex-row items-center justify-between bg-gray-200">
+            <TouchableOpacity className="rounded-lg flex-row items-center justify-between bg-gray-200">
               <View className="flex-row gap-x-2 items-center">
                 <DatePicker
                   label="Start Date"
@@ -289,11 +290,10 @@ const Add = () => {
                 <Feather name="chevron-right" size={20} color={"gray"} />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity className="h-[50]  rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
+            <TouchableOpacity className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-gray-200">
               <FrequencyPicker handleChange={handleFreq} />
             </TouchableOpacity>
-            {drug.repeatFrequency &&
-              drug.repeatFrequency > 1 &&
+            {drug.repeatFrequency! > 1 &&
               (drug.repeat === "weekly" || drug.repeat === "monthly") && (
                 <Text className="font-semibold text-sm">
                   Repeat every {drug.repeatFrequency}{" "}
@@ -311,18 +311,15 @@ const Add = () => {
                     className="flex-row h-50 bg-gray-200 py-3 px-3 rounded-xl justify-between my-3 items-center"
                     key={index}
                   >
-                    {
-                      <Picker
-                        mode="time"
-                        value={time ? new Date(time) : new Date()}
-                        onChange={(event, date) => {
-                          if (event.type === "set" && date) {
-                            handleDateChange(date, index);
-                          }
-                        }}
-                      />
-                    }
-
+                    <Picker
+                      mode="time"
+                      value={time ? new Date(time) : new Date()}
+                      onChange={(event, date) => {
+                        if (event.type === "set" && date) {
+                          handleDateChange(date, index);
+                        }
+                      }}
+                    />
                     {drug.times.length > 1 && (
                       <TouchableOpacity
                         onPress={() =>
@@ -358,7 +355,7 @@ const Add = () => {
       </View>
     ),
     4: (
-      <View className="gap-y-10 items-center">
+      <Pressable className="gap-y-10 items-center">
         <View className="items-center gap-y-3">
           <View className="h-12 w-12 bg-blue-500 items-center justify-center rounded-full">
             <Icon name={`${drug.type}-active` as IconName} />
@@ -394,7 +391,7 @@ const Add = () => {
             numberOfLines={10}
           />
         </View>
-      </View>
+      </Pressable>
     ),
   };
 

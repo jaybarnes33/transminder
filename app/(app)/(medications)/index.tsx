@@ -126,7 +126,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
           <View className="flex-row justify-between border-b border-gray-300 pb-2">
             <Text className="font-semibold text-gray-400">Dosage</Text>
             <Text className="font-semibold text-dark capitalize">
-              {drug.dosage}
+              {drug.dosage} {drug.unit}
             </Text>
           </View>
           {!!drug.notes && (
