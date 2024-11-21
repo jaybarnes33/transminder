@@ -17,7 +17,7 @@ import KeyboardAvoidingScrollView from "@/components/Core/AvoidKeyboard";
 import { eventColors } from "@/constants";
 import { EventColor } from "@/types/global";
 import { getMonth, getYear } from "date-fns";
-import TimePicker from "@/components/Core/TimePicker";
+import TimePicker from "@/components/Core/TImePicker";
 
 const Wrapper = () => {
   const categories = ["health_check-in", "milestones", "community"];

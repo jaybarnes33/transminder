@@ -24,6 +24,7 @@ export default function AppLayout() {
       if (token && !user?.notificationTokens.includes(token)) {
         await axiosInstance.put(`/users/${user?._id}`, {
           notificationToken: token,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         });
       }
     })();

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, ActivityIndicator, View } from "react-native";
+import { Text, ActivityIndicator, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import useSWR from "swr";
 import { MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
@@ -24,9 +24,7 @@ interface TrackProps {
   noHeading?: boolean;
 }
 
-const Track: React.FC<TrackProps> = ({ noHeading = false }) => {
-  const navigation = useNavigation();
-
+const Track = ({ noHeading = false }) => {
   const getLogData = async () => {
     const { data } = await axiosInstance.get("/mood");
     return data;
@@ -67,7 +65,7 @@ const Track: React.FC<TrackProps> = ({ noHeading = false }) => {
     }
 
     return (
-      <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
+      <Pressable className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
         <View className="flex-row justify-between items-center">
           <Text className="font-main text-base">Medication Plan</Text>
           <Text className="font-semibold text-neutral-400 text-base">
@@ -117,7 +115,7 @@ const Track: React.FC<TrackProps> = ({ noHeading = false }) => {
             </View>
           ))}
         </View>
-      </View>
+      </Pressable>
     );
   };
 
@@ -135,7 +133,7 @@ const Track: React.FC<TrackProps> = ({ noHeading = false }) => {
     }
 
     return (
-      <View className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
+      <Pressable className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
         <View className="flex-row justify-between items-center">
           <Text className="font-main text-base">Well-being</Text>
           <Text className="font-semibold text-base text-neutral-400">
@@ -175,7 +173,7 @@ const Track: React.FC<TrackProps> = ({ noHeading = false }) => {
             </View>
           ))}
         </View>
-      </View>
+      </Pressable>
     );
   };
 

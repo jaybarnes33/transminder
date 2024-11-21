@@ -345,7 +345,7 @@ export const toSentenceCase = (str: string) => {
 };
 
 export const getImage = (slug: string) => {
-  return slug?.startsWith("http")
+  const url = slug?.startsWith("http")
     ? slug
     : process.env.EXPO_PUBLIC_ENV !== "production"
     ? `${
@@ -354,10 +354,18 @@ export const getImage = (slug: string) => {
           : process.env.EXPO_PUBLIC_ANDROID_BASE
       }${slug}`
     : `${process.env.EXPO_PUBLIC_API_BASE}${slug}`;
+
+  return url;
 };
 
-export const getReadingTime = (text: string, wordsPerMinute: number = 200) => {
+export const getReadingTime = (
+  text: string,
+  wordsPerMinute: number = 200,
+  short = false
+) => {
   const words = text.split(/\s+/).length;
   const readingTime = Math.ceil(words / wordsPerMinute);
-  return readingTime + " minute" + (readingTime > 1 ? "s" : "") + " read";
+  return !short
+    ? readingTime + " minute" + (readingTime > 1 ? "s" : "") + " read"
+    : readingTime + " mins";
 };

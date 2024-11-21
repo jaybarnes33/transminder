@@ -1,4 +1,4 @@
-import { View, Text, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, Dimensions, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { IconName, Resource as ResourceType } from "@/types/global";
 import Icon from "../Core/Icon";
@@ -6,7 +6,6 @@ import clsx from "clsx";
 import { useRouter } from "expo-router";
 
 import { getReadingTime, getImage } from "@/utils";
-import { Image } from "expo-image";
 
 const Resource = ({
   resource,
@@ -35,16 +34,15 @@ const Resource = ({
       disabled={heading}
       onPress={handlePress}
       className={clsx([
-        "bg-white shadow p-4  rounded-[20px]  mr-3 ",
+        " shadow p-4  rounded-[20px]  mr-3 ",
         heading && " p-0 bg-transparent w-full ",
-        !heading && "h-[250px] w-[] ",
+        !heading && "h-[250px] bg-white ",
       ])}
       style={!heading && { width: width / 1.3 }}
     >
       <Image
         source={{ uri: getImage(resource.thumbnail) }}
         className={clsx(["h-4/6 bg-neutral-300", heading && "h-[250px]"])}
-        contentFit={"contain"}
       />
       <View className="my-2">
         <View className="flex-row items-center gap-x-1">

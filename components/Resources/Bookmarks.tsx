@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useEffect } from "react";
 import { Dimensions } from "react-native";
 
@@ -10,8 +10,8 @@ import axiosInstance from "@/lib/axios";
 import useSWR, { mutate } from "swr";
 import Message from "../Core/Message";
 import { FlashList } from "@shopify/flash-list";
-import { Image } from "expo-image";
-import { getImage } from "@/utils";
+
+import { getImage, getReadingTime } from "@/utils";
 import { BookmarkLoader } from "./Loaders/Bookmark";
 
 export const colors = {
@@ -95,13 +95,22 @@ const Bookmarks = ({ search }: { search: string }) => {
               </Text>
               <View className="flex-row gap-x-1 items-center">
                 {resource.type === "guide" && (
-                  <Text className="text-sm text-neutral-400 font-semibold">
-                    {resource.steps?.length} Steps
-                  </Text>
+                  <View>
+                    <Text className="text-sm text-neutral-400 font-semibold">
+                      {resource.steps?.length} Steps
+                    </Text>
+
+                    <View className="h-1 w-1 rounded-full bg-neutral-400" />
+                  </View>
                 )}
-                <View className="h-1 w-1 rounded-full bg-neutral-400" />
                 <Text className="text-sm text-neutral-400 font-semibold">
-                  3 min
+                  {getReadingTime(
+                    resource.type === "article"
+                      ? resource.content!
+                      : resource.steps?.join(" ")!,
+                    200,
+                    true
+                  )}
                 </Text>
               </View>
             </View>

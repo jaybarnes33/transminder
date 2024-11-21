@@ -13,6 +13,7 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetFlatList,
+  BottomSheetFlashList,
 } from "@gorhom/bottom-sheet";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -101,7 +102,7 @@ export const LocationListBottomSheet = forwardRef<
                   {data.length} Places
                 </Text>
               </View>
-              <BottomSheetFlatList
+              <BottomSheetFlashList
                 data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item._id}
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 16,
-    paddingBottom: 200,
+    paddingBottom: 250,
   },
   emptyContainer: {
     flex: 1,

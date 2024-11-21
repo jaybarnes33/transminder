@@ -12,6 +12,7 @@ import { Collection } from "@/types/global";
 import { FlashList } from "@shopify/flash-list";
 import Message from "@/components/Core/Message";
 import Bookmarks from "@/components/Resources/Bookmarks";
+import { ResourceLoader } from "@/components/Resources/Loaders/Resource";
 
 const Learn = () => {
   const fetchCollections = async () => {
@@ -37,7 +38,7 @@ const Learn = () => {
     );
   }
   if (isLoading && !data) {
-    return <Text>Loading</Text>;
+    return <ResourceLoader />;
   }
 
   return (
