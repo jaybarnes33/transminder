@@ -16,6 +16,7 @@ import "react-native-reanimated";
 import { AuthProvider } from "@/context/Auth";
 import { BottomSheetModalProvider } from "@/context/BottomSheet";
 import "../global.css";
+import { SafeAreaView } from "react-native-safe-area-context";
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -55,10 +56,12 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <BottomSheetModalProvider>
-        <Slot />
-      </BottomSheetModalProvider>
-    </AuthProvider>
+    <SafeAreaView>
+      <AuthProvider>
+        <BottomSheetModalProvider>
+          <Slot />
+        </BottomSheetModalProvider>
+      </AuthProvider>
+    </SafeAreaView>
   );
 }
