@@ -1,21 +1,23 @@
 {
   "expo": {
-    "name": "transminder",
+    "name": "Transminder",
     "slug": "transminder",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/app-icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash_screen.png",
-      "resizeMode": "cover"
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.higotechs.transminder",
-      "appleId": "ohenesetwumasi@gmail.com",
-      "appleTeamId": "BL24Y8CQ2Z",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
@@ -23,10 +25,6 @@
       }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "permissions": [
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT",
@@ -49,54 +47,9 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
-        }
-      ],
-      "expo-router",
-      "expo-secure-store",
-
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
-      ],
-
-      [
-        "expo-local-authentication",
-        {
-          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
-        }
-      ],
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.234390212423-p4hcnt6j4rr4s2jio6i81rcspshvs2nj",
-          "iosClientId": "234390212423-p4hcnt6j4rr4s2jio6i81rcspshvs2nj.apps.googleusercontent.com"
-        }
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "eas": {
-        "projectId": "869ee212-11ba-4485-9a9b-76ebdfe7cdfe"
-      }
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/869ee212-11ba-4485-9a9b-76ebdfe7cdfe"
-    }
+    ]
   }
 }
