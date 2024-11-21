@@ -5,7 +5,7 @@ import clsx from "clsx";
 import Input from "@/components/Core/Input";
 
 import { Feather } from "@expo/vector-icons";
-import TimePicker from "@/components/Core/TimePicker";
+
 import DatePicker from "@/components/Core/DatePicker";
 import FrequencyPicker from "@/components/Core/FrequencyPicker";
 import axiosInstance from "@/lib/axios";
@@ -17,6 +17,7 @@ import KeyboardAvoidingScrollView from "@/components/Core/AvoidKeyboard";
 import { eventColors } from "@/constants";
 import { EventColor } from "@/types/global";
 import { getMonth, getYear } from "date-fns";
+import TimePicker from "@/components/Core/TimePicker";
 
 const Wrapper = () => {
   const categories = ["health_check-in", "milestones", "community"];
