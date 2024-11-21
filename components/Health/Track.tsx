@@ -182,8 +182,8 @@ const Track: React.FC<TrackProps> = ({ noHeading = false }) => {
   return (
     <View>
       {!noHeading && <Heading text="Keep Track" description="Last 7 days" />}
-      {/* {renderIntakeSection()} */}
-      {/* {renderMoodSection()} */}
+      {renderIntakeSection()}
+      {renderMoodSection()}
     </View>
   );
 };
