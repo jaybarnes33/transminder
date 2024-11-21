@@ -5,13 +5,13 @@ import {
   Linking,
   useWindowDimensions,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Resource } from "@/types/global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Core/Back";
-import { ScrollView } from "react-native-gesture-handler";
 import Head from "@/components/Resources/Resource";
 import RenderHTML from "react-native-render-html";
 import Constants from "expo-constants";

@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import clsx from "clsx";
 import { ReactNode } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 // Generic DropdownPicker component
@@ -45,7 +45,7 @@ const DropdownPicker = <
     <Dropdown
       style={{
         ...styles.dropdown,
-        maxWidth: range ? 115 : "auto",
+        maxWidth: range ? Dimensions.get("window").width / 3 : "auto",
       }}
       containerStyle={{
         width,

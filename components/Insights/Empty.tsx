@@ -1,11 +1,10 @@
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getDaysOfWeek, getLastNDaysWithDayInitials } from "@/utils";
+import { getLastNDaysWithDayInitials } from "@/utils";
 import Emoji from "@/components/Core/Emoji";
-import { Image } from "react-native";
+
 import clsx from "clsx";
-import { RawButton } from "react-native-gesture-handler";
 
 interface EmptyProps {
   heading: string;

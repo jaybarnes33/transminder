@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import React, { ReactNode, useEffect } from "react";
 import { useUser } from "@/context/Auth";
 import { useRouter } from "expo-router";
+import SkeletonLoader from "../Core/Skeleton";
 
 const UnAuthContent = ({ children }: { children: ReactNode }) => {
   const { user, loading } = useUser();
@@ -13,7 +14,7 @@ const UnAuthContent = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return <SkeletonLoader />;
   }
 
   return <>{children}</>;

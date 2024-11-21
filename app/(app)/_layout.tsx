@@ -8,7 +8,7 @@ import * as Notifications from "expo-notifications";
 export default function AppLayout() {
   const { user } = useUser();
 
-  const responseListener = useRef<Notifications.Subscription>();
+  const responseListener = useRef<Notifications.EventSubscription>();
 
   Notifications.setNotificationHandler({
     handleNotification: async () => ({

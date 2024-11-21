@@ -70,15 +70,6 @@ export default function GallerySkeleton() {
         <AlbumSkeleton />
         <AlbumSkeleton />
       </View>
-
-      <View style={styles.tabBar}>
-        {[...Array(5)].map((_, index) => (
-          <View key={index} style={styles.tabItem}>
-            <View style={styles.tabIcon} />
-            <View style={styles.tabLabel} />
-          </View>
-        ))}
-      </View>
     </View>
   );
 }
@@ -189,34 +180,6 @@ const styles = StyleSheet.create({
   timestampPlaceholder: {
     width: 150,
     height: 16,
-    backgroundColor: "#E5E7EB",
-    borderRadius: 4,
-  },
-  tabBar: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
-    backgroundColor: "white",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  tabItem: {
-    alignItems: "center",
-  },
-  tabIcon: {
-    width: 24,
-    height: 24,
-    backgroundColor: "#E5E7EB",
-    borderRadius: 12,
-    marginBottom: 4,
-  },
-  tabLabel: {
-    width: 48,
-    height: 12,
     backgroundColor: "#E5E7EB",
     borderRadius: 4,
   },

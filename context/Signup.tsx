@@ -100,7 +100,7 @@ export const SignUpProvider = ({ children }: { children: ReactNode }) => {
       }),
     ]);
     mutate("/auth", data.user);
-    navigate("/(tabs)");
+    navigate("/(app)/(tabs)");
   };
 
   const verifyOTP = async () => {

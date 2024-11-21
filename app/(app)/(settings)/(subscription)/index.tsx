@@ -1,7 +1,6 @@
-import { View, Text, Touchable } from "react-native";
+import { View, Text, Touchable, TouchableOpacity } from "react-native";
 import React from "react";
 import Wrapper from "@/components/Settings/Wrapper";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { Href, useRouter } from "expo-router";
 import clsx from "clsx";

@@ -1,7 +1,12 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import { Drug, IconName, Intake } from "@/types/global";
 import Icon from "../Core/Icon";
-import { FlatList } from "react-native-gesture-handler";
 import clsx from "clsx";
 import { useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";

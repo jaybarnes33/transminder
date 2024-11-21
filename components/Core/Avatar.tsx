@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Image as Img,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import * as ImagePicker from "expo-image-picker";
@@ -94,10 +100,11 @@ const Avatar = ({
           size === "xl" && "h-44 w-44",
           size === "lg" && "h-24 w-24",
           size === "md" && "h-20 w-20",
+          size === "sm" && "h-8 w-8",
         ])}
       >
         {image || selected ? (
-          <Image
+          <Img
             source={{ uri: selected?.uri ?? image }}
             style={{
               objectFit: "scale-down",
@@ -105,10 +112,10 @@ const Avatar = ({
             className="absolute h-full w-full rounded-full border border-neutral-300"
           />
         ) : (
-          <>
-            <Image
+          <View className=" w-full h-full rounded-full items-center justify-center">
+            <Img
               source={require("@/assets/images/avatar.png")}
-              className="absolute h-full w-full rounded-full"
+              className="absolute  rounded-full"
             />
 
             <Text
@@ -119,7 +126,7 @@ const Avatar = ({
             >
               {name?.charAt(0)}
             </Text>
-          </>
+          </View>
         )}
       </View>
 

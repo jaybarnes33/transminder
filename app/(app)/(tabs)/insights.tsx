@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { Dimensions, ScrollView, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -78,7 +78,7 @@ const Insights = () => {
       <View className="flex-row justify-between items-center mb-4">
         <View>
           <DropdownPicker
-            width={192}
+            width={Dimensions.get("window").width / 2}
             range
             placeholder="Select range"
             selectedValue={range}

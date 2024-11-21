@@ -1,15 +1,7 @@
 import { FontAwesome6, Octicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Touchable,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import Input from "./Input";
-import { TextInput } from "react-native-gesture-handler";
 
 const FrequencyPicker = ({
   handleChange,

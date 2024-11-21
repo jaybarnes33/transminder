@@ -1,5 +1,6 @@
 import {
   View,
+  FlatList,
   Text,
   TouchableOpacity,
   ActivityIndicator,
@@ -8,7 +9,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { Drug, IconName, Intake, PaginatedResponse } from "@/types/global";
 import Icon from "../Core/Icon";
-import { FlatList } from "react-native-gesture-handler";
 import clsx from "clsx";
 import Heading from "../Core/Heading";
 import { useRouter } from "expo-router";
@@ -57,6 +57,8 @@ export const Item = ({
     mute && mute();
     mutate("/intake?size");
     mutate("/intake/analytics");
+
+    mutate("/insights/med");
     setLoading((prev) => ({ ...prev, [action]: false }));
   };
 

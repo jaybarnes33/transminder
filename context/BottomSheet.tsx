@@ -13,7 +13,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { Keyboard, Text, View } from "react-native";
+import { Keyboard } from "react-native";
 import Handle from "@/components/Core/Handle";
 
 type BottomSheetModalContextType = {

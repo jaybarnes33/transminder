@@ -1,12 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { resources } from "@/utils/createMockData";
-import { Dimensions } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import clsx from "clsx";
-import Icon from "../Core/Icon";
-import { IconName } from "@/types/global";
+
 import Resource from "./Resource";
 
 const Featured = () => {

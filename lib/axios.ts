@@ -42,16 +42,23 @@ axiosInstance.interceptors.request.use(
           logout();
           return config;
         }
-        const { data } = await axios.get(`${baseURL}/auth/refresh`, {
-          headers: {
-            Authorization: `Refresh ${refreshToken}`,
-          },
-        });
-        await setTokens({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        });
-        config.headers["Authorization"] = `Bearer ${data.accessToken}`;
+        try {
+          const { data } = await axios.get(`${baseURL}/auth/refresh`, {
+            headers: {
+              Authorization: `Refresh ${refreshToken}`,
+            },
+          });
+          await setTokens({
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+          });
+          config.headers["Authorization"] = `Bearer ${data.accessToken}`;
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.response?.status === 404) {
+            logout();
+          }
+          return Promise.reject(error);
+        }
       }
       return config;
     }

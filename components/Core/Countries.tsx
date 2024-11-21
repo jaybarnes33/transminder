@@ -1,14 +1,7 @@
-import {
-  View,
-  Text,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-} from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Keyboard } from "react-native";
 import React, { useEffect, useState } from "react";
 import { countries } from "@/constants";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 import Input from "./Input";
 import clsx from "clsx";
 import { Feather } from "@expo/vector-icons";

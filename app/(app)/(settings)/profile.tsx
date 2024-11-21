@@ -32,7 +32,7 @@ export const ProfileItem = ({
       <Text className="text-base capitalize text-neutral-700 font-semibold font-main">
         {splitCamelCase(name)}
       </Text>
-      <View className="flex-row items-center space-x-2">
+      <View className="flex-row items-center gap-x-2">
         <Text className="text-base text-dark  font-fwbold">{value}</Text>
 
         <Feather name="chevron-right" size={20} color="gray" />
@@ -62,7 +62,7 @@ const Profile = () => {
   return (
     <Wrapper>
       <View className="flex-1">
-        <View className="items-center space-y-4">
+        <View className="items-center gap-y-4">
           {user && (
             <Avatar
               size="xl"

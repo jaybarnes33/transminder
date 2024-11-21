@@ -1,9 +1,12 @@
-import React, { forwardRef, useCallback, useMemo, useState } from "react";
+"use client";
+
+import React, { forwardRef, useCallback, useMemo } from "react";
 import {
   StyleSheet,
   Text,
   ActivityIndicator,
   TouchableOpacity,
+  View,
 } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -14,12 +17,10 @@ import BottomSheet, {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import { FlashList } from "@shopify/flash-list";
 import Handle from "@/components/Core/Handle";
 import { LocationItem } from "./LocationItem";
-import { Place } from "@/types/global";
-import { View } from "@/components/Themed";
-import clsx from "clsx";
-import { FlashList } from "@shopify/flash-list";
+import type { Place } from "@/types/global";
 
 interface LocationListBottomSheetProps {
   index: SharedValue<number>;
@@ -30,7 +31,7 @@ interface LocationListBottomSheetProps {
   isLoadingMore?: boolean;
 }
 
-export const MIDDLE_SNAP_POINT = 300;
+export const MIDDLE_SNAP_POINT = 500;
 
 export const LocationListBottomSheet = forwardRef<
   BottomSheetModal,
@@ -42,24 +43,11 @@ export const LocationListBottomSheet = forwardRef<
   ) => {
     const headerHeight = useHeaderHeight();
     const { bottom: bottomSafeArea } = useSafeAreaInsets();
-    const TAB_BAR_HEIGHT = 40; // Set this to your tab bar's actual height
-    const [showSearch, setShowSearch] = useState(false);
-    const SNAP_POINTS = [
-      TAB_BAR_HEIGHT + bottomSafeArea,
-      MIDDLE_SNAP_POINT,
-      "100%",
-    ];
+    const TAB_BAR_HEIGHT = 40;
 
-    const scrollViewAnimatedStyle = useAnimatedStyle(
-      () => ({
-        opacity: index.value,
-      }),
-      [index]
-    );
-
-    const scrollViewStyle = useMemo(
-      () => [styles.scrollView, scrollViewAnimatedStyle],
-      [scrollViewAnimatedStyle]
+    const snapPoints = useMemo(
+      () => [TAB_BAR_HEIGHT + bottomSafeArea, MIDDLE_SNAP_POINT, "100%"],
+      [TAB_BAR_HEIGHT, bottomSafeArea]
     );
 
     const renderBackdrop = useCallback(
@@ -97,57 +85,82 @@ export const LocationListBottomSheet = forwardRef<
       <BottomSheet
         ref={ref}
         index={1}
-        snapPoints={SNAP_POINTS}
+        snapPoints={snapPoints}
         topInset={headerHeight}
         animatedPosition={position}
         animatedIndex={index}
-        onChange={(index) => {
-          setShowSearch(index === 2);
-        }}
         backdropComponent={renderBackdrop}
         handleComponent={Handle}
+        style={styles.bottomSheet}
       >
-        {data.length > 0 ? (
-          <>
-            <View className="mt-10 mb-4">
-              <Text
-                className={clsx([
-                  "text-center font-fwbold text-xl hidden",
-                  !showSearch && "flex",
-                ])}
-              >
-                {data.length} Places
-              </Text>
+        <View style={styles.contentContainer}>
+          {data.length > 0 ? (
+            <>
+              <View style={styles.header}>
+                <Text className="font-fwbold text-center text-xl">
+                  {data.length} Places
+                </Text>
+              </View>
+              <BottomSheetFlatList
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={(item) => item._id}
+                contentContainerStyle={styles.listContent}
+                onEndReached={onEndReached}
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={renderFooter}
+              />
+            </>
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No places found</Text>
             </View>
-            <FlashList
-              data={data}
-              estimatedItemSize={10}
-              renderItem={renderItem}
-              keyExtractor={(item) => item._id}
-              contentContainerStyle={{
-                paddingHorizontal: 16,
-                paddingTop: showSearch ? 100 : 10,
-              }}
-              onEndReached={onEndReached}
-              onEndReachedThreshold={0.1}
-              ListFooterComponent={renderFooter}
-            />
-          </>
-        ) : (
-          <View className="my-5">
-            <Text className="font-main text-xl text-center">
-              No places found
-            </Text>
-          </View>
-        )}
+          )}
+        </View>
       </BottomSheet>
     );
   }
 );
 
 const styles = StyleSheet.create({
-  scrollView: {
+  bottomSheet: {
     flex: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  header: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 200,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    textAlign: "center",
   },
   loadingFooter: {
     paddingVertical: 20,

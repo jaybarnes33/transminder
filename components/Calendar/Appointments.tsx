@@ -1,11 +1,10 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, FlatList, ActivityIndicator } from "react-native";
 import React from "react";
 import Heading from "../Core/Heading";
 import Appointment from "./Appointment";
 import { useRouter } from "expo-router";
 import useSWR from "swr";
 import axiosInstance from "@/lib/axios";
-import { FlatList } from "react-native-gesture-handler";
 import EmptyEvents from "../Health/Empty/EmptyEvents";
 
 const Appointments = ({

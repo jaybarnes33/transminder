@@ -1,7 +1,6 @@
-import { View, Text, Linking } from "react-native";
+import { View, Text, Linking, TouchableOpacity } from "react-native";
 import React from "react";
 import Wrapper from "@/components/Settings/Wrapper";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const About = () => {
   const handlePress = (url: string) => {

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Fragment } from "react";
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import AlbumDetailSkeleton from "@/components/Gallery/DetailSkeleton";
 import MediaAddDropdown from "@/components/Gallery/MediaAddDropdown";
 import Emoji from "@/components/Core/Emoji";
 import Back from "@/components/Core/Back";
+import AlbumOptionsDropdown from "@/components/Gallery/AlbumOptions";
 
 interface Album {
   _id: string;
@@ -245,6 +246,7 @@ export default function AlbumDetail() {
   if (!album) return null;
 
   const { name, media, createdAt } = album;
+  console.log({ createdAt });
 
   const renderMediaItem = (url: string) => {
     const fileExtension = url.split(".").pop()?.toLowerCase();
@@ -304,20 +306,20 @@ export default function AlbumDetail() {
         </View>
       ) : (
         <>
-          <View className="px-4 py-2 flex-row items-center justify-between">
+          <View className="px-4 py-2 flex-row items-center  justify-between">
             <Back />
             <Text className="text-2xl font-fwbold">{name}</Text>
-            <View className="flex-row items-center gap-x-4">
+            <View className="flex-row justify-between  gap-x-4">
               <TouchableOpacity>
                 <Text className="text-gray-600 font-main">Select</Text>
               </TouchableOpacity>
-              <TouchableOpacity>
-                <MoreVertical size={20} className="text-gray-600" />
-              </TouchableOpacity>
+              <View>
+                <AlbumOptionsDropdown onSelect={console.log} />
+              </View>
             </View>
           </View>
 
-          <Text className="px-4 font-semibold text-gray-500 mb-4">
+          <Text className="px-4  font-semibold text-gray-500 mb-4">
             {media.length} items • Created on{" "}
             {new Date(createdAt).toLocaleDateString()}
           </Text>

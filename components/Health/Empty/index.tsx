@@ -1,6 +1,12 @@
-import { View, Text, Image, ImageSourcePropType } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ImageSourcePropType,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 import clsx from "clsx";
 
 interface EmptyStateProps {
@@ -32,8 +38,8 @@ const EmptyState = ({
         </View>
       </View>
 
-      {!!buttonLabel && (
-        <>
+      {buttonLabel?.length && (
+        <View>
           <Image
             source={require("@/assets/images/line.png")}
             className="w-full mt-2"
@@ -41,13 +47,12 @@ const EmptyState = ({
           <TouchableOpacity
             onPress={buttonAction}
             className={clsx([
-              "h-10 mx-auto mt-3 justify-center items-center rounded-full mb-2 w-3/5",
-              color,
+              "h-10 mx-auto mt-3 justify-center bg-purple-500 items-center rounded-full mb-2 w-3/5",
             ])}
           >
             <Text className="font-fwbold text-white">{buttonLabel}</Text>
           </TouchableOpacity>
-        </>
+        </View>
       )}
     </View>
   );

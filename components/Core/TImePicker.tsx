@@ -1,8 +1,6 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Feather } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { DatePicker } from "../nativewindui/DatePicker";
 
 const TimePicker = ({
