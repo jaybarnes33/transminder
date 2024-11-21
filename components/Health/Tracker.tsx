@@ -36,8 +36,8 @@ const Tracker = ({ date }: { date: string }) => {
   return isLoading || !data?.mood ? (
     <View
       className={clsx([
-        "bg-purple-500 relative rounded-[20px] h-[126] items-center gap-y-3 pt-4 my-4",
-        isPast && "bg-[#FFA88F]",
+        " relative rounded-[20px] h-[126] items-center gap-y-3 pt-4 my-4",
+        isPast ? "bg-[#FFA88F]" : "bg-purple-500",
       ])}
     >
       <View className="flex-row items-center justify-center">
@@ -53,8 +53,8 @@ const Tracker = ({ date }: { date: string }) => {
       >
         <Text
           className={clsx([
-            "font-fwbold text-purple-500",
-            isPast && "text-[#FD8C6C]",
+            "font-fwbold ",
+            isPast ? "text-[#FD8C6C]" : "text-purple-500",
           ])}
         >
           {copy.label}
