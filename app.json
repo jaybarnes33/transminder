@@ -40,7 +40,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "react-native-safearea-context",
+      "react-native-safe-area-context",
       [
         "expo-av",
         {
