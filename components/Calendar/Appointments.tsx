@@ -47,8 +47,11 @@ const Appointments = ({
           </View>
         ) : (
           <FlashList
-            estimatedItemSize={200}
-            contentContainerStyle={{ paddingBottom: 200 }}
+            showsVerticalScrollIndicator={false}
+            estimatedItemSize={1000}
+            contentContainerStyle={{
+              paddingBottom: 600,
+            }}
             data={data}
             ListEmptyComponent={<EmptyEvents />}
             keyExtractor={(item) => item._id}
