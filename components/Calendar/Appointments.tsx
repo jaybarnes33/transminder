@@ -40,18 +40,15 @@ const Appointments = ({
           />
         </View>
       )}
-      <View className="mt-2 w-full min-h-screen">
+      <View className="mt-2 w-full ">
         {isLoading ? (
           <View className="items-center">
             <ActivityIndicator />
           </View>
         ) : (
-          <FlashList
+          <FlatList
+            contentContainerStyle={{ paddingBottom: !limitted ? 600 : 0 }}
             showsVerticalScrollIndicator={false}
-            estimatedItemSize={1000}
-            contentContainerStyle={{
-              paddingBottom: 600,
-            }}
             data={data}
             ListEmptyComponent={<EmptyEvents />}
             keyExtractor={(item) => item._id}

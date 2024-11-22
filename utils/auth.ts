@@ -58,13 +58,15 @@ export const onboardingCompleted = async (): Promise<boolean> => {
 };
 
 export const getAvatar = (avatar: string, id: string) => {
-  return avatar.startsWith("http")
+  const url = avatar.startsWith("http")
     ? avatar
     : process.env.EXPO_PUBLIC_ENV !== "production"
     ? `${
         Platform.OS !== "android"
           ? process.env.EXPO_PUBLIC_BASE
           : process.env.EXPO_PUBLIC_ANDROID_BASE
-      }/uploads/${id}/${avatar}`
-    : `${process.env.EXPO_PUBLIC_URL}/uploads/${id}/${avatar}`;
+      }/uploads/users/${id}/${avatar}`
+    : `${process.env.EXPO_PUBLIC_URL}/uploads/users/${id}/${avatar}`;
+  console.log({ url });
+  return url;
 };

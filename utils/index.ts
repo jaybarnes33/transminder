@@ -358,6 +358,11 @@ export const getImage = (slug: string) => {
   return url;
 };
 
+export const getAvatar = (name: string, id: string) => {
+  if (name.startsWith("http")) return name;
+  return `${process.env.EXPO_PUBLIC_API_BASE}/uploads/users/${id}/${name}`;
+};
+
 export const getReadingTime = (
   text: string,
   wordsPerMinute: number = 200,
