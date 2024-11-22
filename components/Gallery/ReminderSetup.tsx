@@ -55,7 +55,7 @@ interface CustomHeaderProps {
   onPressPrev: () => void;
 }
 
-const CustomHeader: React.FC<CustomHeaderProps> = ({
+export const CustomHeader: React.FC<CustomHeaderProps> = ({
   date,
   onMonthChange,
   onPressNext,

@@ -34,9 +34,9 @@ const Resource = ({
       disabled={heading}
       onPress={handlePress}
       className={clsx([
-        " shadow p-4  rounded-[20px]  mr-3 ",
+        "  ",
         heading && " p-0 bg-transparent w-full ",
-        !heading && "h-[250px] bg-white ",
+        !heading && " bg-white shadow y-2 p-4  rounded-[20px]  mr-3  ",
       ])}
       style={!heading && { width: width / 1.3 }}
     >

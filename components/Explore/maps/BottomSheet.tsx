@@ -32,7 +32,7 @@ interface LocationListBottomSheetProps {
   isLoadingMore?: boolean;
 }
 
-export const MIDDLE_SNAP_POINT = 500;
+export const MIDDLE_SNAP_POINT = 40;
 
 export const LocationListBottomSheet = forwardRef<
   BottomSheetModal,

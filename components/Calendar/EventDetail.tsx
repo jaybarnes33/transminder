@@ -114,7 +114,7 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
           >
             <Text className="font-semibold text-gray-400">Location</Text>
             <Text className="font-semibold text-dark capitalize">
-              {event.location}
+              {!!event.location ? event.location : "N/A"}
             </Text>
           </View>
 

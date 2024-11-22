@@ -13,6 +13,7 @@ import { FlashList } from "@shopify/flash-list";
 import Message from "@/components/Core/Message";
 import Bookmarks from "@/components/Resources/Bookmarks";
 import { ResourceLoader } from "@/components/Resources/Loaders/Resource";
+import EmptyState from "@/components/Health/Empty";
 
 const Learn = () => {
   const fetchCollections = async () => {
@@ -48,10 +49,18 @@ const Learn = () => {
         <Actions activity={false} />
       </View>
 
-      <Search search={setSearch} term={search} />
+      {data?.length! > 0 ? (
+        <Search search={setSearch} term={search} />
+      ) : (
+        <EmptyState
+          description="No resources available now, please check later"
+          heading="No resources available"
+        />
+      )}
 
       {data && (
         <FlashList
+          ListEmptyComponent={<Message message="No resources found" />}
           estimatedItemSize={5}
           data={[{ name: "bookmark", _id: "bookmark" }, ...data]}
           renderItem={({ item }) =>

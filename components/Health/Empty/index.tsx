@@ -10,7 +10,7 @@ import React from "react";
 import clsx from "clsx";
 
 interface EmptyStateProps {
-  image: ImageSourcePropType;
+  image?: ImageSourcePropType;
   heading: string;
   description: string;
   buttonLabel?: string;
@@ -19,7 +19,7 @@ interface EmptyStateProps {
 }
 
 const EmptyState = ({
-  image,
+  image = require("@/assets/images/calendar-empty.png"),
   heading,
   description,
   buttonLabel,

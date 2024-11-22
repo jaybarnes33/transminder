@@ -172,11 +172,16 @@ const PlaceDetail = () => {
           </View>
         </View>
         <TouchableOpacity
+          onPress={handleBookmark}
           className={clsx([
-            "bg-dark flex-row h-[50] gap-x-2 items-center justify-center w-full rounded-full mt-auto mb-5",
+            "bg-dark flex-row h-[50]  gap-x-2 items-center justify-center w-full rounded-full mt-10 mb-5",
           ])}
         >
-          <Text className="font-fwbold text-white">Save this place</Text>
+          <Text className="font-fwbold text-white">
+            {place.bookmarks.includes(user?._id!)
+              ? "Unsave place"
+              : "Save this place"}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

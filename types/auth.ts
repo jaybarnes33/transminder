@@ -20,6 +20,7 @@ export interface User {
   password: string;
   genderIdentity: string;
   allowNotifications: boolean;
+  timezone: string;
   avatar: string;
   age: string;
   googleId?: string;

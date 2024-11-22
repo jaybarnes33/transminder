@@ -52,13 +52,13 @@ const Section = ({
     return;
   }
   return (
-    <View className="mt-7 flex-1">
+    <View className="mt-7 flex-1 h-[300px]">
       <Text className="font-fwbold text-xl">{collection.name}</Text>
       <FlashList
         data={data?.data}
         className=" my-2 gap-x-4"
         horizontal
-        estimatedItemSize={100}
+        estimatedItemSize={200}
         renderItem={({ item }) => <Resource key={item._id} resource={item} />}
         showsHorizontalScrollIndicator={false}
       />
