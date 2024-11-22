@@ -16,7 +16,7 @@ import { mutate } from "swr";
 import KeyboardAvoidingScrollView from "@/components/Core/AvoidKeyboard";
 import { eventColors } from "@/constants";
 import { EventColor } from "@/types/global";
-import { getMonth, getYear } from "date-fns";
+import { getMonth, getYear, startOfDay } from "date-fns";
 import TimePicker from "@/components/Core/TImePicker";
 
 const Wrapper = () => {
@@ -36,7 +36,7 @@ const Wrapper = () => {
     name: "",
     location: "",
     note: "",
-    date: new Date().toISOString(),
+    date: startOfDay(new Date()).toISOString(),
     repeats: "everyday",
     start: "",
     category: "",
@@ -114,7 +114,7 @@ const Wrapper = () => {
   };
 
   const handleDate = (val: string) => {
-    handleChange("date", val);
+    handleChange("date", startOfDay(new Date(val)).toISOString());
   };
 
   const handleStart = (val: string) => {
@@ -168,18 +168,15 @@ const Wrapper = () => {
         <View className="my-4 gap-y-2">
           <TouchableOpacity
             onPress={hideKeyboard}
-            className="h-[50] rounded-lg flex-row px-3 items-center justify-between bg-neutral-200"
+            className="h-[50] rounded-lg flex-row items-center justify-between bg-neutral-200"
           >
-            <Text className="font-main text-base">Date</Text>
-            <View className="flex-row gap-x-2 items-center">
-              <DatePicker
-                label="Date"
-                isEdit={isEdit}
-                value={formData.date}
-                handleChange={handleDate}
-              />
-              <Feather name="chevron-right" size={20} color={"gray"} />
-            </View>
+            <DatePicker
+              label="Date"
+              isEdit={isEdit}
+              value={formData.date}
+              handleChange={handleDate}
+            />
+            <Feather name="chevron-right" size={20} color={"gray"} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={hideKeyboard}

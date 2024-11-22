@@ -20,7 +20,7 @@ const Appointments = ({
     `/events?date=${date ? date : ""}`,
     async () => {
       const { data: res } = await axiosInstance.get(
-        `/events?date=${!limitted ? date : ""}&limit=5`
+        `/events?date=${!limitted ? date : ""}&limit=${limitted ? 5 : ""}`
       );
 
       return res.events;
