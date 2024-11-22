@@ -14,6 +14,7 @@ import Message from "@/components/Core/Message";
 import Bookmarks from "@/components/Resources/Bookmarks";
 import { ResourceLoader } from "@/components/Resources/Loaders/Resource";
 import EmptyState from "@/components/Health/Empty";
+import { useRouter } from "expo-router";
 
 const Learn = () => {
   const fetchCollections = async () => {
@@ -21,6 +22,7 @@ const Learn = () => {
     return data;
   };
 
+  const { navigate } = useRouter();
   const [search, setSearch] = useState("");
 
   const { data, error, isLoading } = useSWR<Collection[]>(
@@ -42,6 +44,13 @@ const Learn = () => {
     return <ResourceLoader />;
   }
 
+  const handleSearch = (s: string) => {
+    setSearch(s);
+    navigate({
+      pathname: "/(app)/learnsearch",
+      params: { search: s },
+    });
+  };
   return (
     <SafeAreaView className="px-4 flex-1 bg-neutral-100">
       <View className="flex-row justify-between items-center">
@@ -50,7 +59,7 @@ const Learn = () => {
       </View>
 
       {data?.length! > 0 ? (
-        <Search search={setSearch} term={search} />
+        <Search search={handleSearch} term={search} />
       ) : (
         <EmptyState
           description="No resources available now, please check later"
