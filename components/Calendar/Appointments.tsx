@@ -6,6 +6,8 @@ import { useRouter } from "expo-router";
 import useSWR from "swr";
 import axiosInstance from "@/lib/axios";
 import EmptyEvents from "../Health/Empty/EmptyEvents";
+import { FlashList } from "@shopify/flash-list";
+import { IEvent } from "@/types/global";
 
 const Appointments = ({
   limitted,
@@ -16,7 +18,7 @@ const Appointments = ({
 }) => {
   const { navigate } = useRouter();
 
-  const { data, isLoading } = useSWR(
+  const { data, isLoading } = useSWR<IEvent[]>(
     `/events?date=${date ? date : ""}`,
     async () => {
       const { data: res } = await axiosInstance.get(
@@ -38,13 +40,15 @@ const Appointments = ({
           />
         </View>
       )}
-      <View className="mt-2">
+      <View className="mt-2 w-full min-h-screen">
         {isLoading ? (
           <View className="items-center">
             <ActivityIndicator />
           </View>
         ) : (
-          <FlatList
+          <FlashList
+            estimatedItemSize={200}
+            contentContainerStyle={{ paddingBottom: 200 }}
             data={data}
             ListEmptyComponent={<EmptyEvents />}
             keyExtractor={(item) => item._id}
