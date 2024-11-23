@@ -72,7 +72,7 @@ const Bookmarks = ({ search }: { search: string }) => {
             onPress={() => handlePress(resource)}
             key={resource.title}
             style={{ width: width - 35 }}
-            className="flex-row bg-white items-center mr-5 rounded-[20px] shadow gap-x-3 p-4 h-[120px]"
+            className="flex-row m-1 bg-white items-center mr-5 rounded-[20px] shadow gap-x-3 p-4 h-[120px]"
           >
             <Image
               className="w-1/4 h-full rounded-xl"

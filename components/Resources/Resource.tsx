@@ -10,9 +10,11 @@ import { getReadingTime, getImage } from "@/utils";
 const Resource = ({
   resource,
   heading,
+  fullWidth,
 }: {
   resource: ResourceType;
   heading?: boolean;
+  fullWidth?: boolean;
 }) => {
   const width = Dimensions.get("window").width;
   const colors = {
@@ -34,17 +36,24 @@ const Resource = ({
       disabled={heading}
       onPress={handlePress}
       className={clsx([
-        "  ",
         heading && " p-0 bg-transparent w-full ",
-        !heading && " bg-white shadow y-2 p-4  rounded-[20px]  mr-3  ",
+        !heading && " bg-white h-[270px]  shadow y-2 p-4  rounded-[20px]    ",
       ])}
-      style={!heading && { width: width / 1.3 }}
+      style={
+        !heading && {
+          width: !fullWidth ? width / 1.3 : width - 35,
+          margin: 4,
+        }
+      }
     >
       <Image
         source={{ uri: getImage(resource.thumbnail) }}
-        className={clsx(["h-4/6 bg-neutral-300", heading && "h-[250px]"])}
+        className={clsx([
+          "rounded-[20px] bg-neutral-300",
+          heading ? "h-[250px]" : "h-48",
+        ])}
       />
-      <View className="my-2">
+      <View className=" my-2">
         <View className="flex-row items-center gap-x-1">
           <Icon name={resource.type as IconName} />
           <Text

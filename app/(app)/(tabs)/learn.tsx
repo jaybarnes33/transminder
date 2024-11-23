@@ -22,9 +22,6 @@ const Learn = () => {
     return data;
   };
 
-  const { navigate } = useRouter();
-  const [search, setSearch] = useState("");
-
   const { data, error, isLoading } = useSWR<Collection[]>(
     "/resources/collections",
     fetchCollections,
@@ -34,6 +31,8 @@ const Learn = () => {
       refreshInterval: 10000 * 60,
     }
   );
+  const { navigate } = useRouter();
+  const [search, setSearch] = useState("");
 
   if (error) {
     return (

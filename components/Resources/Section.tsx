@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import React from "react";
 
 import {
@@ -51,15 +51,22 @@ const Section = ({
   if (!data?.pagination.total) {
     return;
   }
+
+  const width = Dimensions.get("window").width;
+  const fullWidth = data.data.length < 2;
   return (
-    <View className="mt-7 flex-1 h-[300px]">
+    <View className="mt-7 flex-1  w-full">
       <Text className="font-fwbold text-xl">{collection.name}</Text>
       <FlashList
         data={data?.data}
-        className=" my-2 gap-x-4"
+        className=" my-2 gap-x-4 w-screen"
         horizontal
         estimatedItemSize={200}
-        renderItem={({ item }) => <Resource key={item._id} resource={item} />}
+        renderItem={({ item }) => (
+          <View style={fullWidth && { width: width - 16 }} key={item._id}>
+            <Resource fullWidth={data.data.length < 2} resource={item} />
+          </View>
+        )}
         showsHorizontalScrollIndicator={false}
       />
     </View>
