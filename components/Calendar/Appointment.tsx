@@ -18,7 +18,7 @@ const Appointment = ({ event, date }: { event: IEvent; date?: string }) => {
   return (
     <TouchableOpacity
       onPress={() => showModal(<EventDetail event={event} date={date} />)}
-      className=" bg-white flex-row gap-x-4  p-4  my-2 rounded-3xl "
+      className=" bg-white flex-row gap-x-4  p-4 m-1 shadow-sm my-2 rounded-3xl "
     >
       <View className={clsx(["flex-1  border-l-[3px] px-2 ", color.border])}>
         <Text

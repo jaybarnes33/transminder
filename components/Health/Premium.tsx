@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 const Premium = () => {
   const { navigate } = useRouter();
   return (
-    <View className="mt-4 mb-14 p-4 h-[305px] bg-white rounded-[20px]">
+    <View className="m-1 mt-4 mb-14 p-4 h-[305px] shadow-sm bg-white rounded-[20px]">
       <View className="flex-row items-center gap-x-2">
         <Text className="text-lg font-fwbold">Transminder</Text>
         <Image source={require("@/assets/images/premium.png")} />

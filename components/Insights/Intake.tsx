@@ -77,7 +77,7 @@ const IntakeInsight = ({
       description="No meds logged yet. Start tracking to gain insights into your intake patterns and progress here."
     />
   ) : (
-    <View className="bg-white mb-4 shadow rounded-[20px] p-4   gap-y-4">
+    <View className="bg-white m-1 mb-4 shadow-sm rounded-[20px] p-4   gap-y-4">
       <Text className="font-semibold text-base">Medication intake</Text>
 
       {range === "week" && (

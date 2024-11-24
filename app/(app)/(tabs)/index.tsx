@@ -32,7 +32,7 @@ const Index = () => {
 
   const getItemCount = (data: typeof sections) => data.length;
   return (
-    <SafeAreaView className="px-4">
+    <SafeAreaView className="px-3">
       <LinearGradient
         colors={["#e4d6f3", "#f3f4f6"]}
         style={styles.background}

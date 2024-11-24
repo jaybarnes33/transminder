@@ -12,7 +12,7 @@ import Wrapper from "@/components/Settings/Wrapper";
 import { getAvatar } from "@/utils/auth";
 
 const Profile = () => {
-  const { user, loading, logOut } = useUser();
+  const { user } = useUser();
   const sections: Record<
     "personalize" | "preferences" | "support",
     {
@@ -76,19 +76,16 @@ const Profile = () => {
   return (
     <Wrapper>
       {user && (
-        <View className="items-center gap-y-1">
+        <View className="items-center gap-y-2">
           <Avatar
-            size="lg"
-            name={user?.name as string}
+            size="xl"
+            name={(user?.name as string) ?? "User"}
             image={user.avatar && getAvatar(user.avatar, user._id)}
             isEdit={false}
           />
-          <Text className="font-fwbold text-[30] ">
-            {user?.name.split(" ")[0]}
+          <Text className="font-fwbold text-neutral-600 ">
+            {user?.name ? user?.name.split(" ")[0] : "User"}
           </Text>
-          <TouchableOpacity onPress={logOut}>
-            <Text className=" font-base font-fwbold text-red-500">Logout</Text>
-          </TouchableOpacity>
         </View>
       )}
 

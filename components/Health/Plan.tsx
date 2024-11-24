@@ -72,7 +72,7 @@ export const Item = ({
     <>
       <View
         className={clsx([
-          " bg-white rounded-[20px] p-3 mb-2 shadow-sm items-center",
+          " bg-white rounded-[20px] p-3 m-1  shadow-sm items-center",
           (canEdit || allowChange) && "h-[140px]",
         ])}
       >

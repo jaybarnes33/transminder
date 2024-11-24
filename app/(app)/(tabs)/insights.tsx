@@ -74,8 +74,8 @@ const Insights = () => {
     })();
   }, [range]);
   return (
-    <SafeAreaView className="p-4">
-      <View className="flex-row justify-between items-center mb-4">
+    <SafeAreaView className="p-3">
+      <View className="flex-row p-1 justify-between items-center mb-4">
         <View>
           <DropdownPicker
             width={Dimensions.get("window").width / 2}

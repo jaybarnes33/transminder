@@ -19,7 +19,7 @@ const EmptyInsight = ({
   showEmojis,
 }: EmptyProps) => {
   return (
-    <View className="min-h-[248] bg-white mb-4 rounded-[20px] p-4 gap-y-4">
+    <View className="min-h-[248] bg-white m-1 shadow-sm mb-4 rounded-[20px] p-4 gap-y-4">
       <Text className="font-semibold text-base">{heading}</Text>
       <View className="flex-row  items-center justify-end">
         {!!label && <Text className="font-fwbold text-lg flex-1">{label}</Text>}

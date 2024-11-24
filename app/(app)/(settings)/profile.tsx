@@ -66,7 +66,7 @@ const Profile = () => {
           {user && (
             <Avatar
               size="xl"
-              name={user?.name as string}
+              name={(user?.name as string) ?? "User"}
               image={user?.avatar && getAvatar(user.avatar, user._id)}
             />
           )}

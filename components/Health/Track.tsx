@@ -65,7 +65,7 @@ const Track = ({ noHeading = false }) => {
     }
 
     return (
-      <Pressable className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
+      <Pressable className=" m-1 mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
         <View className="flex-row justify-between items-center">
           <Text className="font-main text-base">Medication Plan</Text>
           <Text className="font-semibold text-neutral-400 text-base">
@@ -133,7 +133,7 @@ const Track = ({ noHeading = false }) => {
     }
 
     return (
-      <Pressable className="mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
+      <Pressable className="m-1 mt-2 bg-white h-[108] rounded-[20px] p-4 shadow-sm gap-y-1">
         <View className="flex-row justify-between items-center">
           <Text className="font-main text-base">Well-being</Text>
           <Text className="font-semibold text-base text-neutral-400">

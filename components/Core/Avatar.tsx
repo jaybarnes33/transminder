@@ -96,11 +96,11 @@ const Avatar = ({
     <View className="gap-y-4">
       <View
         className={clsx([
-          "h-14 w-14 rounded-full items-center justify-center",
+          "rounded-full items-center justify-center",
           size === "xl" && "h-44 w-44",
           size === "lg" && "h-24 w-24",
           size === "md" && "h-20 w-20",
-          size === "sm" && "h-8 w-8",
+          size === "sm" && "h-14 w-14",
         ])}
       >
         {image || selected ? (

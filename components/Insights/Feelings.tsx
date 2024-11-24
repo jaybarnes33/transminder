@@ -98,7 +98,7 @@ const FeelingsInsight = ({ start, end }: { start: Date; end: Date }) => {
       description="No emotions logged yet. Start tracking to see insights and view your top five emotions here"
     />
   ) : (
-    <View className="bg-white shadow mb-4 rounded-[20px] p-4 gap-y-1">
+    <View className="bg-white m-1 shadow-sm mb-4 rounded-[20px] p-4 gap-y-1">
       <Text className="font-semibold text-base">Mental health</Text>
       <View className="flex-row relative justify-between items-center mb-2"></View>
 
