@@ -26,7 +26,7 @@ const TimePicker = ({
     onChange(val);
   }, [val]);
   return (
-    <View className="space-y-1">
+    <View className="gap-y-1">
       {isEdit && <Text className="font-semibold">{label}</Text>}
       <View className="w-full flex-row justify-between items-center px-3 bg-neutral-200 rounded-xl h-[50px]">
         {!show && (

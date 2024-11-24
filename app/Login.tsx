@@ -53,7 +53,7 @@ const Login = () => {
       <SafeAreaView className="bg-purple-50 flex-1 px-4">
         <Back action={() => navigate("/Auth")} />
 
-        <View className="items-center space-y-1">
+        <View className="items-center gap-y-1">
           <Text className="font-fwbold text-2xl text-center text-dark">
             Login to your account
           </Text>
@@ -73,8 +73,8 @@ const Login = () => {
             </Text>
           </TouchableOpacity>
         )}
-        <View className="mt-6 space-y-1">
-          <View className="space-y-1">
+        <View className="mt-6 gap-y-1">
+          <View className="gap-y-1">
             <Input
               placeholder="Email Address"
               textContentType="emailAddress"
@@ -83,7 +83,7 @@ const Login = () => {
               onChangeText={(text) => handleChange("email", text)}
             />
           </View>
-          <View className="space-y-1">
+          <View className="gap-y-1">
             <Input
               placeholder="••••••••"
               textContentType="password"
@@ -100,11 +100,11 @@ const Login = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="items-center w-full space-y-2 mt-6 ">
+        <View className="items-center w-full gap-y-2 mt-6 ">
           <TouchableOpacity
             disabled={loading || !form.email || !form.password}
             onPress={handleLogin}
-            className="bg-dark flex-row space-x-2 w-full items-center h-12 justify-center rounded-full"
+            className="bg-dark flex-row gap-x-2 w-full items-center h-12 justify-center rounded-full"
           >
             <Text className="font-main text-base text-white font-semibold">
               Login
@@ -119,7 +119,7 @@ const Login = () => {
             )}
           </TouchableOpacity>
 
-          <View className="w-full px-6 flex-row justify-center space-x-2 items-center mb-2">
+          <View className="w-full px-6 flex-row justify-center gap-x-2 items-center mb-2">
             <View className="h-px bg-gray-300  w-1/2  " />
             <Text className="font-main font-semibold text-gray-500">OR</Text>
             <View className="h-px bg-gray-300  w-1/2   " />

@@ -25,11 +25,11 @@ export default function TabLayout() {
   useEffect(() => {
     (async () => {
       const token = await registerForPushNotificationsAsync();
-      if (token && !user?.notificationTokens.includes(token)) {
-        await axiosInstance.put(`/users/${user?._id}`, {
-          notificationToken: token,
-        });
-      }
+
+      await axiosInstance.put(`/users/${user?._id}`, {
+        notificationToken: token ? token : undefined,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      });
     })();
 
     responseListener.current =

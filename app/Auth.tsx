@@ -11,7 +11,7 @@ const Auth = () => {
   return (
     <UnAuthContent>
       <SafeAreaView className="bg-purple-50 flex-1 px-4">
-        <View className="items-center h-[70vh] justify-center  space-y-4">
+        <View className="items-center h-[70vh] justify-center  gap-y-4">
           <Image source={require("@/assets/images/logo2.png")} />
           <View className="w-full items-center">
             <Text className="font-fwbold  text-2xl text-center">
@@ -22,16 +22,16 @@ const Auth = () => {
             </Text>
           </View>
         </View>
-        <View className="items-center w-full space-y-2 ">
+        <View className="items-center w-full gap-y-2 ">
           <Google />
-          <View className="w-full px-6 flex-row justify-center space-x-2 items-center">
+          <View className="w-full px-6 flex-row justify-center gap-x-2 items-center">
             <View className="h-px bg-gray-300  w-1/2  " />
             <Text className="font-main font-semibold text-gray-500">OR</Text>
             <View className="h-px bg-gray-300  w-1/2   " />
           </View>
           <TouchableOpacity
             onPress={() => navigate("/Signup")}
-            className="bg-dark flex-row space-x-2 w-full items-center h-12 justify-center rounded-full"
+            className="bg-dark flex-row gap-x-2 w-full items-center h-12 justify-center rounded-full"
           >
             <Image
               className="w-6 h-6"
@@ -45,7 +45,7 @@ const Auth = () => {
         <View className="mt-auto">
           <TouchableOpacity
             onPress={() => navigate("/Login")}
-            className="flex-row space-x-2 items-center h-10 justify-center"
+            className="flex-row gap-x-2 items-center h-10 justify-center"
           >
             <Text className="font-main font-semibold text-dark">
               Already have an account?

@@ -128,7 +128,8 @@ const Track = ({ noHeading = false }) => {
       );
     }
 
-    if (!moodData || moodData.logs?.length === 0) {
+    console.log({ moodData });
+    if (!moodData.logs?.length) {
       return <EmptyTrack />;
     }
 
