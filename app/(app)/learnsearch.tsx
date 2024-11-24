@@ -123,23 +123,20 @@ export default function Component() {
       component: (
         <>
           {isLoading && <ActivityIndicator />}
-
           <FlatList
             ListEmptyComponent={
               <Text className="font-semibold text-gray-600">
                 No resources found{" "}
-                {collection.name
-                  ? `in ${collection.name}`
-                  : `matching ${search}`}
+                {search
+                  ? `matching ${search}`
+                  : "matching your search criteria"}
               </Text>
             }
-            data={data?.data!}
+            data={data?.data ?? []}
             initialNumToRender={4}
             ItemSeparatorComponent={() => <View className="h-4" />}
             renderItem={({ item }) => <Resource fullWidth resource={item} />}
             keyExtractor={(item: IResource) => item._id.toString()}
-            getItem={(data, index) => data[index]}
-            getItemCount={(data) => data.length}
             showsVerticalScrollIndicator={false}
           />
         </>

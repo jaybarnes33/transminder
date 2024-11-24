@@ -353,7 +353,7 @@ export const getImage = (slug: string) => {
           ? process.env.EXPO_PUBLIC_BASE
           : process.env.EXPO_PUBLIC_ANDROID_BASE
       }${slug}`
-    : `${process.env.EXPO_PUBLIC_API_BASE}${slug}`;
+    : `${process.env.EXPO_PUBLIC_BASE}${slug}`;
 
   return url;
 };
