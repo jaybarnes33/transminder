@@ -90,12 +90,19 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
 
   return (
     <View className="h-full">
-      <View className="relative z-0  h-[20vh]">
+      <View className="relative z-0  h-full">
         <Svg height="100%" width="100%">
           <Defs>
-            <LinearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <LinearGradient
+              id="grad"
+              x1="196.5"
+              y1="764"
+              x2="196.5"
+              y2="94"
+              gradientUnits="userSpaceOnUse"
+            >
               <Stop offset="0" stopColor="#d7f3ff" />
-              <Stop offset="1" stopColor="#f9fafb" />
+              <Stop offset="1" stopColor="#F9FAFB" />
             </LinearGradient>
           </Defs>
           <Rect width="100%" rx={15} height="100%" fill="url(#grad)" />
@@ -116,7 +123,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
             )}
           </Text>
         </View>
-        <View className="mt-4  bg-white p-4 gap-y-3 rounded-[20px] shadow">
+        <View className="mt-4   p-4 gap-y-3 rounded-[20px] shadow">
           <View className="flex-row justify-between border-b border-gray-300 pb-2">
             <Text className="font-semibold text-gray-400">Form</Text>
             <Text className="font-semibold text-dark capitalize">
@@ -146,9 +153,11 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
                 handleChange={setDate}
               />
             ) : (
-              <Text className=" font-semibold">
-                {drug.endDate ? format(drug.endDate, "PPP") : "N/A"}
-              </Text>
+              drug.endDate && (
+                <Text className=" font-semibold">
+                  {drug.endDate ? format(drug.endDate, "PPP") : "N/A"}
+                </Text>
+              )
             )}
           </View>
         </View>
@@ -161,7 +170,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
           {ending && <ActivityIndicator color={"white"} />}
         </TouchableOpacity>
       </View>
-      <View className="absolute items-center w-full gap-y-2 bottom-20">
+      <View className="items-center w-full gap-y-2 bottom-20">
         <TouchableOpacity
           onPress={editDrug}
           className="items-center px-5 rounded-full py-1 bg-gray-200 "

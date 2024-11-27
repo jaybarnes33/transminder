@@ -61,7 +61,7 @@ export interface Drug extends DrugPayload {
   nextIntakeDate?: string;
   schedule: {
     day: string;
-    repeat: "everyday" | "weekly" | "monthly" | "once";
+    repeat: "everyday" | "weekly" | "monthly" | "none";
     date?: number;
     frequency?: number;
   };

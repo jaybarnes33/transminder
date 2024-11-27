@@ -1,5 +1,5 @@
 import { DayObj, Intake, MoodLog } from "@/types/global";
-import { differenceInMinutes, format, parse } from "date-fns";
+import { differenceInMinutes, format, formatRelative, parse } from "date-fns";
 import { Platform } from "react-native";
 
 export const transformDate = (date: Date) => {
@@ -144,7 +144,7 @@ const getDayOfWeek = (dateString?: string) => {
 export const formatDrugTimes = (
   times: string[],
   startDate: string,
-  frequency: "weekly" | "everyday" | "monthly" | "once",
+  frequency: "weekly" | "everyday" | "monthly" | "none",
   interval: number
 ) => {
   console.log(interval);
@@ -172,10 +172,12 @@ export const formatDrugTimes = (
       return interval === 1 || !interval
         ? `Every month on the ${dayOfMonth} at ${formattedTimes}`
         : `Every ${interval} months on the ${dayOfMonth} at ${formattedTimes}`;
-    case "once":
-      return `Once on ${format(
-        new Date(startDate),
-        "MMMM do, yyyy"
+    case "none":
+      return ` ${capitalize(
+        formatRelative(
+          new Date(startDate).setHours(0, 0, 0, 0),
+          new Date()
+        ).split("at")[0]
       )} at ${formattedTimes}`;
     default:
       return formattedTimes; // If no frequency, just return the times

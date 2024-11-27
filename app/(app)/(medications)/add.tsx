@@ -124,6 +124,7 @@ const Add = () => {
   const [name, setName] = useState("");
 
   const fetchDrug = async () => {
+    if (!id) return;
     const { data } = await axiosInstance.get(`/drugs/${id}`);
     return data;
   };

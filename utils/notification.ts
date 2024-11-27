@@ -27,6 +27,7 @@ export async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
+      alert(finalStatus);
       handleRegistrationError(
         "Permission not granted to get push token for push notification!"
       );

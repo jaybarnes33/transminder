@@ -37,7 +37,7 @@ const Wrapper = () => {
     location: "",
     note: "",
     date: startOfDay(new Date()).toISOString(),
-    repeats: "everyday",
+    repeats: "none",
     start: "",
     category: "",
     end: "",
