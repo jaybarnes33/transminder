@@ -30,14 +30,14 @@ export function DatePicker(
   };
 
   return (
-    <View className="flex-row gap-2.5">
+    <View className="flex-row h-full gap-2.5">
       {props.mode.includes("date") && (
         <View className={clsx("relative pt-1.5", props.materialDateClassName)}>
           <Pressable
             onPress={show("date")}
-            className="border-foreground/30 rounded border py-3 pl-2.5 active:opacity-80"
+            className=" rounded border py-3 pl-2.5 "
           >
-            <Text className="py-px">
+            <Text className="py-px font-main text-base">
               {new Intl.DateTimeFormat("en-US", {
                 dateStyle: "medium",
               }).format(props.value)}
@@ -56,28 +56,16 @@ export function DatePicker(
         </View>
       )}
       {props.mode.includes("time") && (
-        <View className={clsx("relative pt-1.5", props.materialTimeClassName)}>
-          <Pressable
-            onPress={show("time")}
-            className="border-foreground/30 rounded border py-3 pl-2.5 active:opacity-80"
-          >
-            <Text className="py-px">
-              {new Intl.DateTimeFormat("en-US", {
-                timeStyle: "short",
-              }).format(props.value)}
-            </Text>
-          </Pressable>
-          <View
-            className={clsx(
-              "bg-card absolute left-2 top-0 px-1",
-              props.materialTimeLabelClassName
-            )}
-          >
-            <Text variant="caption2" className="text-[10px] opacity-60">
-              {props.materialTimeLabel ?? "Time"}
-            </Text>
-          </View>
-        </View>
+        <Pressable
+          onPress={show("time")}
+          className="h-full justify-center rounded w-5/6  pl-2.5"
+        >
+          <Text className="font-semibold text-base">
+            {new Intl.DateTimeFormat("en-US", {
+              timeStyle: "short",
+            }).format(props.value)}
+          </Text>
+        </Pressable>
       )}
     </View>
   );
