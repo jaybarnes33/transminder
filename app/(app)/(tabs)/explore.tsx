@@ -6,13 +6,7 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  useEffect,
-} from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { useUser } from "@/context/Auth";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -151,7 +145,6 @@ const Explore = () => {
               ])}
             >
               <Emoji name={item.name.toLowerCase()} />
-              <Text>{category}</Text>
               <Text className={clsx(["font-semibold"])}>{item.name}</Text>
             </TouchableOpacity>
           )}
