@@ -29,8 +29,8 @@ const Insights = () => {
   }>({
     label: "This Week",
     value: "week",
-    startDate: startOfWeek(new Date()),
-    endDate: endOfWeek(new Date()),
+    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
+    endDate: endOfWeek(new Date(), { weekStartsOn: 1 }),
   });
 
   const onChange = (val: { label: string; value: string }) => {
@@ -44,8 +44,8 @@ const Insights = () => {
         endDate = endOfMonth(date);
         break;
       case "week":
-        startDate = startOfWeek(date);
-        endDate = endOfWeek(date);
+        startDate = startOfWeek(date, { weekStartsOn: 1 });
+        endDate = endOfWeek(date, { weekStartsOn: 1 });
         break;
       case "year":
         startDate = startOfYear(date);

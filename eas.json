@@ -11,7 +11,7 @@
         "EXPO_PUBLIC_BASE": "http://localhost:8080",
         "EXPO_PUBLIC_ANDROID_BASE": "http://10.0.2.2:8080",
         "EXPO_PUBLIC_ENV": "development",
-        "EXPO_PUBLIC_URL": "https://minder.otwumasi.tech",
+        "EXPO_PUBLIC_URL": "https://api.transminder.app",
         "EXPO_PUBLIC_GOOGLE_ID": "234390212423-p4hcnt6j4rr4s2jio6i81rcspshvs2nj.apps.googleusercontent.com",
         "EXPO_PUBLIC_ANDROID_ID": "234390212423-p3jdr7a504m2c0pu5l0f2ienf012394n.apps.googleusercontent.com",
         "EXPO_PUBLIC_GOOGLE_WEB_ID": "234390212423-qi0v1v4jo7gfq630kakit288anaitc5q.apps.googleusercontent.com"
@@ -21,10 +21,10 @@
       "android": {
         "buildType": "apk",
         "env": {
-          "EXPO_PUBLIC_BASE": "https://minder.otwumasi.tech",
-          "EXPO_PUBLIC_ANDROID_BASE": "https://minder.otwumasi.tech",
+          "EXPO_PUBLIC_BASE": "https://api.transminder.app",
+          "EXPO_PUBLIC_ANDROID_BASE": "https://api.transminder.app",
           "EXPO_PUBLIC_ENV": "production",
-          "EXPO_PUBLIC_URL": "https://minder.otwumasi.tech",
+          "EXPO_PUBLIC_URL": "https://api.transminder.app",
           "EXPO_PUBLIC_GOOGLE_ID": "234390212423-p4hcnt6j4rr4s2jio6i81rcspshvs2nj.apps.googleusercontent.com",
           "EXPO_PUBLIC_ANDROID_ID": "234390212423-p3jdr7a504m2c0pu5l0f2ienf012394n.apps.googleusercontent.com",
           "EXPO_PUBLIC_GOOGLE_WEB_ID": "234390212423-qi0v1v4jo7gfq630kakit288anaitc5q.apps.googleusercontent.com"
@@ -34,10 +34,10 @@
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_BASE": "https://minder.otwumasi.tech",
-        "EXPO_PUBLIC_ANDROID_BASE": "https://minder.otwumasi.tech",
+        "EXPO_PUBLIC_BASE": "https://api.transminder.app",
+        "EXPO_PUBLIC_ANDROID_BASE": "https://api.transminder.app",
         "EXPO_PUBLIC_ENV": "production",
-        "EXPO_PUBLIC_URL": "https://minder.otwumasi.tech",
+        "EXPO_PUBLIC_URL": "https://api.transminder.app",
         "EXPO_PUBLIC_GOOGLE_ID": "234390212423-p4hcnt6j4rr4s2jio6i81rcspshvs2nj.apps.googleusercontent.com",
         "EXPO_PUBLIC_ANDROID_ID": "234390212423-p3jdr7a504m2c0pu5l0f2ienf012394n.apps.googleusercontent.com",
         "EXPO_PUBLIC_GOOGLE_WEB_ID": "234390212423-qi0v1v4jo7gfq630kakit288anaitc5q.apps.googleusercontent.com"

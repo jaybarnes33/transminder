@@ -1,10 +1,8 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Actions } from "@/components/Core/Header";
-
 import Search from "@/components/Explore/maps/Search";
-
 import Section from "@/components/Resources/Section";
 import axiosInstance from "@/lib/axios";
 import useSWR from "swr";
@@ -17,6 +15,10 @@ import EmptyState from "@/components/Health/Empty";
 import { useRouter } from "expo-router";
 
 const Learn = () => {
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { navigate } = useRouter();
+
   const fetchCollections = async () => {
     const { data } = await axiosInstance.get("/resources/collections");
     return data;
@@ -31,25 +33,33 @@ const Learn = () => {
       refreshInterval: 10000 * 60,
     }
   );
-  const { navigate } = useRouter();
-  const [search, setSearch] = useState("");
 
   if (error) {
     return (
       <Message isError message={error.message ?? "Failed to fetch posts"} />
     );
   }
+
   if (isLoading && !data) {
     return <ResourceLoader />;
   }
 
-  const handleSearch = (s: string) => {
+  const handleSearch = (s: string, collection?: string) => {
     setSearch(s);
     navigate({
       pathname: "/(app)/learnsearch",
-      params: { search: s },
+      params: { search: s, collection },
     });
   };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
+  };
+
+  const filteredData = selectedCategory
+    ? data?.filter((item) => item._id === selectedCategory)
+    : data;
+
   return (
     <SafeAreaView className="px-4 flex-1 bg-neutral-100">
       <View className="flex-row justify-between items-center">
@@ -66,13 +76,46 @@ const Learn = () => {
         />
       )}
 
+      {data?.length && (
+        <FlashList
+          ListEmptyComponent={<Message message="No resources found" />}
+          data={[{ name: "bookmarks", _id: "bookmark" }, ...data]}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              className={`mr-4 rounded-xl p-2 border ${
+                selectedCategory === item._id
+                  ? "bg-purple-500 border-purple-500"
+                  : "border-gray-600"
+              }`}
+              onPress={() => handleCategorySelect(item._id)}
+            >
+              <Text
+                className={`font-fwbold capitalize ${
+                  selectedCategory === item._id ? "text-white" : "text-gray-600"
+                }`}
+              >
+                {item.name}
+              </Text>
+            </TouchableOpacity>
+          )}
+          horizontal
+          className="mb-2"
+          showsHorizontalScrollIndicator={false}
+        />
+      )}
+
       {data && (
         <FlashList
           ListEmptyComponent={<Message message="No resources found" />}
           estimatedItemSize={5}
-          data={[{ name: "bookmark", _id: "bookmark" }, ...data]}
+          data={[
+            ...(selectedCategory === "bookmark" || !selectedCategory
+              ? [{ name: "bookmarks", _id: "bookmark" }]
+              : []),
+            ...(filteredData || []),
+          ]}
           renderItem={({ item }) =>
-            item.name === "bookmark" ? (
+            item.name === "bookmarks" ? (
               <Bookmarks search={search} />
             ) : (
               <Section

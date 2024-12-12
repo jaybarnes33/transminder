@@ -6,12 +6,12 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Drug, IconName, Intake, PaginatedResponse } from "@/types/global";
 import Icon from "../Core/Icon";
 import clsx from "clsx";
 import Heading from "../Core/Heading";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
 import useSWRInfinite from "swr/infinite";
 import EmptyPlan from "./Empty/EmptyPlan";
@@ -190,6 +190,7 @@ const Plan = () => {
 
   const fetchDrugs = async (url: string) => {
     const { data } = await axiosInstance.get(url);
+    console.log({ intakes: data });
     return data;
   };
 
@@ -211,10 +212,6 @@ const Plan = () => {
 
   useSWR("/intake/generate", generateIntakes, { refreshInterval: 1000 });
 
-  console.log({ data });
-  const todayIntakes = data ? data.flatMap((page) => page.data.today) : [];
-  const missedIntakes = data ? data[0].data.missed : [];
-
   // Check if there are more pages to load
   const hasMorePages =
     data && data.length > 0
@@ -228,6 +225,12 @@ const Plan = () => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      mutateDrugs();
+    }, [])
+  );
+
   return (
     <View className="gap-y-2">
       <View className="flex-row items-center justify-between gap-x-2">
@@ -238,9 +241,9 @@ const Plan = () => {
         />
       </View>
 
-      {missedIntakes.length > 0 && (
+      {data && data[0].data.missed.length > 0 && (
         <FlatList
-          data={missedIntakes}
+          data={data[0].data.missed}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <Item item={{ ...item }} mutate={mutateDrugs} />
@@ -249,7 +252,7 @@ const Plan = () => {
       )}
 
       <FlatList
-        data={todayIntakes}
+        data={data ? data.flatMap((page) => page.data.today) : []}
         ListEmptyComponent={EmptyPlan}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (

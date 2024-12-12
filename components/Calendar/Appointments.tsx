@@ -1,4 +1,4 @@
-import { View, FlatList, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import React from "react";
 import Heading from "../Core/Heading";
 import Appointment from "./Appointment";
@@ -8,6 +8,7 @@ import axiosInstance from "@/lib/axios";
 import EmptyEvents from "../Health/Empty/EmptyEvents";
 import { FlashList } from "@shopify/flash-list";
 import { IEvent } from "@/types/global";
+import clsx from "clsx";
 
 const Appointments = ({
   limitted,
@@ -40,20 +41,25 @@ const Appointments = ({
           />
         </View>
       )}
-      <View className="mt-2 w-full ">
+      <View className="mt-2 w-full  ">
         {isLoading ? (
           <View className="items-center">
             <ActivityIndicator />
           </View>
         ) : (
-          <FlatList
-            contentContainerStyle={{ paddingBottom: !limitted ? 600 : 0 }}
-            showsVerticalScrollIndicator={false}
-            data={data}
-            ListEmptyComponent={<EmptyEvents />}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => <Appointment event={item} date={date} />}
-          />
+          <View className={clsx(!limitted && "h-[50vh]")}>
+            <FlashList
+              // contentContainerStyle={{ paddingBottom: !limitted ? 200 : 0 }}
+              showsVerticalScrollIndicator={false}
+              data={data}
+              estimatedItemSize={4}
+              ListEmptyComponent={<EmptyEvents />}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
+                <Appointment event={item} date={date} />
+              )}
+            />
+          </View>
         )}
       </View>
     </View>

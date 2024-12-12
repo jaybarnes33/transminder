@@ -1,18 +1,13 @@
-// MonthlyMoodChart.tsx
 import React from "react";
 import { View, Text, Dimensions, Image } from "react-native";
 import Emoji from "../Core/Emoji";
-
-import { getDaysInMonth, startOfMonth } from "date-fns"; // Import date-fns functions
+import { getDaysInMonth } from "date-fns"; // Import date-fns functions
 import { IntakeAnalytics } from "./Intake";
-import Icon from "../Core/Icon";
-import { Feather, Ionicons, Octicons } from "@expo/vector-icons";
+import { Octicons, Ionicons } from "@expo/vector-icons";
 import clsx from "clsx";
+import { getDaysOfWeek } from "@/utils";
 
 const screenWidth = Dimensions.get("window").width;
-
-// Create an array for the days of the week
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 interface MonthlyIntakeChartProps {
   intakes: IntakeAnalytics["intakes"];
@@ -38,7 +33,8 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
   const daysInMonth = getDaysInMonth(new Date(year, month));
 
   // Calculate the starting day of the month (0 = Sunday, 1 = Monday, ...)
-  const startDay = new Date(year, month, 1).getDay();
+  let startDay = new Date(year, month, 1).getDay();
+  startDay = (startDay + 6) % 7; // Adjust so that Monday is the first day of the week
 
   // Create an array for the days to render, filling in empty slots for alignment
   const daysToRender = Array.from({ length: daysInMonth + startDay }).map(
@@ -58,9 +54,9 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
       // Determine the highest count status if log exists
       const status = log
         ? (() => {
-            console.log();
             const { taken, skipped, missed } = log;
-            if (taken >= skipped && taken >= missed) return "taken";
+            if (taken >= skipped && taken >= missed && taken !== 0)
+              return "taken";
             if (skipped > taken && skipped >= missed) return "skipped";
             if (missed > taken && missed >= skipped) return "missed";
             return "pending";
@@ -75,8 +71,8 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
   );
 
   return (
-    <View className="mx-auto h-[30vh]  mt-4">
-      <View className="flex-row w-full flex-wrap flex-1 ">
+    <View className="mx-auto min-h-[35vh] mt-4">
+      <View className="flex-row w-full flex-wrap flex-1">
         {daysToRender.map((item, index) => {
           return (
             <View
@@ -121,19 +117,16 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
       </View>
 
       {/* Render Days of the Week */}
-      <View className="flex-row ">
-        {daysOfWeek.map((day, index) => (
-          <View style={{ width: screenWidth / 8 - 4 }}>
-            <Text
-              className="font-fwbold text-sm text-neutral-400 text-center "
-              key={index}
-            >
-              {day}
+      <View className="flex-row">
+        {getDaysOfWeek().map((day, index) => (
+          <View key={index} style={{ width: screenWidth / 8 - 4 }}>
+            <Text className="font-fwbold text-sm text-neutral-400 text-center">
+              {day.dayOfWeek}
             </Text>
           </View>
         ))}
       </View>
-      <View className=" flex-row pt-2 mt-3 justify-around">
+      <View className="flex-row pt-2 mt-3 justify-around">
         <Image
           source={require("@/assets/images/line.png")}
           className={clsx(["w-full left-0 absolute top-[0px]"])}

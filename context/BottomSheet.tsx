@@ -10,9 +10,10 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider as GorhomBottomSheetModalProvider,
   BottomSheetView,
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
 import { Keyboard } from "react-native";
 import Handle from "@/components/Core/Handle";
 
@@ -35,6 +36,7 @@ export const BottomSheetModalProvider: React.FC<{
   const snapPoints = useMemo(() => ["70%", "75%"], []);
 
   const showModal = useCallback((content: React.ReactNode) => {
+    Keyboard.dismiss();
     setContent(content);
     bottomSheetModalRef.current?.present();
   }, []);
@@ -44,10 +46,19 @@ export const BottomSheetModalProvider: React.FC<{
   }, []);
 
   const dismissModal = useCallback(() => {
-    setContent(null);
-    Keyboard.dismiss();
     bottomSheetModalRef.current?.dismiss();
-    bottomSheetModalRef.current?.close();
+    setContent(null);
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop {...props} opacity={0.5} />
+    ),
+    []
+  );
+
+  const handleSheetChange = useCallback((index: number) => {
+    Keyboard.dismiss();
   }, []);
 
   return (
@@ -65,6 +76,7 @@ export const BottomSheetModalProvider: React.FC<{
             enableDismissOnClose
             enablePanDownToClose
             onDismiss={dismissModal}
+            backdropComponent={renderBackdrop}
           >
             <BottomSheetView>{content}</BottomSheetView>
           </BottomSheetModal>

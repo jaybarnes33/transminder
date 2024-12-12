@@ -94,9 +94,12 @@ const Mood = () => {
     try {
       setLoading(true);
       await axiosInstance.post("/mood", { ...moodData, date });
-      mutate(`/mood/${date}`);
-      mutate("/mood");
-      mutate("/mood-insights");
+      await Promise.all([
+        mutate(`/mood/${date}`),
+        mutate("/mood"),
+        mutate((key: string[]) => key[0].startsWith("/mood-insights")),
+      ]);
+
       navigate("/(app)/(tabs)");
     } catch (error) {
       //@ts-ignore

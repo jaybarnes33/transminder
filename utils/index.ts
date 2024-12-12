@@ -14,7 +14,7 @@ export const getDaysOfWeek = () => {
   const currentDate = new Date();
   const currentDay = currentDate.getDay();
   const sunday = new Date(currentDate);
-  sunday.setDate(currentDate.getDate() - currentDay);
+  sunday.setDate(currentDate.getDate() - currentDay + 1);
 
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(sunday);

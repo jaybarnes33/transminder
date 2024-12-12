@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Pressable,
+  Keyboard,
 } from "react-native";
 import React, { ReactNode, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -80,7 +81,7 @@ const Add = () => {
   const validations: Record<number, boolean> = {
     0: !!drug.name,
     1: !!drug.type,
-    2: !!drug.dosage,
+    2: true,
     3: !!drug.times,
     4: true,
   };
@@ -163,8 +164,8 @@ const Add = () => {
 
       mutate("/medications");
       mutate("/intake/generate");
-      mutate("/drugs/upcoming");
-      mutate("/medications?size");
+      // mutate((key: string) => key.startsWith("/drug"));
+
       navigate("/(medications)");
     } catch (error) {
       console.error(error);
@@ -305,7 +306,10 @@ const Add = () => {
 
           <View>
             <Text className="font-main font-semibold">Time</Text>
-            <ScrollView className="gap-y-2">
+            <ScrollView
+              onScrollBeginDrag={Keyboard.dismiss}
+              className="gap-y-2"
+            >
               {drug.times.map((time, index) => {
                 return (
                   <View

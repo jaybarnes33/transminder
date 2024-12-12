@@ -37,10 +37,7 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
       try {
         setDeleting(true);
         await axiosInstance.delete(`/events/${event._id}`);
-        dismissModal();
-        mutate(`/events?date=${date ? date : ""}`);
-        mutate("/events?size");
-        mutate(`/event/${event._id}`);
+        await mutate((key: string) => key.startsWith("/event"));
 
         dismissModal();
       } catch (error) {
@@ -59,7 +56,7 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
     ];
   return (
     <View className="h-full">
-      <View className="relative z-0  h-[100vh]">
+      <View className="relative z-0  h-full">
         <Svg height="100%" width="100%">
           <Defs>
             <LinearGradient

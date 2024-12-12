@@ -4,20 +4,21 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "@/components/Core/Icon";
 import { Drug, IconName } from "@/types/global";
 import clsx from "clsx";
 import Back from "@/components/Core/Back";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import axiosInstance from "@/lib/axios";
 import useSWR, { mutate } from "swr";
 import EmptyPlan from "@/components/Health/Empty/EmptyPlan";
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import { Defs, LinearGradient, Rect, Stop, Svg } from "react-native-svg";
 import { format, formatDate } from "date-fns";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { formatDrugTimes } from "@/utils";
 import DatePicker from "@/components/Core/DatePicker";
 
@@ -48,13 +49,15 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
     } else {
       try {
         setDeleting(true);
+
         await axiosInstance.delete(`/drugs/${drug._id}`);
+
+        await Promise.all([
+          mutate((key: string) => key.includes("drugs")),
+          mutate("/medications"),
+        ]);
+
         dismissModal();
-        mutate("/medications");
-        mutate("/medications?size");
-        mutate("/drugs/intake");
-        mutate(`/drug/${drug._id}`);
-        navigate("/(app)/(medications)");
       } catch (error) {
         //@ts-ignore
         alert(error.response.data.error ?? `Failed to delete ${drug.name}`);
@@ -73,11 +76,10 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
     try {
       setEnding(true);
       await axiosInstance.put(`/drugs/${drug._id}`, { endDate: date });
-      dismissModal();
-      mutate("/medications");
-      mutate("/medications?size");
-      mutate("/drugs/intake");
-      mutate(`/drug/${drug._id}`);
+      await Promise.all([
+        mutate((key: string) => key.includes("drug")),
+        mutate("/medications"),
+      ]);
       navigate("/(app)/(medications)");
     } catch (error) {
       //@ts-ignore
@@ -93,16 +95,9 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
       <View className="relative z-0  h-full">
         <Svg height="100%" width="100%">
           <Defs>
-            <LinearGradient
-              id="grad"
-              x1="196.5"
-              y1="764"
-              x2="196.5"
-              y2="94"
-              gradientUnits="userSpaceOnUse"
-            >
+            <LinearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
               <Stop offset="0" stopColor="#d7f3ff" />
-              <Stop offset="1" stopColor="#F9FAFB" />
+              <Stop offset="1" stopColor="#f9fafb" />
             </LinearGradient>
           </Defs>
           <Rect width="100%" rx={15} height="100%" fill="url(#grad)" />
@@ -123,7 +118,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
             )}
           </Text>
         </View>
-        <View className="mt-4   p-4 gap-y-3 rounded-[20px] shadow">
+        <View className="mt-4 bg-white   p-4 gap-y-3 rounded-[20px] shadow">
           <View className="flex-row justify-between border-b border-gray-300 pb-2">
             <Text className="font-semibold text-gray-400">Form</Text>
             <Text className="font-semibold text-dark capitalize">
@@ -170,7 +165,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
           {ending && <ActivityIndicator color={"white"} />}
         </TouchableOpacity>
       </View>
-      <View className="items-center w-full gap-y-2 bottom-20">
+      <View className="items-center absolute w-full gap-y-2 bottom-20">
         <TouchableOpacity
           onPress={editDrug}
           className="items-center px-5 rounded-full py-1 bg-gray-200 "
@@ -263,6 +258,20 @@ const Medications = () => {
     return data;
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        navigate("/(tabs)/");
+        return true; // Prevent default behavior
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [navigate])
+  );
   const { data: drugs, isLoading } = useSWR("/medications", fetchDrugs);
   return (
     <SafeAreaView className="px-4 bg-gray-200  flex-1">

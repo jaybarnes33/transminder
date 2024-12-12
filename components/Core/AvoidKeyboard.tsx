@@ -54,6 +54,7 @@ const KeyboardAvoidingScrollView: React.FC<KeyboardAvoidingScrollViewProps> = ({
             contentContainerStyle,
           ]}
           keyboardShouldPersistTaps="handled"
+          onScrollBeginDrag={Keyboard.dismiss}
           {...scrollViewProps}
         >
           {children}

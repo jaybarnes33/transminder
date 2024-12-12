@@ -1,4 +1,4 @@
-import { View, Dimensions, StyleSheet } from "react-native";
+import { View, Dimensions, StyleSheet, Text } from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { useUser } from "@/context/Auth";
@@ -12,9 +12,20 @@ import { Place, PaginatedResponse } from "@/types/global";
 import Search from "@/components/Explore/maps/Search";
 import axiosInstance from "@/lib/axios";
 import Message from "@/components/Core/Message";
-import PlacesLoader from "@/components/Explore/Loaders/Places";
+import { FlashList } from "@shopify/flash-list";
 
 const PAGE_SIZE = 15;
+
+const categories = [
+  { name: "Support", color: "bg-blue-500" },
+  { name: "Healthcare", color: "bg-cyan-500" },
+  { name: "Social", color: "bg-red-500" },
+  { name: "Wellness", color: "bg-yellow-500" },
+  { name: "Shopping", color: "bg-purple-500" },
+  { name: "Housing", color: "bg-purple-500" },
+  { name: "Services", color: "bg-purple-500" },
+  { name: "Education", color: "bg-purple-500" },
+];
 
 const Explore = () => {
   const { hasMapsAccess } = useUser();
@@ -98,6 +109,16 @@ const Explore = () => {
     <View className="h-full">
       <View className="absolute px-4 top-20 left-0  z-[9999] w-full ">
         <Search search={setSearch} term={search} />
+        <FlashList
+          className="h-12 -mt-2"
+          data={categories}
+          horizontal
+          renderItem={({ item }) => (
+            <View className="px-3 py-2 rounded shadow border border-gray-200 bg-white mr-3">
+              <Text className="font-semibold">{item.name}</Text>
+            </View>
+          )}
+        />
       </View>
       <MapView
         ref={mapRef}
