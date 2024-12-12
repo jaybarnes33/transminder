@@ -16,11 +16,18 @@ import useSWR from "swr";
 import EmptyState from "@/components/Health/Empty";
 import { Album, PaginatedResponse } from "@/types/global";
 import GallerySkeleton from "@/components/Gallery/Skeleton";
+import { format } from "date-fns";
 
 const AlbumCard = ({
   item,
 }: {
-  item: { name: string; media: string[]; updatedAt: string; _id: string };
+  item: {
+    name: string;
+    media: string[];
+    updatedAt: string;
+    createdAt: string;
+    _id: string;
+  };
 }) => {
   const { navigate } = useRouter();
 
@@ -69,9 +76,11 @@ const AlbumCard = ({
       <View className="flex-row items-center justify-between">
         <View>
           <Text className="text-base font-semibold">{item.name}</Text>
-          <Text className="text-xs font-main text-gray-500">
-            Last added {item.updatedAt}
-          </Text>
+          {item.updatedAt !== item.createdAt && (
+            <Text className="text-xs font-main text-gray-500">
+              Last added {format(item.updatedAt, "MMM dd, yyyy")}
+            </Text>
+          )}
         </View>
         <View className="flex-row items-center gap-1">
           <Text className="text-sm font-semibold text-gray-500">
@@ -106,7 +115,11 @@ export default function AlbumsScreen() {
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row gap-x-2 items-baseline">
             <Text className="text-2xl font-semibold">Albums</Text>
-            <Text className="text-2xl font-semibold text-gray-400 ml-1">3</Text>
+            {albumData && albumData.data?.length > 0 && (
+              <Text className="text-2xl font-semibold text-gray-400 ml-1">
+                {albumData.data.length}
+              </Text>
+            )}
           </View>
           <View className="flex-row items-center gap-4">
             <Actions activity={false} />

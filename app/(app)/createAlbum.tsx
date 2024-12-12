@@ -46,6 +46,12 @@ export default function NewAlbum() {
     };
   }>({
     name: "",
+    reminder: {
+      date: "",
+      time: "",
+      repeat: "week",
+      repeatFrequency: 0,
+    },
   });
   const [loading, setLoading] = useState(false);
 
@@ -72,7 +78,10 @@ export default function NewAlbum() {
     if (reminderEnabled) {
       Keyboard.dismiss();
       showModal(
-        <ReminderSetup onChange={(reminder) => handleReminder(reminder)} />
+        <ReminderSetup
+          value={reminder}
+          onChange={(reminder) => handleReminder(reminder)}
+        />
       );
     }
   }, [reminderEnabled]);

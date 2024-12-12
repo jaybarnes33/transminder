@@ -148,7 +148,7 @@ const ReminderSetup = ({
   const [reminder, setReminder] = useState({
     date: "",
     time: new Date().toISOString(),
-    repeat: "",
+    repeat: "weekly",
     repeatFrequency: 1,
   });
   const handleChange = (key: string, value: string | number) => {
@@ -264,7 +264,7 @@ const ReminderSetup = ({
 
       <View className="gap-y-2 mb-4">
         <View className="bg-neutral-200 flex-row items-center h-[50px] rounded-lg justify-between py-2 px-2">
-          <FrequencyPicker handleChange={handleFreq} />
+          <FrequencyPicker val={reminder.repeat} handleChange={handleFreq} />
         </View>
         <View className="bg-neutral-200 flex-row items-center h-[50px] rounded-xl justify-between py-2 px-2">
           <Text className="  font-semibold">Time</Text>

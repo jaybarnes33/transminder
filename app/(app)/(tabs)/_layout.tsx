@@ -53,6 +53,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="index" />
       <Tabs.Screen name="insights" />
+      <Tabs.Screen name="gallery" />
 
       <Tabs.Screen name="explore" />
       <Tabs.Screen name="learn" />
