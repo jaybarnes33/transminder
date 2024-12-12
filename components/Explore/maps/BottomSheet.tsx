@@ -30,6 +30,7 @@ interface LocationListBottomSheetProps {
   onItemPress: (location: Place) => void;
   onEndReached: () => void;
   isLoadingMore?: boolean;
+  category?: string;
 }
 
 export const MIDDLE_SNAP_POINT = 40;
@@ -39,12 +40,20 @@ export const LocationListBottomSheet = forwardRef<
   LocationListBottomSheetProps
 >(
   (
-    { index, position, onItemPress, data, onEndReached, isLoadingMore },
+    {
+      index,
+      position,
+      onItemPress,
+      category,
+      data,
+      onEndReached,
+      isLoadingMore,
+    },
     ref
   ) => {
     const headerHeight = useHeaderHeight();
     const { bottom: bottomSafeArea } = useSafeAreaInsets();
-    const TAB_BAR_HEIGHT = 40;
+    const TAB_BAR_HEIGHT = 60;
 
     const snapPoints = useMemo(
       () => [TAB_BAR_HEIGHT + bottomSafeArea, MIDDLE_SNAP_POINT, "100%"],
@@ -87,7 +96,7 @@ export const LocationListBottomSheet = forwardRef<
         ref={ref}
         index={1}
         snapPoints={snapPoints}
-        topInset={headerHeight}
+        topInset={headerHeight * 10}
         animatedPosition={position}
         animatedIndex={index}
         backdropComponent={renderBackdrop}
@@ -114,7 +123,9 @@ export const LocationListBottomSheet = forwardRef<
             </>
           ) : (
             <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>No places found</Text>
+              <Text className="font-semibold text-base capitalize">
+                No places found in {category}
+              </Text>
             </View>
           )}
         </View>

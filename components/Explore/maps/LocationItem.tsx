@@ -12,7 +12,7 @@ interface LocationItemProps {
   location: Place;
 }
 
-const LocationItemComponent = ({ location }: LocationItemProps) => {
+export const LocationItem = ({ location }: LocationItemProps) => {
   const { user } = useUser();
   const [bookmarked, setBookmarked] = useState(
     location.bookmarks.includes(user?._id as string)
@@ -24,8 +24,10 @@ const LocationItemComponent = ({ location }: LocationItemProps) => {
       await axiosInstance.post(`/places/${location._id}/bookmark`, {
         placeId: location._id,
       });
-      mutate(`/places/${location._id}`);
-      mutate(`/places/bookmarks`);
+      await Promise.all([
+        mutate(`/places/${location._id}`),
+        mutate((key: string) => key.includes("place")),
+      ]);
     } catch (error) {
       console.log(error);
       setBookmarked(location.bookmarks.includes(user?._id as string));
@@ -46,15 +48,14 @@ const LocationItemComponent = ({ location }: LocationItemProps) => {
             {location.address.city}
           </Text>
         </View>
+
         <TouchableOpacity
           className="relative z-[9999]"
           onPress={handleBookmark}
         >
-          <Emoji name={bookmarked ? "bookmark" : "bookmark-active"} />
+          <Emoji name={bookmarked ? "bookmark-active" : "bookmark"} />
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
-export const LocationItem = memo(LocationItemComponent);

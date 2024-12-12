@@ -5,9 +5,9 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { IconName, Location, Place } from "@/types/global";
+import { IconName, Place } from "@/types/global";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Core/Back";
 import { Ionicons, Octicons } from "@expo/vector-icons";
@@ -23,7 +23,6 @@ import useSWR, { mutate } from "swr";
 
 const PlaceDetail = () => {
   const { id } = useLocalSearchParams();
-
   const { user } = useUser();
 
   const fetchPlace = async () => {
@@ -38,9 +37,14 @@ const PlaceDetail = () => {
     mutate: mutatePlace,
   } = useSWR<Place>(`/places/${id}`, fetchPlace);
 
-  const [bookmarked, setBookmarked] = useState(
-    place?.bookmarks.includes(user?._id as string)
-  );
+  const [bookmarked, setBookmarked] = useState(false);
+
+  useEffect(() => {
+    if (place) {
+      setBookmarked(place.bookmarks.includes(user?._id as string));
+    }
+  }, [place, user]);
+
   if (isLoading || !place) {
     return <ActivityIndicator />;
   }
@@ -55,12 +59,19 @@ const PlaceDetail = () => {
       await axiosInstance.post(`/places/${id}/bookmark`, {
         placeId: place._id,
       });
-      mutatePlace();
-      mutate(`/places/bookmarks`);
+
+      await Promise.all([
+        mutatePlace(),
+        mutate((key: string) => {
+          console.log({ key });
+          return key.includes("place");
+        }),
+      ]);
     } catch (error) {
       setBookmarked(false);
     }
   };
+
   return (
     <SafeAreaView className="px-4">
       <View className="flex-row items-center pb-4 justify-between">
@@ -178,9 +189,7 @@ const PlaceDetail = () => {
           ])}
         >
           <Text className="font-fwbold text-white">
-            {place.bookmarks.includes(user?._id!)
-              ? "Unsave place"
-              : "Save this place"}
+            {bookmarked ? "Unsave place" : "Save this place"}
           </Text>
         </TouchableOpacity>
       </ScrollView>

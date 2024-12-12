@@ -38,7 +38,6 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ photos }) => {
   };
 
   const renderItem = ({ item }: { item: string }) => {
-    console.log(`${process.env.EXPO_PUBLIC_URL}${item}`);
     return (
       <Image
         source={{ uri: getImage(item) }}

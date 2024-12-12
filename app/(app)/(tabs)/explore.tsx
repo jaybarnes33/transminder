@@ -1,8 +1,21 @@
-import { View, Dimensions, StyleSheet, Text } from "react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  Text,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import useSWRInfinite from "swr/infinite";
 import { useUser } from "@/context/Auth";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import MapView, { Marker } from "react-native-maps";
 import { useLocation } from "@/hooks/useLocation";
 import { LocationListBottomSheet } from "@/components/Explore/maps/BottomSheet";
@@ -13,6 +26,8 @@ import Search from "@/components/Explore/maps/Search";
 import axiosInstance from "@/lib/axios";
 import Message from "@/components/Core/Message";
 import { FlashList } from "@shopify/flash-list";
+import Emoji from "@/components/Core/Emoji";
+import clsx from "clsx";
 
 const PAGE_SIZE = 15;
 
@@ -43,6 +58,7 @@ const Explore = () => {
   const animatedPOIListPosition = useSharedValue<number>(SCREEN_HEIGHT);
   const { location } = useLocation();
 
+  const [category, setCategory] = useState("");
   const getKey = (
     pageIndex: number,
     previousPageData: PaginatedResponse<Place[]> | null
@@ -50,7 +66,7 @@ const Explore = () => {
     if (previousPageData && !previousPageData.data.length) return null;
     return `/places?page=${pageIndex + 1}&limit=${PAGE_SIZE}&latLng=${
       location.latitude
-    },${location.longitude}`;
+    },${location.longitude}&search=${search}&type=${category}`;
   };
 
   const fetcher = async (url: string) => {
@@ -58,9 +74,15 @@ const Explore = () => {
     console.log({ data: JSON.stringify(data.data) });
     return data;
   };
-  const { data, error, size, setSize, isLoading } = useSWRInfinite<
+  const { data, error, size, setSize, isLoading, mutate } = useSWRInfinite<
     PaginatedResponse<Place[]>
   >(getKey, fetcher);
+
+  useFocusEffect(
+    useCallback(() => {
+      mutate();
+    }, [])
+  );
 
   const [search, setSearch] = useState("");
 
@@ -84,16 +106,24 @@ const Explore = () => {
       data[data.length - 1]?.pagination.currentPage ===
         data[data.length - 1]?.pagination.totalPages);
 
-  const handleOnLocationPress = useCallback((item: Place) => {
+  const handleOnLocationPress = (item: Place) => {
     navigate({
       pathname: "/(app)/place-details",
       params: { id: item._id },
     });
-  }, []);
+  };
 
-  const handleTouchStart = useCallback(() => {
+  const handleTouchStart = () => {
     poiListModalRef.current?.collapse();
-  }, []);
+  };
+
+  const handleMapPress = () => {
+    Keyboard.dismiss();
+  };
+
+  const handleCategoryPress = (value: string) => {
+    setCategory(value);
+  };
 
   const loadMore = useCallback(() => {
     if (!isReachingEnd && !isLoadingMore) {
@@ -108,15 +138,22 @@ const Explore = () => {
   return (
     <View className="h-full">
       <View className="absolute px-4 top-20 left-0  z-[9999] w-full ">
-        <Search search={setSearch} term={search} />
+        <Search placeholder="Explore places" search={setSearch} term={search} />
         <FlashList
           className="h-12 -mt-2"
           data={categories}
           horizontal
           renderItem={({ item }) => (
-            <View className="px-3 py-2 rounded shadow border border-gray-200 bg-white mr-3">
-              <Text className="font-semibold">{item.name}</Text>
-            </View>
+            <TouchableOpacity
+              onPress={() => handleCategoryPress(item.name.toLowerCase())}
+              className={clsx([
+                "px-3 py-2 flex-row gap-x-2 items-center rounded shadow border border-gray-200 mr-3 bg-white",
+              ])}
+            >
+              <Emoji name={item.name.toLowerCase()} />
+              <Text>{category}</Text>
+              <Text className={clsx(["font-semibold"])}>{item.name}</Text>
+            </TouchableOpacity>
           )}
         />
       </View>
@@ -131,6 +168,7 @@ const Explore = () => {
         }}
         style={styles.mapContainer}
         onTouchStart={handleTouchStart}
+        onPress={handleMapPress}
       >
         {location && (
           <Marker coordinate={location}>
@@ -150,15 +188,24 @@ const Explore = () => {
           ))}
       </MapView>
 
-      <LocationListBottomSheet
-        data={places}
-        ref={poiListModalRef}
-        index={animatedPOIListIndex}
-        position={animatedPOIListPosition}
-        onItemPress={handleOnLocationPress}
-        onEndReached={loadMore}
-        isLoadingMore={isLoadingMore || isLoadingInitialData}
-      />
+      {places.length > 0 ? (
+        <LocationListBottomSheet
+          data={places}
+          category={category}
+          ref={poiListModalRef}
+          index={animatedPOIListIndex}
+          position={animatedPOIListPosition}
+          onItemPress={handleOnLocationPress}
+          onEndReached={loadMore}
+          isLoadingMore={isLoadingMore || isLoadingInitialData}
+        />
+      ) : (
+        <View className="absolute bg-white rounded  bottom-10 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Text className="text-lg text-neutral-600 font-semibold text-center">
+            No places found
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
