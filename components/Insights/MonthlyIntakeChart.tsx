@@ -55,13 +55,15 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
       const status = log
         ? (() => {
             const { taken, skipped, missed } = log;
-            if (taken >= skipped && taken >= missed && taken !== 0)
+            if (taken > 0 && taken >= skipped && taken >= missed) {
               return "taken";
-            if (skipped > taken && skipped >= missed) return "skipped";
-            if (missed > taken && missed >= skipped) return "missed";
-            return "pending";
+            }
+            if (skipped >= missed) {
+              return "skipped";
+            }
+            return "missed";
           })()
-        : "pending"; // Default to "pending" if no log found for the day
+        : "pending";
 
       return {
         day,
@@ -93,8 +95,8 @@ const MonthlyIntakeChart: React.FC<MonthlyIntakeChartProps> = ({
                         </Text>
                       )}
                       {item.log === "skipped" && (
-                        <Text className="text-red-400">
-                          <Octicons name="check-circle-fill" size={24} />
+                        <Text className="text-gray-700">
+                          <Octicons name="x-circle-fill" size={24} />
                         </Text>
                       )}
                       {item.log === "missed" && (
