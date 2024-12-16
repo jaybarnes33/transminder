@@ -68,7 +68,7 @@ const OnboardingItem = ({
   title: string;
 }) => {
   return (
-    <View className=" items-center my-8">
+    <View className=" items-center my-20">
       <View className="my-2">
         <Image source={image} />
       </View>
