@@ -107,11 +107,12 @@ const Explore = () => {
     if (previousPageData && !previousPageData.data.length) return null;
     return `/places?page=${pageIndex + 1}&limit=${PAGE_SIZE}&latLng=${
       location.latitude
-    },${location.longitude}&search=${search}&type=${category}`;
+    },${location.longitude}&name=${search}&type=${category}`;
   };
 
   const fetcher = async (url: string) => {
     const { data } = await axiosInstance.get<PaginatedResponse<Place[]>>(url);
+    console.log({ data: data });
     return data;
   };
 
@@ -127,12 +128,13 @@ const Explore = () => {
 
   const fetchPlaces = async () => {
     const { data } = await axiosInstance.get(
-      `/places/all?latLng=${location.latitude},${location.longitude}&search=${search}&type=${category}`
+      `/places/all?latLng=${location.latitude},${location.longitude}&name=${search}&type=${category}`
     );
+
     return data.places;
   };
 
-  const { data: allPlaces, mutate: mutatePlaces } = useSWR<
+  const { data: unpaginatedPlaces, mutate: mutatePlaces } = useSWR<
     {
       name: string;
       description: string;
@@ -157,6 +159,7 @@ const Explore = () => {
 
   const places = useMemo(() => {
     const allPlaces = data ? data.flatMap((page) => page.data) : [];
+
     return allPlaces.filter(
       (place) =>
         place.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -252,9 +255,9 @@ const Explore = () => {
             <View className="h-5 w-5 rounded-full border-4 border-white bg-blue-500 shadow" />
           </Marker>
         )}
-        {allPlaces &&
-          allPlaces.length > 0 &&
-          allPlaces.map((place) => (
+        {unpaginatedPlaces &&
+          unpaginatedPlaces.length > 0 &&
+          unpaginatedPlaces.map((place) => (
             <Marker
               key={place._id}
               coordinate={{

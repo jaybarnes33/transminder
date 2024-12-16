@@ -68,7 +68,7 @@ const OnboardingItem = ({
   title: string;
 }) => {
   return (
-    <View className=" items-center my-20">
+    <View className="flex-col items-center justify-between mt-4">
       <View className="my-2">
         <Image source={image} />
       </View>

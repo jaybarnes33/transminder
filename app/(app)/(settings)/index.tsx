@@ -91,7 +91,6 @@ const Profile = () => {
 
       <FlatList
         data={Object.keys(sections)}
-        scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <View className="gap-y-1 my-1" key={item}>
