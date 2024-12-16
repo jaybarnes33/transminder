@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { ChevronDown, Plus, Settings } from "lucide-react-native";
 
@@ -17,6 +11,7 @@ import EmptyState from "@/components/Health/Empty";
 import { Album, PaginatedResponse } from "@/types/global";
 import GallerySkeleton from "@/components/Gallery/Skeleton";
 import { format } from "date-fns";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AlbumCard = ({
   item,

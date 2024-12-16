@@ -12,10 +12,12 @@ const Search = ({
   search,
   placeholder = "Search ....",
   term,
+  clear,
 }: {
   placeholder?: string;
   search: (term: string) => void;
   term: string;
+  clear: () => void;
 }) => {
   return (
     <View className="my-4 bg-white shadow flex-row p-3 gap-x-2 items-center rounded-lg h-12 justify-between">
@@ -28,7 +30,7 @@ const Search = ({
         onBlur={Keyboard.dismiss}
       />
 
-      <TouchableOpacity onPress={() => search("")}>
+      <TouchableOpacity onPress={clear}>
         <Feather name="x" size={20} color="#aaa" />
       </TouchableOpacity>
     </View>

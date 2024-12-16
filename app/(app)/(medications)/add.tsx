@@ -164,7 +164,6 @@ const Add = () => {
 
       mutate("/medications");
       mutate("/intake/generate");
-      // mutate((key: string) => key.startsWith("/drug"));
 
       navigate("/(medications)");
     } catch (error) {

@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 
-import { format, formatDate } from "date-fns";
+import { format, formatDate, getMonth } from "date-fns";
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import { IEvent } from "@/types/global";
 import { useRouter } from "expo-router";
@@ -28,6 +28,8 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
     dismissModal();
   };
 
+  const newMonth = getMonth(date as string);
+  const newYear = getMonth(date as string);
   const [confirm, setConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const deleteEvent = async () => {
@@ -38,7 +40,8 @@ const EventDetail = ({ event, date }: { event: IEvent; date?: string }) => {
         setDeleting(true);
         await axiosInstance.delete(`/events/${event._id}`);
         await mutate((key: string) => key.startsWith("/event"));
-
+        mutate(`/events?date=${date}`);
+        mutate(`/events/month?month=${newMonth}&year=${newYear}`);
         dismissModal();
       } catch (error) {
         //@ts-ignore

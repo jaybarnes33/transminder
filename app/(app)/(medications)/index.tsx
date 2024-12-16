@@ -90,6 +90,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
     }
   };
 
+  const showEnd = !!drug.endDate || showDatePicker;
   return (
     <View className="h-full">
       <View className="relative z-0  h-full">
@@ -105,7 +106,7 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
       </View>
       <View className="absolute p-4 mt-[3vh] w-full">
         <View className="items-center gap-y-2">
-          <View className="bg-blue-500 w-12 h-12 rounded-full items-center justify-center">
+          <View className="bg-blue-500 w-12 h-12 rounded-full items-center  justify-center">
             <Icon name={`${drug.type}-active` as IconName} />
           </View>
           <Text className="font-fwbold text-xl text-dark">{drug.name}</Text>
@@ -118,19 +119,31 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
             )}
           </Text>
         </View>
-        <View className="mt-4 bg-white   p-4 gap-y-3 rounded-[20px] shadow">
-          <View className="flex-row justify-between border-b border-gray-300 pb-2">
+        <View className="mt-4 bg-white justify-center  p-4  rounded-[20px] shadow">
+          <View
+            className={clsx([
+              "flex-row justify-between my-1 border-gray-300  ",
+              !!drug.dosage && "border-b pb-2",
+            ])}
+          >
             <Text className="font-semibold text-gray-400">Form</Text>
             <Text className="font-semibold text-dark capitalize">
               {drug.type}
             </Text>
           </View>
-          <View className="flex-row justify-between border-b border-gray-300 pb-2">
-            <Text className="font-semibold text-gray-400">Dosage</Text>
-            <Text className="font-semibold text-dark capitalize">
-              {drug.dosage} {drug.unit}
-            </Text>
-          </View>
+          {!!drug.dosage && (
+            <View
+              className={clsx([
+                "flex-row justify-between my-1  border-gray-300 ",
+                !!drug.notes && "border-b pb-2",
+              ])}
+            >
+              <Text className="font-semibold text-gray-400">Dosage</Text>
+              <Text className="font-semibold text-dark capitalize">
+                {drug.dosage} {drug.unit}
+              </Text>
+            </View>
+          )}
           {!!drug.notes && (
             <View className="flex-col justify-between  border-gray-300  gap-y-1 pb-2">
               <Text className="font-semibold text-gray-400">
@@ -139,31 +152,45 @@ export const DrugDetail = ({ drug }: { drug: Drug }) => {
               <Text className="font-semibold text-dark ">{drug.notes}</Text>
             </View>
           )}
-          <View className="flex-row items-center justify-between  border-gray-300  gap-y-1 pb-2">
+          <View
+            className={clsx([
+              "flex-row items-center justify-between   border-gray-300   ",
+              showEnd && "border-t mt-2",
+            ])}
+          >
             {showDatePicker ? (
               <DatePicker
                 label="End Date"
+                secondary
                 value={new Date(date.length ? date : new Date()).toISOString()}
                 isEdit
                 handleChange={setDate}
               />
             ) : (
               drug.endDate && (
-                <Text className=" font-semibold">
-                  {drug.endDate ? format(drug.endDate, "PPP") : "N/A"}
-                </Text>
+                <TouchableOpacity
+                  onPress={() => setShowDatePicker(true)}
+                  className="pt-2 flex-row justify-between w-full"
+                >
+                  <Text className="font-semibold text-gray-400">End Date</Text>
+                  <Text className=" font-semibold">
+                    {drug.endDate ? format(drug.endDate, "PPP") : "N/A"}
+                  </Text>
+                </TouchableOpacity>
               )
             )}
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={endDrug}
-          className="items-center px-5 py-1 w-1/4 my-2 justify-center ml-auto bg-blue-500 flex-row rounded-full"
-        >
-          <Text className="text-base font-semibold text-white">End</Text>
-          {ending && <ActivityIndicator color={"white"} />}
-        </TouchableOpacity>
+        {(!drug.endDate || showDatePicker) && (
+          <TouchableOpacity
+            onPress={endDrug}
+            className="items-center px-5 py-1 w-1/4 my-2 justify-center ml-auto bg-blue-500 flex-row rounded-full"
+          >
+            <Text className="text-base font-semibold text-white">End</Text>
+            {ending && <ActivityIndicator color={"white"} />}
+          </TouchableOpacity>
+        )}
       </View>
       <View className="items-center absolute w-full gap-y-2 bottom-20">
         <TouchableOpacity

@@ -1,3 +1,10 @@
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import {
   View,
   Dimensions,
@@ -6,7 +13,6 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { useUser } from "@/context/Auth";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -22,19 +28,58 @@ import Message from "@/components/Core/Message";
 import { FlashList } from "@shopify/flash-list";
 import Emoji from "@/components/Core/Emoji";
 import clsx from "clsx";
+import useSWR from "swr";
 
 const PAGE_SIZE = 15;
 
 const categories = [
-  { name: "Support", color: "bg-blue-500" },
-  { name: "Healthcare", color: "bg-cyan-500" },
-  { name: "Social", color: "bg-red-500" },
-  { name: "Wellness", color: "bg-yellow-500" },
-  { name: "Shopping", color: "bg-purple-500" },
-  { name: "Housing", color: "bg-purple-500" },
-  { name: "Services", color: "bg-purple-500" },
-  { name: "Education", color: "bg-purple-500" },
+  { name: "saved", fore: "#000000", bg: "white" },
+  { name: "support", fore: "#24B2FF", bg: "white" },
+  { name: "healthcare", fore: "#4DCFFF", bg: "white" },
+  { name: "social", fore: "#F5673E", bg: "white" },
+  { name: "wellness", fore: "#F7CD1B", bg: "white" },
+  { name: "shopping", fore: "#B85ADF", bg: "white" },
+  { name: "housing", fore: "#F87171", bg: "white" },
+  { name: "services", fore: "#6B7280", bg: "white" },
+  { name: "education", fore: "#46C17E", bg: "white" },
 ];
+
+const CategoryButton = React.memo(
+  ({
+    item,
+    isSelected,
+    onPress,
+  }: {
+    item: (typeof categories)[number];
+    isSelected: boolean;
+    onPress: () => void;
+  }) => (
+    <TouchableOpacity
+      onPress={onPress}
+      className={clsx([
+        "px-3 py-2 flex-row gap-x-2 items-center  rounded shadow border mr-3",
+        isSelected ? "bg-rose-100 border-gray-300" : "bg-white border-gray-200",
+      ])}
+      style={{
+        transform: [{ scale: isSelected ? 1.05 : 1 }],
+      }}
+    >
+      <Emoji
+        name={item.name === "saved" ? "bookmark-active" : item.name}
+        fore={item.fore}
+        size="sm"
+      />
+      <Text
+        className={clsx([
+          "font-semibold capitalize",
+          isSelected ? "text-gray-900" : "text-gray-700",
+        ])}
+      >
+        {item.name}
+      </Text>
+    </TouchableOpacity>
+  )
+);
 
 const Explore = () => {
   const { hasMapsAccess } = useUser();
@@ -53,6 +98,8 @@ const Explore = () => {
   const { location } = useLocation();
 
   const [category, setCategory] = useState("");
+  const [search, setSearch] = useState("");
+
   const getKey = (
     pageIndex: number,
     previousPageData: PaginatedResponse<Place[]> | null
@@ -65,9 +112,9 @@ const Explore = () => {
 
   const fetcher = async (url: string) => {
     const { data } = await axiosInstance.get<PaginatedResponse<Place[]>>(url);
-    console.log({ data: JSON.stringify(data.data) });
     return data;
   };
+
   const { data, error, size, setSize, isLoading, mutate } = useSWRInfinite<
     PaginatedResponse<Place[]>
   >(getKey, fetcher);
@@ -75,10 +122,42 @@ const Explore = () => {
   useFocusEffect(
     useCallback(() => {
       mutate();
-    }, [])
+    }, [mutate])
   );
 
-  const [search, setSearch] = useState("");
+  const fetchPlaces = async () => {
+    const { data } = await axiosInstance.get(
+      `/places/all?latLng=${location.latitude},${location.longitude}&search=${search}&type=${category}`
+    );
+    return data.places;
+  };
+
+  const { data: allPlaces, mutate: mutatePlaces } = useSWR<
+    {
+      name: string;
+      description: string;
+      type: string;
+      _id: string;
+      location: { latitude: number; longitude: number };
+    }[]
+  >("/places/all", fetchPlaces);
+
+  useEffect(() => {
+    if (location && mapRef.current) {
+      mapRef.current.animateCamera({
+        center: location,
+        zoom: 10,
+      });
+    }
+  }, [location]);
+
+  useEffect(() => {
+    mutatePlaces();
+  }, [category, search, mutatePlaces]);
+
+  useEffect(() => {
+    console.log("Current category:", category);
+  }, [category]);
 
   const places = useMemo(() => {
     const allPlaces = data ? data.flatMap((page) => page.data) : [];
@@ -100,30 +179,37 @@ const Explore = () => {
       data[data.length - 1]?.pagination.currentPage ===
         data[data.length - 1]?.pagination.totalPages);
 
-  const handleOnLocationPress = (item: Place) => {
-    navigate({
-      pathname: "/(app)/place-details",
-      params: { id: item._id },
-    });
-  };
+  const handleOnLocationPress = useCallback(
+    (item: Place) => {
+      navigate({
+        pathname: "/(app)/place-details",
+        params: { id: item._id },
+      });
+    },
+    [navigate]
+  );
 
-  const handleTouchStart = () => {
+  const handleTouchStart = useCallback(() => {
     poiListModalRef.current?.collapse();
-  };
+  }, []);
 
-  const handleMapPress = () => {
+  const handleMapPress = useCallback(() => {
     Keyboard.dismiss();
-  };
+  }, []);
 
-  const handleCategoryPress = (value: string) => {
-    setCategory(value);
-  };
+  const handleCategoryPress = useCallback((value: string) => {
+    setCategory((prevCategory) => {
+      const newCategory = prevCategory === value ? "" : value;
+      console.log("Category changed to:", newCategory);
+      return newCategory;
+    });
+  }, []);
 
   const loadMore = useCallback(() => {
     if (!isReachingEnd && !isLoadingMore) {
-      setSize(size + 1);
+      setSize((prevSize) => prevSize + 1);
     }
-  }, [isReachingEnd, isLoadingMore, setSize, size]);
+  }, [isReachingEnd, isLoadingMore, setSize]);
 
   if (error) {
     return <Message isError message={error.message} />;
@@ -131,23 +217,26 @@ const Explore = () => {
 
   return (
     <View className="h-full">
-      <View className="absolute px-4 top-20 left-0  z-[9999] w-full ">
-        <Search placeholder="Explore places" search={setSearch} term={search} />
+      <View className="absolute px-4 top-20 left-0 z-[9999] w-full">
+        <Search
+          clear={() => setSearch("")}
+          placeholder="Explore places"
+          search={setSearch}
+          term={search}
+        />
         <FlashList
           className="h-12 -mt-2"
           data={categories}
           horizontal
+          keyExtractor={(item) => item.name}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => handleCategoryPress(item.name.toLowerCase())}
-              className={clsx([
-                "px-3 py-2 flex-row gap-x-2 items-center rounded shadow border border-gray-200 mr-3 bg-white",
-              ])}
-            >
-              <Emoji name={item.name.toLowerCase()} />
-              <Text className={clsx(["font-semibold"])}>{item.name}</Text>
-            </TouchableOpacity>
+            <CategoryButton
+              item={item}
+              isSelected={category === item.name}
+              onPress={() => handleCategoryPress(item.name)}
+            />
           )}
+          extraData={category}
         />
       </View>
       <MapView
@@ -165,11 +254,12 @@ const Explore = () => {
       >
         {location && (
           <Marker coordinate={location}>
-            <View className="h-5 w-5 rounded-full  border-4 border-white bg-blue-500 shadow"></View>
+            <View className="h-5 w-5 rounded-full border-4 border-white bg-blue-500 shadow" />
           </Marker>
         )}
-        {places?.length > 0 &&
-          places.map((place) => (
+        {allPlaces &&
+          allPlaces.length > 0 &&
+          allPlaces.map((place) => (
             <Marker
               key={place._id}
               coordinate={{
@@ -177,7 +267,27 @@ const Explore = () => {
                 longitude: place.location.longitude,
               }}
               title={place.name}
-            />
+            >
+              <View
+                style={{
+                  backgroundColor: categories.find(
+                    (item) => item.name === place.type
+                  )?.fore,
+                  borderRadius: 999,
+                  padding: 4,
+                  borderWidth: 2,
+                  borderColor: categories.find(
+                    (item) => item.name === place.type
+                  )?.bg,
+                }}
+              >
+                <Emoji
+                  name={place.type}
+                  fore={categories.find((item) => item.name === place.type)?.bg}
+                  bg={categories.find((item) => item.name === place.type)?.fore}
+                />
+              </View>
+            </Marker>
           ))}
       </MapView>
 
@@ -193,7 +303,7 @@ const Explore = () => {
           isLoadingMore={isLoadingMore || isLoadingInitialData}
         />
       ) : (
-        <View className="absolute bg-white rounded  bottom-10 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <View className="absolute bg-white rounded bottom-10 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <Text className="text-lg text-neutral-600 font-semibold text-center">
             No places found
           </Text>

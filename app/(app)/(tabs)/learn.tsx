@@ -46,10 +46,16 @@ const Learn = () => {
 
   const handleSearch = (s: string, collection?: string) => {
     setSearch(s);
+
     navigate({
       pathname: "/(app)/learnsearch",
       params: { search: s, collection },
     });
+    clearSearch();
+  };
+
+  const clearSearch = () => {
+    setSearch("");
   };
 
   const handleCategorySelect = (categoryId: string) => {
@@ -68,7 +74,7 @@ const Learn = () => {
       </View>
 
       {data?.length! > 0 ? (
-        <Search search={handleSearch} term={search} />
+        <Search search={handleSearch} term={search} clear={clearSearch} />
       ) : (
         <EmptyState
           description="No resources available now, please check later"

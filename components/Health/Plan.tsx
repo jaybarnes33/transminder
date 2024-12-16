@@ -19,7 +19,6 @@ import { differenceInMinutes, formatRelative } from "date-fns";
 import { getDrugStatus, toSentenceCase } from "@/utils";
 import UpcomingDrugs from "./Upcoming";
 import useSWR, { mutate } from "swr";
-import EmptyIntake from "./Empty/EmptyIntake";
 
 export const Item = ({
   item,
@@ -87,11 +86,11 @@ export const Item = ({
               "bg-blue-100",
             ])}
           >
-            <Icon name={item.drug?.type as IconName} />
+            <Icon name={item.type as IconName} />
           </View>
           <View className="flex-1">
             <Text className="font-main text-neutral-400 text-sm font-semibold capitalize">
-              {item.drug?.type}
+              {item.type}
             </Text>
             <Text className="font-main text-base font-semibold">
               {item.drugName}

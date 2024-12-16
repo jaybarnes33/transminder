@@ -69,7 +69,8 @@ export interface Drug extends DrugPayload {
 
 export interface Intake {
   _id: string;
-  drug: Drug;
+  drug: Drug; // Reference to the Drug model
+  type: string;
   drugName: string;
   dosage: string;
   time: string; // e.g., "14:00:00"
