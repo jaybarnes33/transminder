@@ -155,10 +155,6 @@ const Explore = () => {
     mutatePlaces();
   }, [category, search, mutatePlaces]);
 
-  useEffect(() => {
-    console.log("Current category:", category);
-  }, [category]);
-
   const places = useMemo(() => {
     const allPlaces = data ? data.flatMap((page) => page.data) : [];
     return allPlaces.filter(
@@ -200,7 +196,6 @@ const Explore = () => {
   const handleCategoryPress = useCallback((value: string) => {
     setCategory((prevCategory) => {
       const newCategory = prevCategory === value ? "" : value;
-      console.log("Category changed to:", newCategory);
       return newCategory;
     });
   }, []);
