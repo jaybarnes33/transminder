@@ -16,6 +16,7 @@ import { formatRelative } from "date-fns";
 
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import { DrugDetail } from "@/app/(app)/(medications)";
+import { capitalize } from "@/utils";
 
 const Item = ({ drug }: { drug: Drug }) => {
   const { showModal } = useBottomSheetModal();
@@ -51,7 +52,9 @@ const Item = ({ drug }: { drug: Drug }) => {
         <View>
           <Text className="font-fwbold text-blue-500 text-sm ">
             <Text>
-              {formatRelative(new Date(drug?.nextIntakeDate!), new Date())}
+              {capitalize(
+                formatRelative(new Date(drug?.nextIntakeDate!), new Date())
+              )}
             </Text>
           </Text>
           {!!drug.notes && (
@@ -68,10 +71,8 @@ const Item = ({ drug }: { drug: Drug }) => {
   );
 };
 const UpcomingDrugs = () => {
-  const { navigate } = useRouter();
-
   const fetchDrugs = async () => {
-    const { data } = await axiosInstance.get("/drugs/upcoming/?size=5");
+    const { data } = await axiosInstance.get("/drugs/upcoming");
 
     return data;
   };
@@ -83,14 +84,12 @@ const UpcomingDrugs = () => {
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          drugs.length > 0 && (
-            <FlatList
-              data={drugs}
-              ListEmptyComponent={<EmptyPlan />}
-              keyExtractor={(item) => item._id}
-              renderItem={({ item }) => <Item drug={{ ...item }} />}
-            />
-          )
+          <FlatList
+            data={drugs}
+            ListEmptyComponent={<EmptyPlan />}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => <Item drug={{ ...item }} />}
+          />
         )}
       </View>
     </View>

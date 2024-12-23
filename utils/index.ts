@@ -191,11 +191,10 @@ export const getDrugStatus = (
   // Parse the time string (e.g., "14:30" -> "2:30 PM") and compare it with the current time
   const currentTime = new Date();
 
-  const splitTime = time.split(":").map((i) => Number.parseInt(i));
-  const drugTime = new Date().setHours(splitTime[0], splitTime[1]); // Assumes the time format is 24-hour (e.g., "14:30")
+  // Assumes the time format is 24-hour (e.g., "14:30")
 
   // Calculate the time difference in minutes between the current time and the drug time
-  const timeDifference = differenceInMinutes(currentTime, drugTime);
+  const timeDifference = differenceInMinutes(currentTime, new Date(time));
 
   // If the drug has already been marked as taken or skipped, return the current status
   if (

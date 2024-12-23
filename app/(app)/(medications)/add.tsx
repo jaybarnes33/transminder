@@ -162,9 +162,11 @@ const Add = () => {
             schedule: getSchedule(),
           });
 
-      mutate("/medications");
-      mutate("/intake/generate");
-
+      await Promise.all([
+        mutate("/medications"),
+        mutate("/intake/generate"),
+        mutate("/drugs/upcoming"),
+      ]);
       navigate("/(medications)");
     } catch (error) {
       console.error(error);

@@ -61,9 +61,6 @@ export const Item = ({
     setLoading((prev) => ({ ...prev, [action]: false }));
   };
 
-  const splitTime = item.time.split(":").map((t) => Number.parseInt(t));
-  const time = new Date(item.createdAt);
-  time.setHours(splitTime[0], splitTime[1]);
   const status = getDrugStatus(item.status, item.time);
   const [allowChange, setAllowChange] = useState(false);
 
@@ -104,7 +101,9 @@ export const Item = ({
               ])}
             >
               {toSentenceCase(
-                formatRelative(time, new Date(), { weekStartsOn: 1 })
+                formatRelative(new Date(item.time), new Date(), {
+                  weekStartsOn: 1,
+                })
               )}
             </Text>
             {!!item.drug?.notes && (
@@ -195,7 +194,6 @@ const Plan = () => {
 
   const {
     data,
-    error,
     size,
     setSize,
     isValidating,
