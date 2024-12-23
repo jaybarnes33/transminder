@@ -82,7 +82,11 @@ const MoodInsight = ({
         label="Log your moods"
         heading="Well-being"
         showEmojis
-        description="Loading your mood insights..."
+        description={
+          isLoading
+            ? "Loading your mood insights..."
+            : "No moods logged for this period"
+        }
       />
     );
   }
