@@ -197,6 +197,7 @@ const Plan = () => {
     size,
     setSize,
     isValidating,
+    isLoading,
     mutate: mutateDrugs,
   } = useSWRInfinite(fetchKey, fetchDrugs);
 
@@ -248,20 +249,23 @@ const Plan = () => {
         />
       )}
 
-      <FlatList
-        data={data ? data.flatMap((page) => page.data.today) : []}
-        ListEmptyComponent={EmptyPlan}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <Item item={{ ...item }} mutate={mutateDrugs} />
-        )}
-        onEndReached={hasMorePages ? loadMore : null}
-        onEndReachedThreshold={0.5} // Load more when reaching 50% of the list
-        ListFooterComponent={
-          isValidating && hasMorePages ? <ActivityIndicator /> : null
-        }
-      />
-
+      {!isLoading || !isValidating ? (
+        <FlatList
+          data={data ? data.flatMap((page) => page.data.today) : []}
+          ListEmptyComponent={EmptyPlan}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <Item item={{ ...item }} mutate={mutateDrugs} />
+          )}
+          onEndReached={hasMorePages ? loadMore : null}
+          onEndReachedThreshold={0.5} // Load more when reaching 50% of the list
+          ListFooterComponent={
+            isValidating && hasMorePages ? <ActivityIndicator /> : null
+          }
+        />
+      ) : (
+        <ActivityIndicator />
+      )}
       <UpcomingDrugs />
     </View>
   );

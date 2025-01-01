@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { MoreVertical } from "lucide-react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -48,6 +49,8 @@ export default function AlbumDetail() {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
   const recordingRef = useRef<Audio.Recording | null>(null);
+  const [selectedItems, setSelectedItems] = useState<UploadableFile[]>([]);
+  const [uploadingItems, setUploadingItems] = useState<string[]>([]);
 
   const {
     data: album,
@@ -94,11 +97,11 @@ export default function AlbumDetail() {
       try {
         const photo = await cameraRef.current.takePictureAsync();
         setIsCameraOpen(false);
-        const res = await fetch(photo!.uri);
-        const blob = await res.blob();
-        const file = new File([blob], "photo");
-
-        photo && (await uploadMedia(file));
+        addSelectedItem({
+          uri: photo?.uri!,
+          type: "image/jpeg",
+          name: "photo.jpg",
+        });
       } catch (error) {
         console.error("Error capturing photo:", error);
         alert("Failed to capture photo. Please try again.");
@@ -136,10 +139,11 @@ export default function AlbumDetail() {
         const uri = recordingRef.current.getURI();
         setIsRecording(false);
         if (uri) {
-          const res = await fetch(uri);
-          const blob = await res.blob();
-          const file = new File([blob], "audio");
-          await uploadMedia(file);
+          addSelectedItem({
+            uri,
+            type: "audio/mp4",
+            name: "audio.m4a",
+          });
         }
       } catch (err) {
         console.error("Failed to stop recording", err);
@@ -167,10 +171,11 @@ export default function AlbumDetail() {
         setIsCameraOpen(false);
         const video = await videoRecordPromise;
         if (video?.uri) {
-          const res = await fetch(video!.uri);
-          const blob = await res.blob();
-          const file = new File([blob], "video");
-          await uploadMedia(file);
+          addSelectedItem({
+            uri: video.uri,
+            type: "video/mp4",
+            name: "video.mp4",
+          });
         }
       } catch (error) {
         console.error("Error recording video:", error);
@@ -188,14 +193,18 @@ export default function AlbumDetail() {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
+        allowsMultipleSelection: true,
         quality: 1,
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        const asset = result.assets[0];
-        console.log({ result: JSON.stringify(result) });
+        result.assets.forEach((asset) => {
+          addSelectedItem({
+            uri: asset.uri,
+            type: asset.type === "image" ? "image/jpeg" : "video/mp4",
+            name: asset.fileName || "media",
+          });
+        });
       }
     } catch (error) {
       console.error("Error picking from gallery:", error);
@@ -209,9 +218,12 @@ export default function AlbumDetail() {
       return;
     }
     try {
-      const result = await DocumentPicker.getDocumentAsync({});
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "*/*",
+        multiple: true,
+      });
       if (result.output?.length) {
-        await uploadMedia(result.output[0]);
+        result.output.forEach((file) => addSelectedItem(file));
       }
     } catch (error) {
       console.error("Error picking file:", error);
@@ -219,26 +231,35 @@ export default function AlbumDetail() {
     }
   };
 
-  const uploadMedia = async (file: File) => {
-    try {
-      const formData = new FormData();
+  const addSelectedItem = (item: UploadableFile) => {
+    setSelectedItems((prev) => [...prev, item]);
+  };
 
-      formData.append("file", file);
-      formData.append("albumId", id);
+  const uploadMedia = async () => {
+    for (const item of selectedItems) {
+      setUploadingItems((prev) => [...prev, item.uri]);
+      try {
+        const formData = new FormData();
+        formData.append("file", item);
+        formData.append("albumId", id);
 
-      const response = await axiosInstance.post("/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+        const response = await axiosInstance.post("/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-      if (response.data.success) {
-        mutate();
+        if (response.data.success) {
+          mutate();
+        }
+      } catch (error) {
+        console.error("Error uploading media:", error);
+        alert(`Failed to upload ${item.name}. Please try again.`);
+      } finally {
+        setUploadingItems((prev) => prev.filter((uri) => uri !== item.uri));
       }
-    } catch (error) {
-      console.error("Error uploading media:", error);
-      alert("Failed to upload media. Please try again.");
     }
+    setSelectedItems([]);
   };
 
   if (isLoading) return <AlbumDetailSkeleton />;
@@ -246,40 +267,40 @@ export default function AlbumDetail() {
   if (!album) return null;
 
   const { name, media, createdAt } = album;
-  console.log({ createdAt });
 
-  const renderMediaItem = (url: string) => {
+  const renderMediaItem = (url: string, isUploading: boolean = false) => {
     const fileExtension = url.split(".").pop()?.toLowerCase();
     const isAudio = ["mp3", "wav", "ogg"].includes(fileExtension || "");
     const isVideo = ["mp4", "mov", "avi"].includes(fileExtension || "");
 
-    if (isAudio) {
-      return (
-        <View className="bg-gray-100 rounded-xl aspect-square items-center justify-center">
-          <Emoji name="audio" />
-        </View>
-      );
-    }
-
-    if (isVideo) {
-      return (
-        <View className="relative">
+    return (
+      <View className="relative w-1/3 p-1 h-40">
+        {isAudio ? (
+          <View className="bg-gray-100 rounded-xl  items-center justify-center">
+            <Emoji name="audio" />
+          </View>
+        ) : isVideo ? (
+          <View className="relative">
+            <Image
+              source={{ uri: url }}
+              className="w-full h-full rounded-xl bg-gray-100"
+            />
+            <View className="absolute bottom-2 right-2 bg-black/50 px-1.5 py-0.5 rounded">
+              <Text className="text-white text-xs">Video</Text>
+            </View>
+          </View>
+        ) : (
           <Image
             source={{ uri: url }}
-            className="w-full aspect-square rounded-xl bg-gray-100"
+            className="w-full h-full rounded-xl bg-gray-100"
           />
-          <View className="absolute bottom-2 right-2 bg-black/50 px-1.5 py-0.5 rounded">
-            <Text className="text-white text-xs">Video</Text>
+        )}
+        {isUploading && (
+          <View className="absolute inset-0 bg-black/50 rounded-xl items-center justify-center">
+            <ActivityIndicator size="large" color="#ffffff" />
           </View>
-        </View>
-      );
-    }
-
-    return (
-      <Image
-        source={{ uri: url }}
-        className="w-full aspect-square rounded-xl bg-gray-100"
-      />
+        )}
+      </View>
     );
   };
 
@@ -306,10 +327,10 @@ export default function AlbumDetail() {
         </View>
       ) : (
         <>
-          <View className="px-4 py-2 flex-row items-center  justify-between">
+          <View className="px-4 py-2 flex-row items-center justify-between">
             <Back />
             <Text className="text-2xl font-fwbold">{name}</Text>
-            <View className="flex-row justify-between  gap-x-4">
+            <View className="flex-row justify-between gap-x-4">
               <TouchableOpacity>
                 <Text className="text-gray-600 font-main">Select</Text>
               </TouchableOpacity>
@@ -319,7 +340,7 @@ export default function AlbumDetail() {
             </View>
           </View>
 
-          <Text className="px-4  font-semibold text-gray-500 mb-4">
+          <Text className="px-4 font-semibold text-gray-500 mb-4">
             {media.length} items • Created on{" "}
             {new Date(createdAt).toLocaleDateString()}
           </Text>
@@ -329,16 +350,33 @@ export default function AlbumDetail() {
               {media.map((url, index) => (
                 <TouchableOpacity
                   key={index}
-                  className="w-1/3 p-2"
                   onPress={() => console.log("Open media", url)}
                 >
                   {renderMediaItem(url)}
                 </TouchableOpacity>
               ))}
-
+              {selectedItems.map((item, index) => (
+                <Fragment key={index}>
+                  {renderMediaItem(item.uri, uploadingItems.includes(item.uri))}
+                </Fragment>
+              ))}
               <MediaAddDropdown onSelect={handleMediaOption} />
             </View>
           </ScrollView>
+
+          {selectedItems.length > 0 && (
+            <View className="absolute bottom-10 left-0 right-0 items-center">
+              <TouchableOpacity
+                onPress={uploadMedia}
+                className="bg-blue-500 rounded-full p-4"
+              >
+                <Text className="text-white font-bold">
+                  Upload {selectedItems.length} item
+                  {selectedItems.length > 1 ? "s" : ""}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
           {isRecording && (
             <View className="absolute bottom-10 left-0 right-0 items-center">

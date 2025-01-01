@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { Menu, IconButton, List, PaperProvider } from "react-native-paper";
+import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { Menu, List, PaperProvider } from "react-native-paper";
 
 import {
   Camera,
@@ -53,45 +53,36 @@ export default function MediaAddDropdown({ onSelect }: MediaAddDropdownProps) {
     <PaperProvider>
       <View style={styles.container}>
         <Menu
-          contentStyle={{
-            backgroundColor: "white",
-            borderRadius: 16,
-            padding: 5,
-            width: 270,
-          }}
-          anchorPosition="top"
           visible={menuVisible}
           onDismiss={closeMenu}
           anchor={
-            <TouchableOpacity className="w-1/3 p-2" onPress={openMenu}>
-              <View className="bg-purple-50 rounded-xl aspect-square items-center justify-center">
-                <Plus size={24} className="text-purple-500" />
+            <TouchableOpacity
+              className="  h-40  bg-purple-200 justify-center rounded-xl items-center"
+              onPress={openMenu}
+              style={styles.button}
+            >
+              <View>
+                <Plus size={50} color="#9333EA" />
               </View>
             </TouchableOpacity>
           }
+          contentStyle={styles.menuContent}
+          style={styles.menu}
         >
-          {/* Dropdown Items */}
           {options.map((option, i) => (
             <List.Item
-              borderless={false}
-              style={
-                i !== options.length - 1 && {
-                  borderBottomColor: "#E5E7EB",
-                  borderBottomWidth: 1,
-                }
-              }
               key={option.value}
               title={option.label}
-              titleStyle={{
-                color: "#4B5563",
-                fontFamily: "Quicksand",
-                fontWeight: "600",
-              }}
-              right={() => <View style={styles.icon}>{option.icon}</View>}
+              titleStyle={styles.menuItemTitle}
+              style={[
+                styles.menuItem,
+                i !== options.length - 1 && styles.menuItemBorder,
+              ]}
               onPress={() => {
                 onSelect(option.value);
                 closeMenu();
               }}
+              right={() => <View style={styles.icon}>{option.icon}</View>}
             />
           ))}
         </Menu>
@@ -103,10 +94,36 @@ export default function MediaAddDropdown({ onSelect }: MediaAddDropdownProps) {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
+    width: 100,
+    height: 100,
   },
-  addButton: {
-    backgroundColor: "#E0E0E0",
-    alignSelf: "center",
+  button: {
+    width: Dimensions.get("window").width / 3 - 10,
+
+    margin: 5,
+  },
+  menu: {
+    position: "absolute",
+    top: 110, // Adjust this value to position the menu correctly
+    left: 0,
+  },
+  menuContent: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 5,
+    width: 270,
+  },
+  menuItem: {
+    paddingVertical: 12,
+  },
+  menuItemBorder: {
+    borderBottomColor: "#E5E7EB",
+    borderBottomWidth: 1,
+  },
+  menuItemTitle: {
+    color: "#4B5563",
+    fontFamily: "Quicksand",
+    fontWeight: "600",
   },
   icon: {
     justifyContent: "center",
