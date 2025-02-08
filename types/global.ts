@@ -209,7 +209,7 @@ export interface Place {
 export interface Album {
   _id: string;
   name: string;
-  media: string[];
+  media: { file: string; date: string }[];
   createdAt: string;
   updatedAt: string;
 }

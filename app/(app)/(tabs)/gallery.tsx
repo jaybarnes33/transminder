@@ -12,13 +12,14 @@ import { Album, PaginatedResponse } from "@/types/global";
 import GallerySkeleton from "@/components/Gallery/Skeleton";
 import { format } from "date-fns";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getImage } from "@/utils";
 
 const AlbumCard = ({
   item,
 }: {
   item: {
     name: string;
-    media: string[];
+    media: { file: string; date: string }[];
     updatedAt: string;
     createdAt: string;
     _id: string;
@@ -38,21 +39,24 @@ const AlbumCard = ({
       }
       className="bg-white rounded-3xl p-4 mb-4 shadow-sm"
     >
-      <View className="flex-row flex-wrap gap-1 mb-3">
+      <View className="flex-row flex-wrap gap-1 gap-x-2 mb-3">
         {item.media.length > 0 ? (
           <>
             <Image
-              source={{ uri: item.media[0] }}
-              className="w-32 h-32 rounded-lg"
+              source={{ uri: getImage(item.media[0]?.file) }}
+              className=" w-40 h-40 rounded-lg"
+              resizeMode="cover"
             />
-            <View className="flex-1 flex-row flex-wrap gap-1">
-              {item.media.slice(1, 5).map((image, index) => (
+            <View className="flex-1 gap-1">
+              {item.media.slice(1, 4).map((image, index) => (
                 <View key={index} className="relative w-[72px] h-[72px]">
                   <Image
-                    source={{ uri: image }}
+                    source={{ uri: getImage(image?.file) }}
                     className="w-full h-full rounded-lg"
                   />
-                  {item.media.find((name) => name.includes("mp4")) &&
+                  {item.media.find((mediaItem) =>
+                    mediaItem?.file.includes("mp4")
+                  ) &&
                     index === 2 && (
                       <View className="absolute bottom-1 right-1 bg-black/75 px-1.5 py-0.5 rounded-full">
                         <Text className="text-white font-semibold text-xs">

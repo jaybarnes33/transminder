@@ -10,9 +10,7 @@ import {
   Keyboard,
 } from "react-native";
 import React, { ReactNode, useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Drug, DrugPayload, IconName } from "@/types/global";
-import * as Notification from "expo-notifications";
 import Input from "@/components/Core/Input";
 import clsx from "clsx";
 import Back from "@/components/Core/Back";

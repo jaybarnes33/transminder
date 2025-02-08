@@ -50,44 +50,42 @@ export default function MediaAddDropdown({ onSelect }: MediaAddDropdownProps) {
   ];
 
   return (
-    <PaperProvider>
-      <View style={styles.container}>
-        <Menu
-          visible={menuVisible}
-          onDismiss={closeMenu}
-          anchor={
-            <TouchableOpacity
-              className="  h-40  bg-purple-200 justify-center rounded-xl items-center"
-              onPress={openMenu}
-              style={styles.button}
-            >
-              <View>
-                <Plus size={50} color="#9333EA" />
-              </View>
-            </TouchableOpacity>
-          }
-          contentStyle={styles.menuContent}
-          style={styles.menu}
-        >
-          {options.map((option, i) => (
-            <List.Item
-              key={option.value}
-              title={option.label}
-              titleStyle={styles.menuItemTitle}
-              style={[
-                styles.menuItem,
-                i !== options.length - 1 && styles.menuItemBorder,
-              ]}
-              onPress={() => {
-                onSelect(option.value);
-                closeMenu();
-              }}
-              right={() => <View style={styles.icon}>{option.icon}</View>}
-            />
-          ))}
-        </Menu>
-      </View>
-    </PaperProvider>
+    <View style={styles.container}>
+      <Menu
+        visible={menuVisible}
+        onDismiss={closeMenu}
+        anchor={
+          <TouchableOpacity
+            className="h-40   bg-purple-200 justify-center rounded-xl items-center"
+            onPress={openMenu}
+            style={styles.button}
+          >
+            <View>
+              <Plus size={50} color="#9333EA" />
+            </View>
+          </TouchableOpacity>
+        }
+        contentStyle={styles.menuContent}
+        // style={styles.menu}
+      >
+        {options.map((option, i) => (
+          <List.Item
+            key={option.value}
+            title={option.label}
+            titleStyle={styles.menuItemTitle}
+            style={[
+              styles.menuItem,
+              i !== options.length - 1 && styles.menuItemBorder,
+            ]}
+            onPress={() => {
+              onSelect(option.value);
+              closeMenu();
+            }}
+            right={() => <View style={styles.icon}>{option.icon}</View>}
+          />
+        ))}
+      </Menu>
+    </View>
   );
 }
 
@@ -99,14 +97,8 @@ const styles = StyleSheet.create({
   },
   button: {
     width: Dimensions.get("window").width / 3 - 10,
+  },
 
-    margin: 5,
-  },
-  menu: {
-    position: "absolute",
-    top: 110, // Adjust this value to position the menu correctly
-    left: 0,
-  },
   menuContent: {
     backgroundColor: "white",
     borderRadius: 16,

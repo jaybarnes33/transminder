@@ -146,7 +146,7 @@ const ReminderSetup = ({
   }) => void;
 }) => {
   const [reminder, setReminder] = useState({
-    date: "",
+    date: new Date().toISOString(),
     time: new Date().toISOString(),
     repeat: "weekly",
     repeatFrequency: 1,

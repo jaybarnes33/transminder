@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from "react";
+import { useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,14 +9,21 @@ import {
   StyleSheet,
   Platform,
   ActivityIndicator,
+  Share,
 } from "react-native";
-import { MoreVertical } from "lucide-react-native";
+import { mutate as mutateSWR } from "swr";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import useSWR from "swr";
 import * as ImagePicker from "expo-image-picker";
 import { Audio } from "expo-av";
+import {
+  Modal,
+  Button,
+  Portal,
+  Provider as PaperProvider,
+} from "react-native-paper";
 
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { CameraView, type CameraType, useCameraPermissions } from "expo-camera";
 import * as DocumentPicker from "expo-document-picker";
 import axiosInstance from "@/lib/axios";
 import AlbumDetailSkeleton from "@/components/Gallery/DetailSkeleton";
@@ -24,11 +31,15 @@ import MediaAddDropdown from "@/components/Gallery/MediaAddDropdown";
 import Emoji from "@/components/Core/Emoji";
 import Back from "@/components/Core/Back";
 import AlbumOptionsDropdown from "@/components/Gallery/AlbumOptions";
+import { getImage } from "@/utils";
+import { useBottomSheetModal } from "@/context/BottomSheet";
+import RenameAlbum from "@/components/Gallery/RenameAlbum";
+import MediaViewer from "@/components/Gallery/MediaViewer";
 
 interface Album {
   _id: string;
   name: string;
-  media: string[];
+  media: { file: string; date: string }[];
   createdAt: string;
   updatedAt: string;
 }
@@ -51,13 +62,28 @@ export default function AlbumDetail() {
   const recordingRef = useRef<Audio.Recording | null>(null);
   const [selectedItems, setSelectedItems] = useState<UploadableFile[]>([]);
   const [uploadingItems, setUploadingItems] = useState<string[]>([]);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(
+    null
+  );
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [isRecordingVideo, setIsRecordingVideo] = useState(false);
 
+  const [showDeleteMediaConfirmation, setShowDeleteMediaConfirmation] =
+    useState(false);
+  const [mediaToDeleteIndex, setMediaToDeleteIndex] = useState<number | null>(
+    null
+  );
+
+  const { navigate } = useRouter();
   const {
     data: album,
     error,
     isLoading,
     mutate,
   } = useSWR<Album>(id ? `/albums/${id}` : null, fetcher);
+
+  const { showModal } = useBottomSheetModal();
 
   const handleMediaOption = async (option: string) => {
     switch (option) {
@@ -75,6 +101,47 @@ export default function AlbumDetail() {
         break;
       case "file":
         await pickFile();
+        break;
+    }
+  };
+
+  const renameAlbum = async () => {
+    showModal(<RenameAlbum name={album?.name!} id={id} />);
+  };
+
+  const deleteAlbum = async () => {
+    console.log("Delete attempt", { showConfirmDelete });
+
+    if (!showConfirmDelete) {
+      setShowConfirmDelete(true);
+      return;
+    }
+
+    try {
+      setLoadingDelete(true);
+      await axiosInstance.delete(`/albums/${id}`);
+      await mutateSWR("/albums");
+      navigate("/gallery");
+    } catch (error) {
+      console.error("Error deleting album:", error);
+      alert("Failed to delete album. Please try again.");
+    } finally {
+      setLoadingDelete(false);
+      setShowConfirmDelete(false);
+    }
+  };
+
+  const handleAlbumOption = (option: string) => {
+    console.log("Album option selected:", option);
+    switch (option) {
+      case "rename":
+        renameAlbum();
+        break;
+      case "delete":
+        deleteAlbum();
+        break;
+      default:
+        handleMediaOption(option);
         break;
     }
   };
@@ -165,11 +232,12 @@ export default function AlbumDetail() {
   };
 
   const handleVideoCapture = async () => {
-    if (cameraRef.current) {
+    if (!cameraRef.current) return;
+
+    if (!isRecordingVideo) {
       try {
-        const videoRecordPromise = cameraRef.current.recordAsync();
-        setIsCameraOpen(false);
-        const video = await videoRecordPromise;
+        setIsRecordingVideo(true);
+        const video = await cameraRef.current.recordAsync();
         if (video?.uri) {
           addSelectedItem({
             uri: video.uri,
@@ -180,6 +248,15 @@ export default function AlbumDetail() {
       } catch (error) {
         console.error("Error recording video:", error);
         alert("Failed to record video. Please try again.");
+      }
+    } else {
+      try {
+        await cameraRef.current.stopRecording();
+        setIsRecordingVideo(false);
+        setIsCameraOpen(false);
+      } catch (error) {
+        console.error("Error stopping video recording:", error);
+        alert("Failed to stop recording. Please try again.");
       }
     }
   };
@@ -223,7 +300,9 @@ export default function AlbumDetail() {
         multiple: true,
       });
       if (result.output?.length) {
-        result.output.forEach((file) => addSelectedItem(file));
+        Array.from(result.output).forEach((file) =>
+          addSelectedItem(file as File & { uri: string })
+        );
       }
     } catch (error) {
       console.error("Error picking file:", error);
@@ -236,31 +315,127 @@ export default function AlbumDetail() {
   };
 
   const uploadMedia = async () => {
-    for (const item of selectedItems) {
-      setUploadingItems((prev) => [...prev, item.uri]);
-      try {
-        const formData = new FormData();
-        formData.append("file", item);
-        formData.append("albumId", id);
+    try {
+      const formData = new FormData();
 
-        const response = await axiosInstance.post("/upload", formData, {
+      selectedItems.forEach((item, index) => {
+        const fileExtension = item.uri.split(".").pop();
+        const fileName = `file${index}.${fileExtension}`;
+
+        //@ts-ignore
+        formData.append("files", {
+          uri: item.uri,
+          type: item.type,
+          name: fileName,
+        });
+      });
+
+      setUploadingItems(selectedItems.map((item) => item.uri));
+      console.log("Uploading to server...");
+
+      const response = await axiosInstance.post(
+        `/upload?album=${id}`,
+        formData,
+        {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          transformRequest: (data) => data,
+        }
+      );
+
+      if (response.data.files && Array.isArray(response.data.files)) {
+        await axiosInstance.put(`/albums/${id}`, {
+          media: [
+            ...album?.media!,
+            ...response.data.files.map((file: string) => ({
+              file: file,
+              date: new Date().toISOString(),
+            })),
+          ],
         });
 
-        if (response.data.success) {
-          mutate();
-        }
-      } catch (error) {
-        console.error("Error uploading media:", error);
-        alert(`Failed to upload ${item.name}. Please try again.`);
-      } finally {
-        setUploadingItems((prev) => prev.filter((uri) => uri !== item.uri));
+        await mutate();
+
+        setSelectedItems([]);
       }
+    } catch (error) {
+      console.error("Error uploading media:", error);
+      alert("Failed to upload media. Please try again.");
+    } finally {
+      setUploadingItems([]);
     }
-    setSelectedItems([]);
   };
+
+  const handleOpenMedia = (index: number) => {
+    setSelectedMediaIndex(index);
+  };
+
+  const handleCloseMedia = () => {
+    setSelectedMediaIndex(null);
+  };
+
+  const handleNavigateToMedia = (index: number) => {
+    setSelectedMediaIndex(index);
+  };
+
+  const handleShareMedia = async (url: string) => {
+    try {
+      const shareUrl = getImage(url);
+      await Share.share({
+        url: shareUrl,
+        message: `Check out this media from ${album?.name}!`,
+      });
+    } catch (error) {
+      console.error("Error sharing media:", error);
+      alert("Failed to share media. Please try again.");
+    }
+  };
+
+  const handleDeleteMedia = useCallback(
+    (index: number) => {
+      setMediaToDeleteIndex(index);
+      setShowDeleteMediaConfirmation(true);
+    },
+    [setMediaToDeleteIndex, setShowDeleteMediaConfirmation]
+  );
+
+  const confirmDeleteMedia = useCallback(async () => {
+    if (mediaToDeleteIndex === null) return;
+
+    try {
+      setLoadingDelete(true);
+      const fileToDelete = album?.media[mediaToDeleteIndex];
+      await axiosInstance.post(`/albums/${id}/media`, {
+        files: [fileToDelete?.file],
+      });
+
+      // Update selectedMediaIndex
+      if (album?.media.length === 1) {
+        // If this was the last item, set to null
+        setSelectedMediaIndex(null);
+      } else if (mediaToDeleteIndex < album?.media.length! - 1) {
+        // If there are more items after this one, move to the next
+        setSelectedMediaIndex(mediaToDeleteIndex);
+      } else {
+        // If this was the last item but not the only one, move to the previous
+        setSelectedMediaIndex(mediaToDeleteIndex - 1);
+      }
+      await mutate();
+      await mutateSWR("/albums");
+    } catch (error) {
+      console.error("Error deleting media:", error);
+      alert("Failed to delete media. Please try again.");
+    } finally {
+      setShowDeleteMediaConfirmation(false);
+      setMediaToDeleteIndex(null);
+      setLoadingDelete(false);
+    }
+  }, [id, album?.media, mediaToDeleteIndex, mutate, setSelectedMediaIndex]);
+  const cancelDeleteMedia = useCallback(() => {
+    setShowDeleteMediaConfirmation(false);
+    setMediaToDeleteIndex(null);
+  }, []);
 
   if (isLoading) return <AlbumDetailSkeleton />;
   if (error) return <Text>Error loading album</Text>;
@@ -268,22 +443,26 @@ export default function AlbumDetail() {
 
   const { name, media, createdAt } = album;
 
-  const renderMediaItem = (url: string, isUploading: boolean = false) => {
+  const renderMediaItem = (url: string, isUploading = false) => {
+    if (!url?.startsWith("file")) {
+      url = getImage(url);
+    }
     const fileExtension = url.split(".").pop()?.toLowerCase();
-    const isAudio = ["mp3", "wav", "ogg"].includes(fileExtension || "");
+    const isAudio = ["mp3", "wav", "ogg", "m4a"].includes(fileExtension || "");
     const isVideo = ["mp4", "mov", "avi"].includes(fileExtension || "");
 
     return (
-      <View className="relative w-1/3 p-1 h-40">
+      <View className="w-full aspect-square bg-gray-100 rounded-xl overflow-hidden">
         {isAudio ? (
-          <View className="bg-gray-100 rounded-xl  items-center justify-center">
+          <View className="w-full h-full items-center justify-center">
             <Emoji name="audio" />
           </View>
         ) : isVideo ? (
-          <View className="relative">
+          <View className="w-full h-full relative">
             <Image
               source={{ uri: url }}
-              className="w-full h-full rounded-xl bg-gray-100"
+              className="w-full h-full"
+              style={{ aspectRatio: 1 }}
             />
             <View className="absolute bottom-2 right-2 bg-black/50 px-1.5 py-0.5 rounded">
               <Text className="text-white text-xs">Video</Text>
@@ -292,11 +471,13 @@ export default function AlbumDetail() {
         ) : (
           <Image
             source={{ uri: url }}
-            className="w-full h-full rounded-xl bg-gray-100"
+            className="w-full h-full"
+            style={{ aspectRatio: 1 }}
+            resizeMode="cover"
           />
         )}
         {isUploading && (
-          <View className="absolute inset-0 bg-black/50 rounded-xl items-center justify-center">
+          <View className="absolute inset-0 bg-black/50 items-center justify-center">
             <ActivityIndicator size="large" color="#ffffff" />
           </View>
         )}
@@ -305,117 +486,210 @@ export default function AlbumDetail() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {isCameraOpen ? (
-        <View style={styles.container}>
-          <CameraView ref={cameraRef} style={styles.camera} facing={cameraType}>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={toggleCameraFacing}
-              >
-                <Text style={styles.text}>Flip Camera</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleCameraCapture}
-              >
-                <Text style={styles.text}>Capture</Text>
-              </TouchableOpacity>
-            </View>
-          </CameraView>
-        </View>
-      ) : (
-        <>
-          <View className="px-4 py-2 flex-row items-center justify-between">
-            <Back />
-            <Text className="text-2xl font-fwbold">{name}</Text>
-            <View className="flex-row justify-between gap-x-4">
-              <TouchableOpacity>
-                <Text className="text-gray-600 font-main">Select</Text>
-              </TouchableOpacity>
-              <View>
-                <AlbumOptionsDropdown onSelect={console.log} />
+    <PaperProvider>
+      <SafeAreaView className="flex-1 bg-white">
+        {isCameraOpen ? (
+          <View style={styles.container}>
+            <CameraView
+              ref={cameraRef}
+              style={styles.camera}
+              facing={cameraType}
+            >
+              <SafeAreaView className="flex-1">
+                <View className="flex-row justify-between px-4 py-2">
+                  <TouchableOpacity onPress={() => setIsCameraOpen(false)}>
+                    <Text className="text-white font-main">Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={toggleCameraFacing}>
+                    <Text className="text-white font-main">Flip</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View className="flex-1 justify-end pb-10">
+                  {isRecordingVideo ? (
+                    <View className="items-center">
+                      <TouchableOpacity
+                        onPress={handleVideoCapture}
+                        className="bg-red-500 rounded-full w-16 h-16 items-center justify-center"
+                      >
+                        <View className="bg-white rounded w-6 h-6" />
+                      </TouchableOpacity>
+                      <Text className="text-white mt-2">Recording...</Text>
+                    </View>
+                  ) : (
+                    <View className="flex-row items-center justify-center gap-x-10">
+                      <TouchableOpacity
+                        onPress={handleCameraCapture}
+                        className="bg-white rounded-full w-16 h-16 items-center justify-center"
+                      >
+                        <View className="bg-black rounded-full w-14 h-14" />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setIsRecordingVideo(true);
+                          handleVideoCapture();
+                        }}
+                        className="bg-white rounded-full w-16 h-16 items-center justify-center"
+                      >
+                        <View className="bg-red-500 rounded-full w-14 h-14" />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              </SafeAreaView>
+            </CameraView>
+          </View>
+        ) : (
+          <View className="flex-1">
+            <View
+              className="px-4 py-2 flex-row items-center justify-between"
+              style={{
+                zIndex: 2,
+                elevation: 2,
+              }}
+            >
+              <Back />
+              <Text className="text-2xl font-fwbold">{name}</Text>
+              <View className="flex-row justify-between gap-x-4">
+                <View
+                  style={{
+                    zIndex: 3,
+                    elevation: 3,
+                  }}
+                >
+                  <AlbumOptionsDropdown onSelect={handleAlbumOption} />
+                </View>
               </View>
             </View>
-          </View>
 
-          <Text className="px-4 font-semibold text-gray-500 mb-4">
-            {media.length} items • Created on{" "}
-            {new Date(createdAt).toLocaleDateString()}
-          </Text>
+            <Text className="px-4 font-semibold text-gray-500 mb-4">
+              {media.length} items • Created on{" "}
+              {new Date(createdAt).toLocaleDateString()}
+            </Text>
 
-          <ScrollView className="flex-1 px-2">
-            <View className="flex-row flex-wrap">
-              {media.map((url, index) => (
+            <ScrollView
+              className="flex-1"
+              style={{
+                zIndex: 1,
+                elevation: 1,
+              }}
+            >
+              <View className="flex-row flex-wrap w-full">
+                {media &&
+                  media.length > 0 &&
+                  media.map((item, index) => (
+                    <TouchableOpacity
+                      key={`media-${index}`}
+                      onPress={() => handleOpenMedia(index)}
+                      className="w-[33.33%]"
+                    >
+                      <View className="p-1">{renderMediaItem(item?.file)}</View>
+                    </TouchableOpacity>
+                  ))}
+                {selectedItems.length > 0 &&
+                  selectedItems.map((item, index) => (
+                    <View key={`selected-${index}`} className="w-[33.33%]">
+                      <View className="p-1">
+                        {renderMediaItem(
+                          item.uri,
+                          uploadingItems.includes(item.uri)
+                        )}
+                      </View>
+                    </View>
+                  ))}
+                <View className="w-[33.33%]">
+                  <View className="p-1">
+                    <MediaAddDropdown onSelect={handleMediaOption} />
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+
+            {(media.length > 0 || selectedItems.length > 0) && (
+              <MediaViewer
+                album={album.name}
+                onDismiss={cancelDeleteMedia}
+                onConfirm={confirmDeleteMedia}
+                loading={loadingDelete}
+                showDelete={showDeleteMediaConfirmation}
+                isVisible={selectedMediaIndex !== null}
+                onClose={handleCloseMedia}
+                currentIndex={selectedMediaIndex || 0}
+                mediaItems={
+                  selectedItems.length > 0
+                    ? [
+                        ...media,
+                        ...selectedItems.map((file) => ({
+                          file: file.uri,
+                          date: new Date().toISOString(),
+                        })),
+                      ]
+                    : [...media]
+                }
+                onNavigate={handleNavigateToMedia}
+                onShare={handleShareMedia}
+                onDelete={handleDeleteMedia}
+              />
+            )}
+            {selectedItems.length > 0 && (
+              <View className="absolute bottom-10 z-[99999] left-0 right-0 items-center">
                 <TouchableOpacity
-                  key={index}
-                  onPress={() => console.log("Open media", url)}
+                  onPress={uploadMedia}
+                  className="bg-blue-500 rounded-full p-4 "
                 >
-                  {renderMediaItem(url)}
+                  <Text className="text-white font-bold">
+                    Upload {selectedItems.length} item
+                    {selectedItems.length > 1 ? "s" : ""}
+                  </Text>
                 </TouchableOpacity>
-              ))}
-              {selectedItems.map((item, index) => (
-                <Fragment key={index}>
-                  {renderMediaItem(item.uri, uploadingItems.includes(item.uri))}
-                </Fragment>
-              ))}
-              <MediaAddDropdown onSelect={handleMediaOption} />
-            </View>
-          </ScrollView>
+              </View>
+            )}
 
-          {selectedItems.length > 0 && (
-            <View className="absolute bottom-10 left-0 right-0 items-center">
-              <TouchableOpacity
-                onPress={uploadMedia}
-                className="bg-blue-500 rounded-full p-4"
-              >
-                <Text className="text-white font-bold">
-                  Upload {selectedItems.length} item
-                  {selectedItems.length > 1 ? "s" : ""}
+            {isRecording && (
+              <View className="absolute bottom-10 left-0 right-0 items-center">
+                <TouchableOpacity
+                  onPress={stopRecording}
+                  className="bg-red-500 rounded-full p-4"
+                >
+                  <Text className="text-white font-bold">Stop Recording</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {showConfirmDelete && (
+              <View className="absolute bottom-10 left-0 right-0 items-center z-50">
+                <TouchableOpacity
+                  onPress={() => deleteAlbum()}
+                  className="items-center px-5 py-1 bg-red-100 flex-row rounded-full"
+                  disabled={loadingDelete}
+                >
+                  <Text className="text-base font-semibold text-red-500">
+                    Delete
+                  </Text>
+                  {loadingDelete && (
+                    <ActivityIndicator color="#EF4444" className="ml-2" />
+                  )}
+                </TouchableOpacity>
+
+                <Text className="text-red-400 font-semibold mt-2 text-center px-4">
+                  Deleting is irreversible, Press the delete button again to
+                  confirm
                 </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {isRecording && (
-            <View className="absolute bottom-10 left-0 right-0 items-center">
-              <TouchableOpacity
-                onPress={stopRecording}
-                className="bg-red-500 rounded-full p-4"
-              >
-                <Text className="text-white font-bold">Stop Recording</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </>
-      )}
-    </SafeAreaView>
+              </View>
+            )}
+          </View>
+        )}
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: "black",
   },
   camera: {
     flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "transparent",
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
   },
 });

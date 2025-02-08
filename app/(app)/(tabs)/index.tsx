@@ -26,7 +26,7 @@ const Index = () => {
       component: <Appointments date={new Date().toISOString()} limitted />,
     },
     { key: "Track", component: <Track /> },
-    { key: "Premium", component: <Premium /> },
+    // { key: "Premium", component: <Premium /> },
   ];
   const getItem = (data: typeof sections, index: number) => data[index];
 
@@ -41,6 +41,7 @@ const Index = () => {
       <VirtualizedList
         data={sections}
         initialNumToRender={4}
+        contentContainerStyle={{ paddingBottom: 200 }}
         renderItem={({ item }) => item.component}
         keyExtractor={(item) => item.key}
         getItem={getItem}

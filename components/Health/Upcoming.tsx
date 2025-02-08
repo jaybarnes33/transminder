@@ -78,18 +78,21 @@ const UpcomingDrugs = () => {
   };
 
   const { data: drugs, isLoading } = useSWR("/drugs/upcoming", fetchDrugs);
+
   return (
     <View className="gap-y-1">
       <View>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <FlatList
-            data={drugs}
-            ListEmptyComponent={<EmptyPlan />}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => <Item drug={{ ...item }} />}
-          />
+          drugs.length > 0 && (
+            <FlatList
+              data={drugs}
+              ListEmptyComponent={<EmptyPlan />}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => <Item drug={{ ...item }} />}
+            />
+          )
         )}
       </View>
     </View>

@@ -2,6 +2,7 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
+import { useRouter } from "expo-router";
 
 function handleRegistrationError(errorMessage: string) {
   alert(errorMessage);
@@ -54,13 +55,26 @@ export async function registerForPushNotificationsAsync() {
 }
 
 export const generateNotification = async () => {
-  //show the notification to the user
-  Notifications.scheduleNotificationAsync({
-    //set the content of the notification
+  // Schedule a daily notification
+  await Notifications.scheduleNotificationAsync({
     content: {
-      title: "Demo title",
-      body: "Demo body",
+      title: "Log your mood",
+      body: "Don't forget to log your mood today!",
+      data: { screen: "Moods" },
     },
-    trigger: null,
+    trigger: {
+      hour: 9,
+      minute: 0,
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
+    },
+  });
+
+  // Handle notification response
+  Notifications.addNotificationResponseReceivedListener((response) => {
+    const navigation = useRouter();
+    const screen = response.notification.request.content.data.screen;
+    if (screen) {
+      navigation.navigate(screen);
+    }
   });
 };

@@ -18,6 +18,7 @@ import { BottomSheetModalProvider } from "@/context/BottomSheet";
 import "../global.css";
 import { SafeAreaView, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { Provider } from "react-native-paper";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -58,12 +59,12 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <Provider>
       <AuthProvider>
         <BottomSheetModalProvider>
           <Slot />
         </BottomSheetModalProvider>
       </AuthProvider>
-    </>
+    </Provider>
   );
 }

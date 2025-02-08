@@ -7,7 +7,7 @@ import { Feather } from "@expo/vector-icons";
 
 export const Actions = ({
   activity = true,
-  chat = true,
+  chat = false,
   profile = true,
 }: {
   activity?: boolean;
