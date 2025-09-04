@@ -15,13 +15,14 @@ import { mutate as mutateSWR } from "swr";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import useSWR from "swr";
 import * as ImagePicker from "expo-image-picker";
-import { Audio, Video } from "expo-av";
+import { VideoView, useVideoPlayer } from "expo-video";
 import {
-  Modal,
-  Button,
-  Portal,
-  Provider as PaperProvider,
-} from "react-native-paper";
+  useAudioRecorder,
+  useAudioRecorderState,
+  useAudioPlayer,
+  requestRecordingPermissionsAsync,
+} from "expo-audio";
+import { Provider as PaperProvider } from "react-native-paper";
 
 import { CameraView, type CameraType, useCameraPermissions } from "expo-camera";
 import * as DocumentPicker from "expo-document-picker";
@@ -59,7 +60,27 @@ export default function AlbumDetail() {
   const [cameraType, setCameraType] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
-  const recordingRef = useRef<Audio.Recording | null>(null);
+
+  // Audio recording setup
+  const audioRecorder = useAudioRecorder({
+    extension: ".m4a",
+    sampleRate: 44100,
+    numberOfChannels: 1,
+    bitRate: 128000,
+    android: {
+      extension: ".m4a",
+      outputFormat: "mpeg4",
+      audioEncoder: "aac",
+      sampleRate: 44100,
+    },
+    ios: {
+      extension: ".m4a",
+      outputFormat: "mpeg4aac",
+      audioQuality: 96,
+      sampleRate: 44100,
+    },
+  });
+  const recorderState = useAudioRecorderState(audioRecorder);
   const [selectedItems, setSelectedItems] = useState<UploadableFile[]>([]);
   const [uploadingItems, setUploadingItems] = useState<string[]>([]);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -181,18 +202,14 @@ export default function AlbumDetail() {
   };
 
   const recordAudio = async () => {
-    const { status } = await Audio.requestPermissionsAsync();
+    const { status } = await requestRecordingPermissionsAsync();
     if (status !== "granted") {
       alert("Sorry, we need audio recording permissions to make this work!");
       return;
     }
     try {
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      await recording.startAsync();
-      recordingRef.current = recording;
+      await audioRecorder.prepareToRecordAsync();
+      audioRecorder.record();
       setIsRecording(true);
     } catch (err) {
       console.error("Failed to start recording", err);
@@ -200,21 +217,20 @@ export default function AlbumDetail() {
   };
 
   const stopRecording = async () => {
-    if (recordingRef.current) {
-      try {
-        await recordingRef.current.stopAndUnloadAsync();
-        const uri = recordingRef.current.getURI();
-        setIsRecording(false);
-        if (uri) {
-          addSelectedItem({
-            uri,
-            type: "audio/mp4",
-            name: "audio.m4a",
-          });
-        }
-      } catch (err) {
-        console.error("Failed to stop recording", err);
+    try {
+      await audioRecorder.stop();
+      setIsRecording(false);
+
+      // Get the recording URL from the recorder state
+      if (recorderState.url) {
+        addSelectedItem({
+          uri: recorderState.url,
+          type: "audio/mp4",
+          name: "audio.m4a",
+        });
       }
+    } catch (err) {
+      console.error("Failed to stop recording", err);
     }
   };
 
@@ -451,19 +467,48 @@ export default function AlbumDetail() {
     const isAudio = ["mp3", "wav", "ogg", "m4a"].includes(fileExtension || "");
     const isVideo = ["mp4", "mov", "avi"].includes(fileExtension || "");
 
+    const VideoComponent = () => {
+      const player = useVideoPlayer({ uri: url });
+      return (
+        <VideoView
+          player={player}
+          className="w-full h-full"
+          style={{ aspectRatio: 1 }}
+        />
+      );
+    };
+
+    const AudioComponent = () => {
+      const player = useAudioPlayer({ uri: url });
+
+      return (
+        <View className="w-full h-full items-center justify-center bg-gray-200">
+          <Emoji name="audio" />
+          <TouchableOpacity
+            onPress={() => {
+              if (player.playing) {
+                player.pause();
+              } else {
+                player.play();
+              }
+            }}
+            className="mt-2 bg-blue-500 rounded-full p-2"
+          >
+            <Text className="text-white text-xs">
+              {player.playing ? "Pause" : "Play"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    };
+
     return (
       <View className="w-full h-32 aspect-square bg-gray-100 rounded-xl overflow-hidden">
         {isAudio ? (
-          <View className="w-full h-full items-center justify-center">
-            <Emoji name="audio" />
-          </View>
+          <AudioComponent />
         ) : isVideo ? (
           <View className="w-full h-full relative">
-            <Video
-              source={{ uri: url }}
-              className="w-full h-full"
-              style={{ aspectRatio: 1 }}
-            />
+            <VideoComponent />
             <View className="absolute bottom-2 right-2 bg-black/50 px-1.5 py-0.5 rounded">
               <Text className="text-white text-xs">Video</Text>
             </View>
