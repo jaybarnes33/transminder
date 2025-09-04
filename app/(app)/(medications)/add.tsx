@@ -46,10 +46,6 @@ const Add = () => {
   const [step, setStep] = useState(0);
 
   const isEdit = !!id;
-  const [show, setShow] = useState(false);
-  const [activeReminderIndex, setActiveReminderIndex] = useState<number | null>(
-    null
-  );
 
   const getSchedule = () => {
     const day = new Date(drug.start);
@@ -73,7 +69,6 @@ const Add = () => {
         ),
       }));
     }
-    setActiveReminderIndex(null);
   };
 
   const validations: Record<number, boolean> = {
@@ -128,6 +123,12 @@ const Add = () => {
     return data;
   };
 
+  const generateIntakes = async () => {
+    const { data } = await axiosInstance.get("/drugs/intake/generate");
+
+    return data;
+  };
+
   const {
     data,
     isLoading,
@@ -162,7 +163,7 @@ const Add = () => {
 
       await Promise.all([
         mutate("/medications"),
-        mutate("/intake/generate"),
+        generateIntakes(),
         mutate("/drugs/upcoming"),
       ]);
       navigate("/(medications)");

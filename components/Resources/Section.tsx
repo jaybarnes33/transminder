@@ -49,7 +49,7 @@ const Section = ({
   }
 
   if (!data?.pagination.total) {
-    return;
+    return null;
   }
 
   const width = Dimensions.get("window").width;

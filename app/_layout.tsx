@@ -8,6 +8,7 @@ import {
   Quicksand_600SemiBold,
   Quicksand_700Bold,
 } from "@expo-google-fonts/quicksand";
+import { PortalHost } from "@rn-primitives/portal";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
@@ -16,8 +17,7 @@ import "react-native-reanimated";
 import { AuthProvider } from "@/context/Auth";
 import { BottomSheetModalProvider } from "@/context/BottomSheet";
 import "../global.css";
-import { SafeAreaView, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+
 import { Provider } from "react-native-paper";
 
 export {
@@ -65,6 +65,7 @@ export default function RootLayout() {
           <Slot />
         </BottomSheetModalProvider>
       </AuthProvider>
+      <PortalHost />
     </Provider>
   );
 }

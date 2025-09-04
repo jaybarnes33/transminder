@@ -7,8 +7,9 @@ import useSWR from "swr";
 import axiosInstance from "@/lib/axios";
 import EmptyEvents from "../Health/Empty/EmptyEvents";
 import { FlashList } from "@shopify/flash-list";
-import { IEvent } from "@/types/global";
+import { IEvent, Intake } from "@/types/global";
 import clsx from "clsx";
+import { Item } from "../Health/Plan";
 
 const Appointments = ({
   limitted,
@@ -19,14 +20,19 @@ const Appointments = ({
 }) => {
   const { navigate } = useRouter();
 
-  const { data, isLoading } = useSWR<IEvent[]>(
+  const { data, isLoading } = useSWR<(IEvent | Intake)[]>(
     `/events?date=${date ? date : ""}`,
     async () => {
       const { data: res } = await axiosInstance.get(
         `/events?date=${!limitted ? date : ""}&limit=${limitted ? 5 : ""}`
       );
 
-      return res.events;
+      return [...res.events, ...res.intakes].sort((a, b) => {
+        return (
+          new Date(a.type ? a.time : a.start).getTime() -
+          new Date(b.type ? b.time : b.start).getTime()
+        );
+      });
     }
   );
 
@@ -49,15 +55,19 @@ const Appointments = ({
         ) : (
           <View className={clsx(!limitted && "h-[50vh]")}>
             <FlashList
-              // contentContainerStyle={{ paddingBottom: !limitted ? 200 : 0 }}
+              contentContainerStyle={{ paddingBottom: !limitted ? 200 : 0 }}
               showsVerticalScrollIndicator={false}
               data={data}
               estimatedItemSize={4}
               ListEmptyComponent={<EmptyEvents />}
               keyExtractor={(item) => item._id}
-              renderItem={({ item }) => (
-                <Appointment event={item} date={date} />
-              )}
+              renderItem={({ item }) =>
+                !("type" in item) ? (
+                  <Appointment event={item as IEvent} date={date} />
+                ) : (
+                  <Item item={item as Intake} />
+                )
+              }
             />
           </View>
         )}

@@ -4,6 +4,7 @@ import React, {
   useRef,
   useState,
   useEffect,
+  useLayoutEffect,
 } from "react";
 import {
   View,
@@ -92,6 +93,7 @@ const Explore = () => {
 
   const mapRef = useRef<MapView>(null);
   const poiListModalRef = useRef<BottomSheetModal>(null);
+  const isMountedRef = useRef(true);
 
   const animatedPOIListIndex = useSharedValue<number>(0);
   const animatedPOIListPosition = useSharedValue<number>(SCREEN_HEIGHT);
@@ -122,7 +124,9 @@ const Explore = () => {
 
   useFocusEffect(
     useCallback(() => {
-      mutate();
+      if (isMountedRef.current) {
+        mutate();
+      }
     }, [mutate])
   );
 
@@ -153,9 +157,17 @@ const Explore = () => {
     }
   }, [location]);
 
-  useEffect(() => {
-    mutatePlaces();
+  useLayoutEffect(() => {
+    if (isMountedRef.current) {
+      mutatePlaces();
+    }
   }, [category, search, mutatePlaces]);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const places = useMemo(() => {
     const allPlaces = data ? data.flatMap((page) => page.data) : [];

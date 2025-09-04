@@ -154,7 +154,7 @@ const Day = ({
     <TouchableOpacity
       className={clsx([
         "h-11 w-11 items-center justify-center rounded-full",
-        isActive && "bg-ring",
+        isActive && "bg-purple-500",
       ])}
       onPress={() => date && onPress(date?.dateString)}
     >

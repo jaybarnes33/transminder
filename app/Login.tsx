@@ -41,7 +41,6 @@ const Login = () => {
       navigate("/(app)/(tabs)");
     } catch (error) {
       //@ts-ignore
-
       setError(error?.response?.data?.error ?? error.message);
     } finally {
       setLoading(false);

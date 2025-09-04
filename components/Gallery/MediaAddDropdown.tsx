@@ -56,7 +56,7 @@ export default function MediaAddDropdown({ onSelect }: MediaAddDropdownProps) {
         onDismiss={closeMenu}
         anchor={
           <TouchableOpacity
-            className="h-40   bg-purple-200 justify-center rounded-xl items-center"
+            className="h-full bg-purple-200 justify-center rounded-xl items-center"
             onPress={openMenu}
             style={styles.button}
           >
@@ -66,7 +66,8 @@ export default function MediaAddDropdown({ onSelect }: MediaAddDropdownProps) {
           </TouchableOpacity>
         }
         contentStyle={styles.menuContent}
-        // style={styles.menu}
+        style={styles.menu}
+        anchorPosition="bottom"
       >
         {options.map((option, i) => (
           <List.Item
@@ -94,16 +95,31 @@ const styles = StyleSheet.create({
     position: "relative",
     width: 100,
     height: 100,
+    zIndex: 999999,
+    elevation: 999999,
   },
   button: {
     width: Dimensions.get("window").width / 3 - 10,
+    height: 100,
   },
-
+  menu: {
+    zIndex: 999999,
+    elevation: 999999,
+  },
   menuContent: {
     backgroundColor: "white",
     borderRadius: 16,
     padding: 5,
     width: 270,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginTop: 8,
   },
   menuItem: {
     paddingVertical: 12,

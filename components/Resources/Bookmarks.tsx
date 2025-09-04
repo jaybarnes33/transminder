@@ -57,7 +57,7 @@ const Bookmarks = ({ search }: { search: string }) => {
   }
 
   if (!data?.length) {
-    return;
+    return null;
   }
   return (
     <View>

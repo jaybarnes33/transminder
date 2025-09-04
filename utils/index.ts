@@ -188,13 +188,14 @@ export const getDrugStatus = (
   drugStatus: string | null,
   time: string
 ): string => {
-  // Parse the time string (e.g., "14:30" -> "2:30 PM") and compare it with the current time
+  // Parse the time string (e.g., "14:30") and compare it with the current time
+  console.log(time);
   const currentTime = new Date();
 
-  // Assumes the time format is 24-hour (e.g., "14:30")
-
   // Calculate the time difference in minutes between the current time and the drug time
-  const timeDifference = differenceInMinutes(currentTime, new Date(time));
+  const timeDifference = Math.abs(
+    differenceInMinutes(currentTime, new Date(time))
+  );
 
   // If the drug has already been marked as taken or skipped, return the current status
   if (
@@ -205,12 +206,15 @@ export const getDrugStatus = (
     return drugStatus;
   }
 
-  // If the time difference is more than 60 minutes and not taken, it's missed
-  if (timeDifference > 60) {
+  console.log({ timeDifference });
+  // If the time difference is more than 30 minutes and not taken, it's missed
+  if (timeDifference >= -30 && timeDifference <= 30) {
+    return "active";
+  } else if (timeDifference > 30) {
     return "missed";
   }
 
-  // Otherwise, it's still pending
+  // Otherwise, it's still pending (clickable within 30-minute window)
   return "pending";
 };
 

@@ -7,7 +7,7 @@ import {
   Image,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { Drug, IconName, Intake, PaginatedResponse } from "@/types/global";
+import { IconName, Intake, PaginatedResponse } from "@/types/global";
 import Icon from "../Core/Icon";
 import clsx from "clsx";
 import Heading from "../Core/Heading";
@@ -18,7 +18,7 @@ import EmptyPlan from "./Empty/EmptyPlan";
 import { differenceInMinutes, formatRelative } from "date-fns";
 import { getDrugStatus, toSentenceCase } from "@/utils";
 import UpcomingDrugs from "./Upcoming";
-import useSWR, { mutate } from "swr";
+import { mutate } from "swr";
 
 export const Item = ({
   item,
@@ -200,15 +200,6 @@ const Plan = () => {
     isLoading,
     mutate: mutateDrugs,
   } = useSWRInfinite(fetchKey, fetchDrugs);
-
-  const generateIntakes = async () => {
-    const { data } = await axiosInstance.get("/drugs/intake/generate");
-
-    mutateDrugs();
-    return data;
-  };
-
-  useSWR("/intake/generate", generateIntakes, { refreshInterval: 1000 });
 
   // Check if there are more pages to load
   const hasMorePages =

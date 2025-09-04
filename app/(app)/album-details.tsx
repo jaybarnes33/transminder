@@ -27,10 +27,10 @@ import { CameraView, type CameraType, useCameraPermissions } from "expo-camera";
 import * as DocumentPicker from "expo-document-picker";
 import axiosInstance from "@/lib/axios";
 import AlbumDetailSkeleton from "@/components/Gallery/DetailSkeleton";
-import MediaAddDropdown from "@/components/Gallery/MediaAddDropdown";
+import MediaAddDropdownModern from "@/components/Gallery/MediaAddDropdownModern";
 import Emoji from "@/components/Core/Emoji";
 import Back from "@/components/Core/Back";
-import AlbumOptionsDropdown from "@/components/Gallery/AlbumOptions";
+import AlbumOptionsDropdownModern from "@/components/Gallery/AlbumOptionsModern";
 import { getImage } from "@/utils";
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import RenameAlbum from "@/components/Gallery/RenameAlbum";
@@ -544,8 +544,8 @@ export default function AlbumDetail() {
             <View
               className="px-4 py-2 flex-row items-center justify-between"
               style={{
-                zIndex: 2,
-                elevation: 2,
+                zIndex: 999998,
+                elevation: 999998,
               }}
             >
               <Back />
@@ -553,11 +553,11 @@ export default function AlbumDetail() {
               <View className="flex-row justify-between gap-x-4">
                 <View
                   style={{
-                    zIndex: 3,
-                    elevation: 3,
+                    zIndex: 999999,
+                    elevation: 999999,
                   }}
                 >
-                  <AlbumOptionsDropdown onSelect={handleAlbumOption} />
+                  <AlbumOptionsDropdownModern onSelect={handleAlbumOption} />
                 </View>
               </View>
             </View>
@@ -574,21 +574,21 @@ export default function AlbumDetail() {
                 elevation: 1,
               }}
             >
-              <View className="flex-row flex-wrap w-full">
+              <View className="flex-row  flex-wrap w-full">
                 {media &&
                   media.length > 0 &&
                   media.map((item, index) => (
                     <TouchableOpacity
+                      className="w-[33.33%] "
                       key={`media-${index}`}
                       onPress={() => handleOpenMedia(index)}
-                      className="w-[33.33%]"
                     >
                       <View className="p-1">{renderMediaItem(item?.file)}</View>
                     </TouchableOpacity>
                   ))}
                 {selectedItems.length > 0 &&
                   selectedItems.map((item, index) => (
-                    <View key={`selected-${index}`} className="w-[33.33%]">
+                    <View key={`selected-${index}`} className="w-[33.33%] ">
                       <View className="p-1">
                         {renderMediaItem(
                           item.uri,
@@ -597,10 +597,8 @@ export default function AlbumDetail() {
                       </View>
                     </View>
                   ))}
-                <View className="w-[33.33%]">
-                  <View className="p-1">
-                    <MediaAddDropdown onSelect={handleMediaOption} />
-                  </View>
+                <View className="w-[33.33%] px-1">
+                  <MediaAddDropdownModern onSelect={handleMediaOption} />
                 </View>
               </View>
             </ScrollView>

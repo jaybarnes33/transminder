@@ -82,7 +82,7 @@ const Learn = () => {
         />
       )}
 
-      {data?.length && (
+      {data && data.length > 0 && (
         <FlashList
           ListEmptyComponent={<Message message="No resources found" />}
           data={[{ name: "bookmarks", _id: "bookmark" }, ...data]}
@@ -110,7 +110,7 @@ const Learn = () => {
         />
       )}
 
-      {data && (
+      {data && data.length > 0 && (
         <FlashList
           ListEmptyComponent={<Message message="No resources found" />}
           estimatedItemSize={5}

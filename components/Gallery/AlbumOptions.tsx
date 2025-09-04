@@ -76,6 +76,8 @@ export default function AlbumOptionsDropdown({
           </TouchableOpacity>
         }
         contentStyle={styles.menuContent}
+        style={styles.menu}
+        anchorPosition="bottom"
       >
         {options.map((option, i) => (
           <List.Item
@@ -107,11 +109,23 @@ const styles = StyleSheet.create({
     zIndex: 999999,
     elevation: 999999,
   },
+  menu: {
+    zIndex: 999999,
+    elevation: 999999,
+  },
   menuContent: {
     backgroundColor: "white",
     borderRadius: 16,
     width: 240,
-    marginTop: Platform.OS === "ios" ? 45 : 35,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginTop: 8,
   },
   menuItem: {
     paddingVertical: 8,
