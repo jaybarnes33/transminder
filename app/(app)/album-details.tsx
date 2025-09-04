@@ -15,7 +15,7 @@ import { mutate as mutateSWR } from "swr";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import useSWR from "swr";
 import * as ImagePicker from "expo-image-picker";
-import { Audio } from "expo-av";
+import { Audio, Video } from "expo-av";
 import {
   Modal,
   Button,
@@ -452,14 +452,14 @@ export default function AlbumDetail() {
     const isVideo = ["mp4", "mov", "avi"].includes(fileExtension || "");
 
     return (
-      <View className="w-full aspect-square bg-gray-100 rounded-xl overflow-hidden">
+      <View className="w-full h-32 aspect-square bg-gray-100 rounded-xl overflow-hidden">
         {isAudio ? (
           <View className="w-full h-full items-center justify-center">
             <Emoji name="audio" />
           </View>
         ) : isVideo ? (
           <View className="w-full h-full relative">
-            <Image
+            <Video
               source={{ uri: url }}
               className="w-full h-full"
               style={{ aspectRatio: 1 }}
@@ -579,7 +579,7 @@ export default function AlbumDetail() {
                   media.length > 0 &&
                   media.map((item, index) => (
                     <TouchableOpacity
-                      className="w-[33.33%] "
+                      className="w-[33.33%] h-32"
                       key={`media-${index}`}
                       onPress={() => handleOpenMedia(index)}
                     >
@@ -588,7 +588,7 @@ export default function AlbumDetail() {
                   ))}
                 {selectedItems.length > 0 &&
                   selectedItems.map((item, index) => (
-                    <View key={`selected-${index}`} className="w-[33.33%] ">
+                    <View key={`selected-${index}`} className="w-[33.33%] h-32">
                       <View className="p-1">
                         {renderMediaItem(
                           item.uri,

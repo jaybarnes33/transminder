@@ -55,7 +55,7 @@ export default function MediaAddDropdownModern({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <TouchableOpacity className=" h-auto flex-1 mr-1  bg-purple-200 justify-center rounded-xl items-center">
+        <TouchableOpacity className=" h-32 top-1 flex-1 mr-1  bg-purple-200 justify-center rounded-xl items-center">
           <View>
             <Plus size={50} color="#9333EA" />
           </View>
