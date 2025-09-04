@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import {
   useAudioRecorderState,
   useAudioPlayer,
   requestRecordingPermissionsAsync,
+  setAudioModeAsync,
 } from "expo-audio";
 import { Provider as PaperProvider } from "react-native-paper";
 
@@ -61,7 +62,26 @@ export default function AlbumDetail() {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
 
-  // Audio recording setup
+  // Configure audio session on component mount
+  useEffect(() => {
+    const configureAudioSession = async () => {
+      try {
+        await setAudioModeAsync({
+          allowsRecording: true,
+          playsInSilentMode: true,
+          shouldPlayInBackground: false,
+          shouldRouteThroughEarpiece: false,
+          interruptionMode: "duckOthers",
+        });
+      } catch (error) {
+        console.error("Failed to configure audio session:", error);
+      }
+    };
+
+    configureAudioSession();
+  }, []);
+
+  // Updated audio recording setup with better configuration
   const audioRecorder = useAudioRecorder({
     extension: ".m4a",
     sampleRate: 44100,
@@ -78,8 +98,13 @@ export default function AlbumDetail() {
       outputFormat: "mpeg4aac",
       audioQuality: 96,
       sampleRate: 44100,
+
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
     },
   });
+
   const recorderState = useAudioRecorderState(audioRecorder);
   const [selectedItems, setSelectedItems] = useState<UploadableFile[]>([]);
   const [uploadingItems, setUploadingItems] = useState<string[]>([]);
@@ -201,18 +226,30 @@ export default function AlbumDetail() {
     setCameraType((current) => (current === "back" ? "front" : "back"));
   };
 
+  // Updated recordAudio function with proper expo-audio usage
   const recordAudio = async () => {
-    const { status } = await requestRecordingPermissionsAsync();
-    if (status !== "granted") {
-      alert("Sorry, we need audio recording permissions to make this work!");
-      return;
-    }
     try {
+      const { status } = await requestRecordingPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need audio recording permissions to make this work!");
+        return;
+      }
+
+      // Configure audio session before recording
+      await setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
+        shouldPlayInBackground: false,
+        shouldRouteThroughEarpiece: false,
+        interruptionMode: "duckOthers",
+      });
+
       await audioRecorder.prepareToRecordAsync();
       audioRecorder.record();
       setIsRecording(true);
     } catch (err) {
       console.error("Failed to start recording", err);
+      alert("Failed to start recording. Please try again.");
     }
   };
 
@@ -221,16 +258,19 @@ export default function AlbumDetail() {
       await audioRecorder.stop();
       setIsRecording(false);
 
-      // Get the recording URL from the recorder state
-      if (recorderState.url) {
-        addSelectedItem({
-          uri: recorderState.url,
-          type: "audio/mp4",
-          name: "audio.m4a",
-        });
-      }
+      // Wait a moment for the file to be written
+      setTimeout(() => {
+        if (recorderState.url) {
+          addSelectedItem({
+            uri: recorderState.url,
+            type: "audio/m4a", // Updated MIME type
+            name: "audio.m4a",
+          });
+        }
+      }, 100);
     } catch (err) {
       console.error("Failed to stop recording", err);
+      alert("Failed to stop recording. Please try again.");
     }
   };
 
@@ -448,6 +488,7 @@ export default function AlbumDetail() {
       setLoadingDelete(false);
     }
   }, [id, album?.media, mediaToDeleteIndex, mutate, setSelectedMediaIndex]);
+
   const cancelDeleteMedia = useCallback(() => {
     setShowDeleteMediaConfirmation(false);
     setMediaToDeleteIndex(null);
