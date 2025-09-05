@@ -35,16 +35,16 @@ const options = [
     value: "photo",
     icon: <Camera size={20} color="#4B5563" />,
   },
-  {
-    label: "Record audio",
-    value: "audio",
-    icon: <Mic size={20} color="#4B5563" />,
-  },
-  {
-    label: "Record video clip",
-    value: "video",
-    icon: <Video size={20} color="#4B5563" />,
-  },
+  // {
+  //   label: "Record audio",
+  //   value: "audio",
+  //   icon: <Mic size={20} color="#4B5563" />,
+  // },
+  // {
+  //   label: "Record video clip",
+  //   value: "video",
+  //   icon: <Video size={20} color="#4B5563" />,
+  // },
   {
     label: "Choose from Gallery",
     value: "gallery",
@@ -103,7 +103,7 @@ export default function AlbumOptionsDropdownModern({
             </View>
           </DropdownMenuItem>
 
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onPress={() => onSelect("audio")}
             className="flex-row items-center justify-between"
           >
@@ -111,9 +111,9 @@ export default function AlbumOptionsDropdownModern({
             <View className="ml-2">
               <Mic size={20} color="#4B5563" />
             </View>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
 
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onPress={() => onSelect("video")}
             className="flex-row items-center justify-between"
           >
@@ -121,7 +121,7 @@ export default function AlbumOptionsDropdownModern({
             <View className="ml-2">
               <Video size={20} color="#4B5563" />
             </View>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
 
           <DropdownMenuItem
             onPress={() => onSelect("gallery")}
@@ -169,4 +169,3 @@ const styles = {
     elevation: 999999,
   },
 };
-

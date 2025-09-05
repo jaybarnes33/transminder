@@ -30,16 +30,16 @@ export default function MediaAddDropdownModern({
       value: "photo",
       icon: <Camera size={20} color="#4B5563" />,
     },
-    {
-      label: "Record audio",
-      value: "audio",
-      icon: <Mic size={20} color="#4B5563" />,
-    },
-    {
-      label: "Record video clip",
-      value: "video",
-      icon: <Video size={20} color="#4B5563" />,
-    },
+    // {
+    //   label: "Record audio",
+    //   value: "audio",
+    //   icon: <Mic size={20} color="#4B5563" />,
+    // },
+    // {
+    //   label: "Record video clip",
+    //   value: "video",
+    //   icon: <Video size={20} color="#4B5563" />,
+    // },
     {
       label: "Choose from Gallery",
       value: "gallery",
@@ -55,7 +55,7 @@ export default function MediaAddDropdownModern({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <TouchableOpacity className=" h-32 top-1 flex-1 mr-1  bg-purple-200 justify-center rounded-xl items-center">
+        <TouchableOpacity className="h-32 mb-2 top-1 mr-1  bg-purple-200 justify-center rounded-xl items-center">
           <View>
             <Plus size={50} color="#9333EA" />
           </View>

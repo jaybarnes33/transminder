@@ -2,41 +2,42 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import {
   View,
   Text,
-  Image,
-  TouchableOpacity,
   ScrollView,
   SafeAreaView,
-  StyleSheet,
   Platform,
-  ActivityIndicator,
   Share,
 } from "react-native";
 import { mutate as mutateSWR } from "swr";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import useSWR from "swr";
 import * as ImagePicker from "expo-image-picker";
-import { VideoView, useVideoPlayer } from "expo-video";
-import {
-  useAudioRecorder,
-  useAudioRecorderState,
-  useAudioPlayer,
-  requestRecordingPermissionsAsync,
-  setAudioModeAsync,
-} from "expo-audio";
+// import {
+//   useAudioRecorder,
+//   useAudioRecorderState,
+//   requestRecordingPermissionsAsync,
+//   setAudioModeAsync,
+// } from "expo-audio";
 import { Provider as PaperProvider } from "react-native-paper";
 
-import { CameraView, type CameraType, useCameraPermissions } from "expo-camera";
+import { useCameraPermissions } from "expo-camera";
 import * as DocumentPicker from "expo-document-picker";
 import axiosInstance from "@/lib/axios";
 import AlbumDetailSkeleton from "@/components/Gallery/DetailSkeleton";
 import MediaAddDropdownModern from "@/components/Gallery/MediaAddDropdownModern";
-import Emoji from "@/components/Core/Emoji";
-import Back from "@/components/Core/Back";
-import AlbumOptionsDropdownModern from "@/components/Gallery/AlbumOptionsModern";
 import { getImage } from "@/utils";
 import { useBottomSheetModal } from "@/context/BottomSheet";
 import RenameAlbum from "@/components/Gallery/RenameAlbum";
 import MediaViewer from "@/components/Gallery/MediaViewer";
+
+// Import new components
+import {
+  CameraCapture,
+  MediaGrid,
+  AlbumHeader,
+  MediaUpload,
+  AudioRecorder,
+  DeleteConfirmation,
+} from "@/components/Gallery";
 
 interface Album {
   _id: string;
@@ -56,56 +57,9 @@ const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export default function AlbumDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [isRecording, setIsRecording] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [cameraType, setCameraType] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
-  const cameraRef = useRef<CameraView>(null);
 
-  // Configure audio session on component mount
-  useEffect(() => {
-    const configureAudioSession = async () => {
-      try {
-        await setAudioModeAsync({
-          allowsRecording: true,
-          playsInSilentMode: true,
-          shouldPlayInBackground: false,
-          shouldRouteThroughEarpiece: false,
-          interruptionMode: "duckOthers",
-        });
-      } catch (error) {
-        console.error("Failed to configure audio session:", error);
-      }
-    };
-
-    configureAudioSession();
-  }, []);
-
-  // Updated audio recording setup with better configuration
-  const audioRecorder = useAudioRecorder({
-    extension: ".m4a",
-    sampleRate: 44100,
-    numberOfChannels: 1,
-    bitRate: 128000,
-    android: {
-      extension: ".m4a",
-      outputFormat: "mpeg4",
-      audioEncoder: "aac",
-      sampleRate: 44100,
-    },
-    ios: {
-      extension: ".m4a",
-      outputFormat: "mpeg4aac",
-      audioQuality: 96,
-      sampleRate: 44100,
-
-      linearPCMBitDepth: 16,
-      linearPCMIsBigEndian: false,
-      linearPCMIsFloat: false,
-    },
-  });
-
-  const recorderState = useAudioRecorderState(audioRecorder);
   const [selectedItems, setSelectedItems] = useState<UploadableFile[]>([]);
   const [uploadingItems, setUploadingItems] = useState<string[]>([]);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -113,7 +67,7 @@ export default function AlbumDetail() {
     null
   );
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [isRecordingVideo, setIsRecordingVideo] = useState(false);
+  const [cameraLoading, setCameraLoading] = useState(false);
 
   const [showDeleteMediaConfirmation, setShowDeleteMediaConfirmation] =
     useState(false);
@@ -122,37 +76,109 @@ export default function AlbumDetail() {
   );
 
   const { navigate } = useRouter();
+
+  const [albumId, setAlbumId] = useState<string | null>(id as string);
+
   const {
     data: album,
     error,
     isLoading,
     mutate,
-  } = useSWR<Album>(id ? `/albums/${id}` : null, fetcher);
+  } = useSWR<Album>(albumId ? `/albums/${albumId}` : null, fetcher);
+
+  // Debug camera permissions
+  useEffect(() => {
+    console.log("Camera permission status:", permission);
+  }, [permission]);
+
+  // Configure audio session on component mount - wrap in try-catch
+  // useEffect(() => {
+  //   const configureAudioSession = async () => {
+  //     try {
+  //       await setAudioModeAsync({
+  //         allowsRecording: true,
+  //         playsInSilentMode: true,
+  //         shouldPlayInBackground: false,
+  //         shouldRouteThroughEarpiece: false,
+  //         interruptionMode: "duckOthers",
+  //       });
+  //     } catch (error) {
+  //       console.error("Failed to configure audio session:", error);
+  //     }
+  //   };
+
+  //   configureAudioSession();
+  // }, []);
+
+  // Initialize audio recorder and state at the top level
+  // const audioRecorder = useAudioRecorder({
+  //   extension: ".m4a",
+  //   sampleRate: 44100,
+  //   numberOfChannels: 1,
+  //   bitRate: 128000,
+  //   android: {
+  //     extension: ".m4a",
+  //     outputFormat: "mpeg4",
+  //     audioEncoder: "aac",
+  //     sampleRate: 44100,
+  //   },
+  //   ios: {
+  //     extension: ".m4a",
+  //     outputFormat: "mpeg4aac",
+  //     audioQuality: 96,
+  //     sampleRate: 44100,
+  //     linearPCMBitDepth: 16,
+  //     linearPCMIsBigEndian: false,
+  //     linearPCMIsFloat: false,
+  //   },
+  // });
+
+  // const recorderState = useAudioRecorderState(audioRecorder);
 
   const { showModal } = useBottomSheetModal();
 
+  // Early return if no album ID
+  if (!albumId) {
+    return (
+      <SafeAreaView className="flex-1 bg-white items-center justify-center">
+        <Text>Invalid album ID</Text>
+      </SafeAreaView>
+    );
+  }
+
   const handleMediaOption = async (option: string) => {
-    switch (option) {
-      case "photo":
-        await takePhoto();
-        break;
-      case "audio":
-        await recordAudio();
-        break;
-      case "video":
-        await recordVideo();
-        break;
-      case "gallery":
-        await pickFromGallery();
-        break;
-      case "file":
-        await pickFile();
-        break;
+    try {
+      switch (option) {
+        case "photo":
+          await takePhoto();
+          break;
+          // case "audio":
+          //   await recordAudio();
+          //   break;
+          // case "video":
+          //   await recordVideo();
+          break;
+        case "gallery":
+          await pickFromGallery();
+          break;
+        case "file":
+          await pickFile();
+          break;
+      }
+    } catch (error) {
+      console.error("Error handling media option:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
   const renameAlbum = async () => {
-    showModal(<RenameAlbum name={album?.name!} id={id} />);
+    try {
+      if (album?.name && albumId) {
+        showModal(<RenameAlbum name={album.name} id={albumId} />);
+      }
+    } catch (error) {
+      console.error("Error showing rename modal:", error);
+    }
   };
 
   const deleteAlbum = async () => {
@@ -165,7 +191,7 @@ export default function AlbumDetail() {
 
     try {
       setLoadingDelete(true);
-      await axiosInstance.delete(`/albums/${id}`);
+      await axiosInstance.delete(`/albums/${albumId}`);
       await mutateSWR("/albums");
       navigate("/gallery");
     } catch (error) {
@@ -179,151 +205,129 @@ export default function AlbumDetail() {
 
   const handleAlbumOption = (option: string) => {
     console.log("Album option selected:", option);
-    switch (option) {
-      case "rename":
-        renameAlbum();
-        break;
-      case "delete":
-        deleteAlbum();
-        break;
-      default:
-        handleMediaOption(option);
-        break;
+    try {
+      switch (option) {
+        case "rename":
+          renameAlbum();
+          break;
+        case "delete":
+          deleteAlbum();
+          break;
+        default:
+          handleMediaOption(option);
+          break;
+      }
+    } catch (error) {
+      console.error("Error handling album option:", error);
     }
   };
 
   const takePhoto = async () => {
-    if (permission?.granted) {
-      setIsCameraOpen(true);
-    } else {
-      const newPermission = await requestPermission();
-      if (newPermission.granted) {
-        setIsCameraOpen(true);
-      } else {
-        alert("Sorry, we need camera permissions to make this work!");
-      }
-    }
-  };
-
-  const handleCameraCapture = async () => {
-    if (cameraRef.current) {
-      try {
-        const photo = await cameraRef.current.takePictureAsync();
-        setIsCameraOpen(false);
-        addSelectedItem({
-          uri: photo?.uri!,
-          type: "image/jpeg",
-          name: "photo.jpg",
-        });
-      } catch (error) {
-        console.error("Error capturing photo:", error);
-        alert("Failed to capture photo. Please try again.");
-      }
-    }
-  };
-
-  const toggleCameraFacing = () => {
-    setCameraType((current) => (current === "back" ? "front" : "back"));
-  };
-
-  // Updated recordAudio function with proper expo-audio usage
-  const recordAudio = async () => {
     try {
-      const { status } = await requestRecordingPermissionsAsync();
+      setCameraLoading(true);
+      if (!permission?.granted) {
+        const newPermission = await requestPermission();
+        if (!newPermission.granted) {
+          alert("Sorry, we need camera permissions to make this work!");
+          setCameraLoading(false);
+          return;
+        }
+      }
+      setIsCameraOpen(true);
+      setTimeout(() => setCameraLoading(false), 1000);
+    } catch (error) {
+      console.error("Error requesting camera permission:", error);
+      alert("Failed to request camera permission. Please try again.");
+      setCameraLoading(false);
+    }
+  };
+
+  const handleCapturePhoto = (file: UploadableFile) => {
+    addSelectedItem(file);
+  };
+
+  const handleCaptureVideo = (file: UploadableFile) => {
+    addSelectedItem(file);
+  };
+
+  const handleCloseCamera = () => {
+    setIsCameraOpen(false);
+  };
+
+  // const recordAudio = async () => {
+  //   try {
+  //     const { status } = await requestRecordingPermissionsAsync();
+  //     if (status !== "granted") {
+  //       alert("Sorry, we need audio recording permissions to make this work!");
+  //       return;
+  //     }
+
+  //     await setAudioModeAsync({
+  //       allowsRecording: true,
+  //       playsInSilentMode: true,
+  //       shouldPlayInBackground: false,
+  //       shouldRouteThroughEarpiece: false,
+  //       interruptionMode: "duckOthers",
+  //     });
+
+  //     await audioRecorder.prepareToRecordAsync();
+  //     audioRecorder.record();
+  //     setIsRecording(true);
+  //   } catch (err) {
+  //     console.error("Failed to start recording", err);
+  //     alert("Failed to start recording. Please try again.");
+  //   }
+  // };
+
+  // const stopRecording = async () => {
+  //   try {
+  //     await audioRecorder.stop();
+  //     setIsRecording(false);
+
+  //     setTimeout(() => {
+  //       if (recorderState.url) {
+  //         addSelectedItem({
+  //           uri: recorderState.url,
+  //           type: "audio/m4a",
+  //           name: "audio.m4a",
+  //         });
+  //       }
+  //     }, 100);
+  //   } catch (err) {
+  //     console.error("Failed to stop recording", err);
+  //     alert("Failed to stop recording. Please try again.");
+  //   }
+  // };
+
+  // const recordVideo = async () => {
+  //   try {
+  //     setCameraLoading(true);
+  //     if (!permission?.granted) {
+  //       const newPermission = await requestPermission();
+  //       if (!newPermission.granted) {
+  //         alert("Sorry, we need camera permissions to make this work!");
+  //         setCameraLoading(false);
+  //         return;
+  //       }
+  //     }
+  //     setIsCameraOpen(true);
+  //     setTimeout(() => setCameraLoading(false), 1000);
+  //   } catch (error) {
+  //     console.error("Error requesting camera permission:", error);
+  //     alert("Failed to request camera permission. Please try again.");
+  //     setCameraLoading(false);
+  //   }
+  // };
+
+  const pickFromGallery = async () => {
+    try {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
-        alert("Sorry, we need audio recording permissions to make this work!");
+        alert("Sorry, we need camera roll permissions to make this work!");
         return;
       }
 
-      // Configure audio session before recording
-      await setAudioModeAsync({
-        allowsRecording: true,
-        playsInSilentMode: true,
-        shouldPlayInBackground: false,
-        shouldRouteThroughEarpiece: false,
-        interruptionMode: "duckOthers",
-      });
-
-      await audioRecorder.prepareToRecordAsync();
-      audioRecorder.record();
-      setIsRecording(true);
-    } catch (err) {
-      console.error("Failed to start recording", err);
-      alert("Failed to start recording. Please try again.");
-    }
-  };
-
-  const stopRecording = async () => {
-    try {
-      await audioRecorder.stop();
-      setIsRecording(false);
-
-      // Wait a moment for the file to be written
-      setTimeout(() => {
-        if (recorderState.url) {
-          addSelectedItem({
-            uri: recorderState.url,
-            type: "audio/m4a", // Updated MIME type
-            name: "audio.m4a",
-          });
-        }
-      }, 100);
-    } catch (err) {
-      console.error("Failed to stop recording", err);
-      alert("Failed to stop recording. Please try again.");
-    }
-  };
-
-  const recordVideo = async () => {
-    if (permission?.granted) {
-      setIsCameraOpen(true);
-    } else {
-      const newPermission = await requestPermission();
-      if (newPermission.granted) {
-        setIsCameraOpen(true);
-      } else {
-        alert("Sorry, we need camera permissions to make this work!");
-      }
-    }
-  };
-
-  const handleVideoCapture = async () => {
-    if (!cameraRef.current) return;
-
-    if (!isRecordingVideo) {
-      try {
-        setIsRecordingVideo(true);
-        const video = await cameraRef.current.recordAsync();
-        if (video?.uri) {
-          addSelectedItem({
-            uri: video.uri,
-            type: "video/mp4",
-            name: "video.mp4",
-          });
-        }
-      } catch (error) {
-        console.error("Error recording video:", error);
-        alert("Failed to record video. Please try again.");
-      }
-    } else {
-      try {
-        await cameraRef.current.stopRecording();
-        setIsRecordingVideo(false);
-        setIsCameraOpen(false);
-      } catch (error) {
-        console.error("Error stopping video recording:", error);
-        alert("Failed to stop recording. Please try again.");
-      }
-    }
-  };
-
-  const pickFromGallery = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
-      return;
-    }
-    try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsMultipleSelection: true,
@@ -390,7 +394,7 @@ export default function AlbumDetail() {
       console.log("Uploading to server...");
 
       const response = await axiosInstance.post(
-        `/upload?album=${id}`,
+        `/upload?album=${albumId}`,
         formData,
         {
           headers: {
@@ -401,9 +405,9 @@ export default function AlbumDetail() {
       );
 
       if (response.data.files && Array.isArray(response.data.files)) {
-        await axiosInstance.put(`/albums/${id}`, {
+        await axiosInstance.put(`/albums/${albumId}`, {
           media: [
-            ...album?.media!,
+            ...(album?.media || []),
             ...response.data.files.map((file: string) => ({
               file: file,
               date: new Date().toISOString(),
@@ -412,7 +416,6 @@ export default function AlbumDetail() {
         });
 
         await mutate();
-
         setSelectedItems([]);
       }
     } catch (error) {
@@ -448,35 +451,29 @@ export default function AlbumDetail() {
     }
   };
 
-  const handleDeleteMedia = useCallback(
-    (index: number) => {
-      setMediaToDeleteIndex(index);
-      setShowDeleteMediaConfirmation(true);
-    },
-    [setMediaToDeleteIndex, setShowDeleteMediaConfirmation]
-  );
+  const handleDeleteMedia = useCallback((index: number) => {
+    setMediaToDeleteIndex(index);
+    setShowDeleteMediaConfirmation(true);
+  }, []);
 
   const confirmDeleteMedia = useCallback(async () => {
-    if (mediaToDeleteIndex === null) return;
+    if (mediaToDeleteIndex === null || !album) return;
 
     try {
       setLoadingDelete(true);
-      const fileToDelete = album?.media[mediaToDeleteIndex];
-      await axiosInstance.post(`/albums/${id}/media`, {
+      const fileToDelete = album.media[mediaToDeleteIndex];
+      await axiosInstance.post(`/albums/${albumId}/media`, {
         files: [fileToDelete?.file],
       });
 
-      // Update selectedMediaIndex
-      if (album?.media.length === 1) {
-        // If this was the last item, set to null
+      if (album.media.length === 1) {
         setSelectedMediaIndex(null);
-      } else if (mediaToDeleteIndex < album?.media.length! - 1) {
-        // If there are more items after this one, move to the next
+      } else if (mediaToDeleteIndex < album.media.length - 1) {
         setSelectedMediaIndex(mediaToDeleteIndex);
       } else {
-        // If this was the last item but not the only one, move to the previous
         setSelectedMediaIndex(mediaToDeleteIndex - 1);
       }
+
       await mutate();
       await mutateSWR("/albums");
     } catch (error) {
@@ -487,7 +484,7 @@ export default function AlbumDetail() {
       setMediaToDeleteIndex(null);
       setLoadingDelete(false);
     }
-  }, [id, album?.media, mediaToDeleteIndex, mutate, setSelectedMediaIndex]);
+  }, [albumId, album, mediaToDeleteIndex, mutate]);
 
   const cancelDeleteMedia = useCallback(() => {
     setShowDeleteMediaConfirmation(false);
@@ -500,158 +497,24 @@ export default function AlbumDetail() {
 
   const { name, media, createdAt } = album;
 
-  const renderMediaItem = (url: string, isUploading = false) => {
-    if (!url?.startsWith("file")) {
-      url = getImage(url);
-    }
-    const fileExtension = url.split(".").pop()?.toLowerCase();
-    const isAudio = ["mp3", "wav", "ogg", "m4a"].includes(fileExtension || "");
-    const isVideo = ["mp4", "mov", "avi"].includes(fileExtension || "");
-
-    const VideoComponent = () => {
-      const player = useVideoPlayer({ uri: url });
-      return (
-        <VideoView
-          player={player}
-          className="w-full h-full"
-          style={{ aspectRatio: 1 }}
-        />
-      );
-    };
-
-    const AudioComponent = () => {
-      const player = useAudioPlayer({ uri: url });
-
-      return (
-        <View className="w-full h-full items-center justify-center bg-gray-200">
-          <Emoji name="audio" />
-          <TouchableOpacity
-            onPress={() => {
-              if (player.playing) {
-                player.pause();
-              } else {
-                player.play();
-              }
-            }}
-            className="mt-2 bg-blue-500 rounded-full p-2"
-          >
-            <Text className="text-white text-xs">
-              {player.playing ? "Pause" : "Play"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
-    };
-
-    return (
-      <View className="w-full h-32 aspect-square bg-gray-100 rounded-xl overflow-hidden">
-        {isAudio ? (
-          <AudioComponent />
-        ) : isVideo ? (
-          <View className="w-full h-full relative">
-            <VideoComponent />
-            <View className="absolute bottom-2 right-2 bg-black/50 px-1.5 py-0.5 rounded">
-              <Text className="text-white text-xs">Video</Text>
-            </View>
-          </View>
-        ) : (
-          <Image
-            source={{ uri: url }}
-            className="w-full h-full"
-            style={{ aspectRatio: 1 }}
-            resizeMode="cover"
-          />
-        )}
-        {isUploading && (
-          <View className="absolute inset-0 bg-black/50 items-center justify-center">
-            <ActivityIndicator size="large" color="#ffffff" />
-          </View>
-        )}
-      </View>
-    );
-  };
-
   return (
     <PaperProvider>
       <SafeAreaView className="flex-1 bg-white">
-        {isCameraOpen ? (
-          <View style={styles.container}>
-            <CameraView
-              ref={cameraRef}
-              style={styles.camera}
-              facing={cameraType}
-            >
-              <SafeAreaView className="flex-1">
-                <View className="flex-row justify-between px-4 py-2">
-                  <TouchableOpacity onPress={() => setIsCameraOpen(false)}>
-                    <Text className="text-white font-main">Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={toggleCameraFacing}>
-                    <Text className="text-white font-main">Flip</Text>
-                  </TouchableOpacity>
-                </View>
+        <CameraCapture
+          isOpen={isCameraOpen}
+          onClose={handleCloseCamera}
+          onCapturePhoto={handleCapturePhoto}
+          onCaptureVideo={handleCaptureVideo}
+        />
 
-                <View className="flex-1 justify-end pb-10">
-                  {isRecordingVideo ? (
-                    <View className="items-center">
-                      <TouchableOpacity
-                        onPress={handleVideoCapture}
-                        className="bg-red-500 rounded-full w-16 h-16 items-center justify-center"
-                      >
-                        <View className="bg-white rounded w-6 h-6" />
-                      </TouchableOpacity>
-                      <Text className="text-white mt-2">Recording...</Text>
-                    </View>
-                  ) : (
-                    <View className="flex-row items-center justify-center gap-x-10">
-                      <TouchableOpacity
-                        onPress={handleCameraCapture}
-                        className="bg-white rounded-full w-16 h-16 items-center justify-center"
-                      >
-                        <View className="bg-black rounded-full w-14 h-14" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setIsRecordingVideo(true);
-                          handleVideoCapture();
-                        }}
-                        className="bg-white rounded-full w-16 h-16 items-center justify-center"
-                      >
-                        <View className="bg-red-500 rounded-full w-14 h-14" />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-              </SafeAreaView>
-            </CameraView>
-          </View>
-        ) : (
+        {!isCameraOpen && (
           <View className="flex-1">
-            <View
-              className="px-4 py-2 flex-row items-center justify-between"
-              style={{
-                zIndex: 999998,
-                elevation: 999998,
-              }}
-            >
-              <Back />
-              <Text className="text-2xl font-fwbold">{name}</Text>
-              <View className="flex-row justify-between gap-x-4">
-                <View
-                  style={{
-                    zIndex: 999999,
-                    elevation: 999999,
-                  }}
-                >
-                  <AlbumOptionsDropdownModern onSelect={handleAlbumOption} />
-                </View>
-              </View>
-            </View>
-
-            <Text className="px-4 font-semibold text-gray-500 mb-4">
-              {media.length} items • Created on{" "}
-              {new Date(createdAt).toLocaleDateString()}
-            </Text>
+            <AlbumHeader
+              name={name}
+              mediaCount={media?.length || 0}
+              createdAt={createdAt}
+              onAlbumOption={handleAlbumOption}
+            />
 
             <ScrollView
               className="flex-1"
@@ -660,36 +523,17 @@ export default function AlbumDetail() {
                 elevation: 1,
               }}
             >
-              <View className="flex-row  flex-wrap w-full">
-                {media &&
-                  media.length > 0 &&
-                  media.map((item, index) => (
-                    <TouchableOpacity
-                      className="w-[33.33%] h-32"
-                      key={`media-${index}`}
-                      onPress={() => handleOpenMedia(index)}
-                    >
-                      <View className="p-1">{renderMediaItem(item?.file)}</View>
-                    </TouchableOpacity>
-                  ))}
-                {selectedItems.length > 0 &&
-                  selectedItems.map((item, index) => (
-                    <View key={`selected-${index}`} className="w-[33.33%] h-32">
-                      <View className="p-1">
-                        {renderMediaItem(
-                          item.uri,
-                          uploadingItems.includes(item.uri)
-                        )}
-                      </View>
-                    </View>
-                  ))}
-                <View className="w-[33.33%] px-1">
-                  <MediaAddDropdownModern onSelect={handleMediaOption} />
-                </View>
-              </View>
+              <MediaGrid
+                media={media || []}
+                selectedItems={selectedItems}
+                uploadingItems={uploadingItems}
+                onMediaPress={handleOpenMedia}
+              >
+                <MediaAddDropdownModern onSelect={handleMediaOption} />
+              </MediaGrid>
             </ScrollView>
 
-            {(media.length > 0 || selectedItems.length > 0) && (
+            {(media?.length > 0 || selectedItems.length > 0) && (
               <MediaViewer
                 album={album.name}
                 onDismiss={cancelDeleteMedia}
@@ -702,78 +546,35 @@ export default function AlbumDetail() {
                 mediaItems={
                   selectedItems.length > 0
                     ? [
-                        ...media,
+                        ...(media || []),
                         ...selectedItems.map((file) => ({
                           file: file.uri,
                           date: new Date().toISOString(),
                         })),
                       ]
-                    : [...media]
+                    : [...(media || [])]
                 }
                 onNavigate={handleNavigateToMedia}
                 onShare={handleShareMedia}
                 onDelete={handleDeleteMedia}
               />
             )}
-            {selectedItems.length > 0 && (
-              <View className="absolute bottom-10 z-[99999] left-0 right-0 items-center">
-                <TouchableOpacity
-                  onPress={uploadMedia}
-                  className="bg-blue-500 rounded-full p-4 "
-                >
-                  <Text className="text-white font-bold">
-                    Upload {selectedItems.length} item
-                    {selectedItems.length > 1 ? "s" : ""}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
 
-            {isRecording && (
-              <View className="absolute bottom-10 left-0 right-0 items-center">
-                <TouchableOpacity
-                  onPress={stopRecording}
-                  className="bg-red-500 rounded-full p-4"
-                >
-                  <Text className="text-white font-bold">Stop Recording</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+            <MediaUpload selectedItems={selectedItems} onUpload={uploadMedia} />
 
-            {showConfirmDelete && (
-              <View className="absolute bottom-10 left-0 right-0 items-center z-50">
-                <TouchableOpacity
-                  onPress={() => deleteAlbum()}
-                  className="items-center px-5 py-1 bg-red-100 flex-row rounded-full"
-                  disabled={loadingDelete}
-                >
-                  <Text className="text-base font-semibold text-red-500">
-                    Delete
-                  </Text>
-                  {loadingDelete && (
-                    <ActivityIndicator color="#EF4444" className="ml-2" />
-                  )}
-                </TouchableOpacity>
+            {/* <AudioRecorder
+              isRecording={isRecording}
+              onStopRecording={stopRecording}
+            /> */}
 
-                <Text className="text-red-400 font-semibold mt-2 text-center px-4">
-                  Deleting is irreversible, Press the delete button again to
-                  confirm
-                </Text>
-              </View>
-            )}
+            <DeleteConfirmation
+              visible={showConfirmDelete}
+              loading={loadingDelete}
+              onConfirm={deleteAlbum}
+            />
           </View>
         )}
       </SafeAreaView>
     </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-  },
-  camera: {
-    flex: 1,
-  },
-});
